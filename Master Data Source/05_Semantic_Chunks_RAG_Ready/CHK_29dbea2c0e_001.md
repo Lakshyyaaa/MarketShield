@@ -1,0 +1,15 @@
+---
+id: "CHK_29dbea2c0e_001"
+title: "SEBI | Creation of Security in issuance of listed debt securities and ‘due diligence’ by debenture trustee(s) - Extension of timeline for implementation"
+heading_lineage: "SEBI  Creation of Security in issuance of listed debt securities and due diligence by debenture trustees - Extension of timeline for implementation"
+source_file: "SEBI  Creation of Security in issuance of listed debt securities and due diligen_6ef13af1ced677ba.md"
+effective_date: "December 31, 2020"
+status: "active"
+category: "debenture_trustees"
+subcategories: ["debt_securities", "debenture_trustee"]
+jurisdiction: "SEBI"
+entity_types: ["debenture_trustee", "issuer"]
+user_aliases: []
+---
+
+# SEBI | Creation of Security in issuance of listed debt securities and ‘due diligence’ by debenture trustee(s) - Extension of timeline for implementation Source PDF: https://www.sebi.gov.in/sebi_data/attachdocs/dec-2020/1609414408132.pdf Landing page: https://www.sebi.gov.in/legal/circulars/dec-2020/creation-of-security-in-issuance-of-listed-debt-securities-and-due-diligence-by-debenture-trustee-s-extension-of-timeline-for-implementation_48621.html [page 1] Page 1 of 1 CIRCULAR SEBI/HO/MIRSD/CRADT/CIR/P/2020/254 December 31, 2020 To, All issuers who propose to list their debt securities All Recognized Stock Exchanges All Debenture Trustees registered with SEBI Dear Sir/ Madam, Sub: Creation of Security in issuance of listed debt securities and ‘due diligence’ by debenture trustee(s) - Extension of timeline for implementation 1. SEBI, vide circular no. SEBI/HO/MIRSD/CRADT/CIR/P/2020/ 218 dated November 03, 2020, specified requirements with regard to creation of security in issuance of listed debt securities and due diligence to be carried out by debenture trustee(s) , which were applicable from January 01, 2021. 2. Representations have been received from debenture trustees with regard to extension of the date of applicability of the provisions of the aforesaid circular. 3. After taking into consideration the representation received fro m debenture trustees, and the challenges arising out of the prevailing business and market conditions due to COVID-19 pandemic, it has been decided to extend the implementation date of the provisions of the aforesaid circular to April 01, 2021. 4. This circular is issued in exercise of the powers conferred upon SEBI under Section 11 (1) of the Securities and Exchange Board of India Act, 1992 read with the provisions of Regulation 2A of the Securities and Exchange Board of India (Debenture Trustees) Regulations, 1993 and Regulation 31(1) of the Securities and Exchange Board of India (Issue and Listing of Debt Securities) Regulations, 2008 to protect the interest of investors in securities and t o promote the development of, and to regulate, the securities market. Yours faithfully, Richa G. Agarwal Deputy General Manager Market Intermediaries Regulation & Supervision Department Email id: richag@sebi.gov.in Phone: +91-22-26449596

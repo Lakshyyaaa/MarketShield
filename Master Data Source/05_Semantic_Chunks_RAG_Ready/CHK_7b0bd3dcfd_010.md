@@ -1,0 +1,15 @@
+---
+id: "CHK_7b0bd3dcfd_010"
+title: "SEBI | Master Circular for Credit Rating Agencies"
+heading_lineage: "SEBI  Master Circular for Credit Rating Agencies"
+source_file: "SEBI  Master Circular for Credit Rating Agencies_9a2916edd75f524e.md"
+effective_date: "July 03, 2023"
+status: "active"
+category: "credit_rating_agencies"
+subcategories: ["cra_regulations"]
+jurisdiction: "SEBI"
+entity_types: ["credit_rating_agency"]
+user_aliases: []
+---
+
+The contents of the Operations Manual/ Internal governing document, as well as any changes to the same, shall be communicated to employees promptly, and training of employees on the same shall be conducted at regular intervals. 6.3. The following shall be specified in the Operations Manual/ Internal governing document of CRAs: 6.3.1. Basic Minimum information required for conducting the Rating Exercise 6.3.2. External entities (bankers, auditors etc.) that need to be contacted 6.3.3. Mode of seeking information from external entities. CRAs should endeavour to obtain such information/confirmation in writing. 6.3.4. Policy regarding internal approvals and timelines at each step of the Rating Exercise. Rating symbols should have CRA’s first name as prefix Rating symbol Definition EL 1 Instruments rated “EL 1” are considered to have the lowest expected loss, over the life of the instrument EL 2 Instruments rated “EL 2” are considered to have very low expected loss, over the life of the instrument EL 3 Instruments rated “EL 3” are considered to have low expected loss, over the life of the instrument EL 4 Instruments rated “EL 4” are considered to have moderate expected loss over the life of the instrument. EL 5 Instruments rated “EL 5” are considered to have high expected loss, over the life of the instrument EL 6 Instruments rated “EL 6” are conside red to have very high expected loss, over the life of the instrument EL 7 Instruments rated “EL 7” are considered to have highest expected loss, over the life of the instrument [page 14] Page 14 of 103 6.3.5. Policy regarding monitoring and review of ratings, including the timelines within which such review is to be completed. Rating Criteria 7.1. Each CRA shall frame detailed rating criteria, include the same in its Operations Manual/ Internal governing document and disclose the same on its website. 7.2. Periodicity of review shall be disclosed on the CRA's website. While disclosing the revised criteria on their website, CRAs shall also provide a reference/ hyperlink to the original criteria (before revision), so as to enable investors to discern the changes made to the same. 7.3.

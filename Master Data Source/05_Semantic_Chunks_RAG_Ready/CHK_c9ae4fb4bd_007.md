@@ -1,0 +1,15 @@
+---
+id: "CHK_c9ae4fb4bd_007"
+title: "SEBI | Adjudication order in the matter of Rajasthan Tube Manufacturing Company Limited"
+heading_lineage: "SEBI  Adjudication order in the matter of Rajasthan Tube Manufacturing Company Limited"
+source_file: "SEBI  Adjudication order in the matter of Rajasthan Tube Manufacturing Company L_bcb4aee023640a03.md"
+effective_date: "March 03, 2023"
+status: "active"
+category: "enforcement_orders"
+subcategories: ["adjudication_orders", "penalties"]
+jurisdiction: "SEBI"
+entity_types: ["violator_entity"]
+user_aliases: []
+---
+
+(a) Information shall be prepared and disclosed in accordance with applicable standards of accounting and financial disclosure. (b) The listed entity shall implement the prescribed accounting standards in letter and spirit in the preparation of financial statements taking into consideration the interest of all stakeholders and shall also ensure that the annual audit is conducted by an independent, competent and qualified auditor. (c) The listed entity shall refrain from misrepresentation and ensure that the information provided to recognised stock exchange(s) and investors is not misleading. (d) The listed entity shall provide adequate and timely information to recognised stock exchange(s) and investors. (e) The listed entity shall ensure that disseminations made under provisions of these regulations and circulars made thereunder, are adequate, accurate, expl icit, timely and presented in a simple language. (f) Channels for disseminating information shall provide for equal, timely and cost efficient access to relevant information by investor. (g) The listed entity shall abide by all the provisions of the appl icable laws including the securities laws and also such other guidelines as may be issued from time to time by the Board and the recognised stock exchange(s) in this regard and as may be applicable. (h) The listed entity shall make the specified disclosures a nd follow its obligations in letter and spirit taking into consideration the interest of all stakeholders. (i) Filings, reports, statements, documents and information which are event based or are filed periodically shall contain relevant information. (j) Periodic filings, reports, statements, documents and information reports shall contain information that shall enable investors to track the performance of a listed entity over regular intervals of time and shall provide sufficient information to enable investors to assess the current status of a listed entity. (2) The listed entity which has listed its specified securities shall comply with the corporate governance provisions as specified in chapter IV which shall be implemented in a manner so as to achieve the objectives of the principles as mentioned below. ………… (e) Disclosure and transparency: The listed entity shall ensure timely and accurate disclosure on all

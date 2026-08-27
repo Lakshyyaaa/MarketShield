@@ -1,0 +1,80 @@
+{
+  "procedure_id": "scores_odr_escalation",
+  "problem": "Investor has a grievance against a SEBI-regulated entity (listed company, registered intermediary, or market infrastructure institution) and needs to know how to escalate it through SCORES and, if needed, ODR.",
+  "user_intent": "File a SCORES complaint and understand what happens at each stage, including what to do if unsatisfied.",
+  "grievance_ids": ["scores_filing", "post_scores_escalation", "odr_eligibility"],
+  "eligibility": [
+    "Complaint concerns securities-market matters governed by the SEBI Act 1992, SCRA 1956, Depositories Act 1996, or relevant Companies Act 2013 provisions administered by SEBI.",
+    "Complaint is against a listed company, a SEBI-registered intermediary, or a market infrastructure institution.",
+    "Complaint is lodged within 1 year of the date of the cause of action (SEBI may reject complaints filed later)."
+  ],
+  "preconditions": [
+    "Complainant has Name, Address, Email, PAN (or PEKRN if PAN-exempt), Mobile Number, and Date of Birth ready — these are mandatory to register on SCORES.",
+    "Ideally, the investor has already raised the issue with the entity directly (SCORES is a facilitation/escalation layer, not necessarily the first stop)."
+  ],
+  "step_by_step_process": [
+    {"step": 1, "action": "Register on scores.sebi.gov.in via 'Sign in/Sign up', either by fetching KYC details from the KRA database (enter PAN + DOB, OTP-verify mobile) or by filling the registration form manually.", "actor": "investor"},
+    {"step": 2, "action": "Sign in (via User ID, registered mobile, or registered email + OTP + password) and click 'Lodge a complaint'; choose the correct category/sub-category (up to 5 sub-categories against the same entity) and attach supporting documents (jpg/jpeg/pdf, up to 10 files, 20MB cumulative).", "actor": "investor"},
+    {"step": 3, "action": "Complaint is auto-forwarded to the concerned Entity and simultaneously to the relevant Designated Body (e.g. an exchange). Entity must resolve and upload an Action Taken Report (ATR) within 21 calendar days.", "actor": "entity"},
+    {"step": 4, "action": "If unsatisfied with the ATR, request a review within 15 calendar days of the ATR date. If the entity misses the 21-day deadline, escalation to first-level review is automatic either way.", "actor": "investor"},
+    {"step": 5, "action": "First-level review: the Designated Body (e.g. exchange) takes up the matter with the entity and must submit its own ATR within 10 calendar days.", "actor": "designated_body"},
+    {"step": 6, "action": "If still unsatisfied, request a second-level review within 15 calendar days of that ATR (or it escalates automatically if the Designated Body misses its 10-day deadline).", "actor": "investor"},
+    {"step": 7, "action": "Second-level review is conducted by SEBI directly with the Designated Body/entity.", "actor": "sebi"},
+    {"step": 8, "action": "At any point, the investor may instead opt for Online Dispute Resolution (conciliation, then arbitration if conciliation fails) via smartodr.in. Opting for ODR automatically closes the SCORES complaint as disposed.", "actor": "investor"}
+  ],
+  "forms_required": [],
+  "documents_required": ["PAN (or PEKRN)", "Proof supporting the complaint (contract notes, statements, correspondence, etc. as applicable)"],
+  "documents_optional": [],
+  "signatures_required": [],
+  "where_to_submit": ["https://scores.sebi.gov.in/ (web)", "SCORES mobile app (Android/iOS)"],
+  "online_process": ["Entire process is online via SCORES web portal or mobile app."],
+  "offline_process": ["Nearest Investor Service Centre (ISC) of NSE/BSE can assist, particularly with the ODR route."],
+  "fees": ["None mentioned in the source FAQ for filing on SCORES."],
+  "expected_timeline": [
+    {"stage": "Entity ATR", "days": 21, "source_url": "https://scores.sebi.gov.in/faqs"},
+    {"stage": "First-level review (Designated Body) ATR", "days": 10, "source_url": "https://scores.sebi.gov.in/faqs"},
+    {"stage": "Investor review window after each ATR", "days": 15, "source_url": "https://scores.sebi.gov.in/faqs"},
+    {"stage": "Limitation period to file the original complaint from cause of action", "days": 365, "source_url": "https://scores.sebi.gov.in/faqs"}
+  ],
+  "rejection_reasons": [
+    "Complaint not pertaining to investment in the securities market",
+    "Anonymous, incomplete, or unspecific complaints; allegations without supporting documents",
+    "Filed beyond the 1-year limitation period",
+    "Against a company on the Dissemination Board, or under liquidation/resolution/struck-off from RoC",
+    "Concerns unclaimed dividends/shares/matured debentures already transferred to IEPF (>7 years unclaimed) — must go directly to the IEPF Authority, outside SEBI's purview",
+    "Matter already pending or concluded via the ODR mechanism",
+    "Complaint is essentially market intelligence (insider trading, price manipulation tips) rather than a personal grievance — route to miportal.sebi.gov.in instead"
+  ],
+  "next_step_if_rejected": [
+    "If SCORES disposes the complaint unsatisfactorily: pursue Online Dispute Resolution (smartodr.in), consumer courts, or other civil remedies.",
+    "If the complaint is out of SEBI's jurisdiction per the exclusion list, it is routed to the correct authority (RBI/Banking Ombudsman, MCA, IRDAI, PFRDA, CCI, NHB, IBBI, IEPF Authority, or the relevant stock exchange for suspended companies) — see jurisdiction table below."
+  ],
+  "escalation_path": [
+    {"order": 1, "channel": "Entity direct (via SCORES auto-routing)", "timeline_days": 21},
+    {"order": 2, "channel": "Designated Body first-level review", "timeline_days": 10},
+    {"order": 3, "channel": "SEBI second-level review", "timeline_days": null},
+    {"order": 4, "channel": "SMART ODR (conciliation, then arbitration)", "timeline_days": null},
+    {"order": 5, "channel": "Consumer courts / other civil remedies", "timeline_days": null}
+  ],
+  "sebi_channel": ["scores.sebi.gov.in"],
+  "exchange_channel": ["NSE/BSE act as Designated Bodies for first-level review in many categories; also operate Investor Service Centres"],
+  "rta_channel": [],
+  "depository_channel": [],
+  "odr_available": true,
+  "scores_available": true,
+  "legal_basis": [
+    "SEBI Master Circular SEBI/HO/OIAE/OIAE_IAD-1/P/CIR/2023/145 dated July 31, 2023 (Online Dispute Resolution)",
+    "SEBI circular SEBI/HO/OIAE/IGRD/CIR/P/2023/156 dated September 20, 2023 (SCORES authentication for Designated Bodies; ODR-SCORES interplay)",
+    "Section 125, Companies Act 2013 (unclaimed dividends/shares transfer to IEPF after 7 years — cited as the basis for SCORES excluding IEPF-eligible claims)"
+  ],
+  "source_urls": [
+    "https://scores.sebi.gov.in/faqs",
+    "https://investor.sebi.gov.in/sebi_scores.html",
+    "https://investor.sebi.gov.in/smart_orr.html"
+  ],
+  "source_documents": [],
+  "last_verified": "2026-08-25",
+  "effective_from": "2023-07-31",
+  "status": "active",
+  "confidence_note": "step_by_step_process, expected_timeline, rejection_reasons, and legal_basis are extracted verbatim/near-verbatim from scores.sebi.gov.in/faqs, a live Tier-1 SEBI source, crawled and hashed on 2026-08-25 (see data/json/sebi/scores/). This supersedes the 'must be re-verified' caveat originally noted in 01_SOURCE_INVENTORY.md section B."
+}

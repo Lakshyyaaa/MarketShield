@@ -1,0 +1,243 @@
+{
+  "playbooks": [
+    {
+      "playbook_id": "iepf_5_unclaimed_shares_dividends",
+      "title": "Claiming Unclaimed Dividends and Shares Transferred to IEPF",
+      "category": "corporate_action",
+      "subcategory": "iepf_claim",
+      "jurisdiction": "IEPF Authority (Ministry of Corporate Affairs)",
+      "legal_basis": "Section 125(3) of Companies Act 2013 read with IEPF Authority (Accounting, Audit, Transfer and Refund) Rules 2016",
+      "trigger_condition": "Dividends or shares unclaimed for 7 consecutive years transferred by company to Investor Education and Protection Fund (IEPF)",
+      "step_by_step_process": [
+        {
+          "step": 1,
+          "action": "Submit online e-Form IEPF-5 on the MCA portal (mca.gov.in). Fill details of claimant, company CIN, folio number/DP-Client ID, unclaimed dividend amount, and share quantity."
+        },
+        {
+          "step": 2,
+          "action": "System generates an SRN (Service Request Number) and printable IEPF-5 acknowledgement slip."
+        },
+        {
+          "step": 3,
+          "action": "Submit physical claim dossier to Company Nodal Officer / RTA within 15 days. Dossier must contain: Printed signed IEPF-5 form, SRN slip, Original share certificates (if physical), Cancelled cheque leaf, Advance Stamp Receipt signed with Rs 1 revenue stamp, CML of Demat Account, Aadhaar and PAN."
+        },
+        {
+          "step": 4,
+          "action": "Company Nodal Officer verifies documents within 30 days and submits Verification Report to IEPF Authority."
+        },
+        {
+          "step": 5,
+          "action": "IEPF Authority sanction order issued; shares credited to Demat account and funds transferred to bank account via e-payment."
+        }
+      ],
+      "expected_timeline": "60 to 90 calendar days post verification report submission",
+      "source_url": "https://www.iepf.gov.in/IEPF/refund.html"
+    },
+    {
+      "playbook_id": "unauthorized_broker_trade_protocol",
+      "title": "24-Hour Emergency Protocol for Unauthorized Trade Execution by Stock Broker",
+      "category": "broker_dispute",
+      "subcategory": "unauthorized_trading",
+      "jurisdiction": "SEBI / Stock Exchanges (BSE & NSE)",
+      "legal_basis": "SEBI Master Circular for Stock Brokers & Stock Exchange Investor Grievances Rules",
+      "trigger_condition": "Broker executes trade without explicit written/recorded client instruction or voice-recorded order confirmation",
+      "step_by_step_process": [
+        {
+          "step": 1,
+          "action": "Immediately (within 24 hours) notify Stock Broker Compliance Officer and Designated Grievance Cell in writing (via registered email ID) stating unauthorized trade details."
+        },
+        {
+          "step": 2,
+          "action": "Request immediate temporary freeze on trading terminal access and debit freeze on Demat account to prevent further unauthorized transactions."
+        },
+        {
+          "step": 3,
+          "action": "If broker fails to reverse trade/losses within 48 hours, file a complaint on Stock Exchange Investor Grievance Portal (NSE: ignse@nse.co.in / BSE: investor.services@bseindia.com)."
+        },
+        {
+          "step": 4,
+          "action": "File complaint on SEBI SCORES 2.0 (scores.sebi.gov.in) attaching contract notes, voice recording logs, and email correspondence."
+        },
+        {
+          "step": 5,
+          "action": "If unresolved, apply for Stock Exchange Investor Grievance Redressal Committee (IGRC) meeting or SMART ODR Arbitration."
+        }
+      ],
+      "expected_timeline": "24 hours emergency report; 21 days for SCORES/Exchange resolution",
+      "source_url": "https://www.nseindia.com/invest/file-a-complaint"
+    },
+    {
+      "playbook_id": "ipo_asba_refund_failure_compensation",
+      "title": "Compensation Claim for Delayed IPO ASBA Fund Unblocking",
+      "category": "ipo",
+      "subcategory": "asba_refund_delay",
+      "jurisdiction": "SEBI (SCSB Bank & Registrar to the Issue)",
+      "legal_basis": "SEBI Circular SEBI/HO/CFD/DIL2/CIR/P/2021/2480/1/M (March 16, 2021) and SEBI/HO/CFD/DIL2/P/CIR/2022/75",
+      "trigger_condition": "Self-Certified Syndicate Bank (SCSB) fails to unblock ASBA IPO application funds within T+1 day post-finalization of allotment",
+      "step_by_step_process": [
+        {
+          "step": 1,
+          "action": "Check IPO allotment status on Registrar website (KFintech / Link Intime) to verify non-allotment."
+        },
+        {
+          "step": 2,
+          "action": "Send written complaint to SCSB Bank Nodal Officer and Registrar specifying Application No, UPI ID/ASBA Account, and PAN."
+        },
+        {
+          "step": 3,
+          "action": "Mandatory Compensation Clause: SCSB Bank is liable to pay compensation of Rs 100 per day of delay to the investor directly without requiring a formal request, for every day post-allotment finalization."
+        },
+        {
+          "step": 4,
+          "action": "If bank/SCSB fails to unblock or pay compensation within 7 days, file complaint on SEBI SCORES 2.0 under IPO/ASBA category."
+        }
+      ],
+      "compensation_rate": "Rs 100 per day of delay",
+      "source_url": "https://www.sebi.gov.in/legal/circulars/mar-2021/streamlining-the-process-of-public-issues-of-equity-shares-and-convertible-securities_49525.html"
+    },
+    {
+      "playbook_id": "non_responsive_rta_escalation",
+      "title": "Handling Non-Responsive Registrars and Transfer Agents (RTAs)",
+      "category": "rta",
+      "subcategory": "rta_non_response",
+      "jurisdiction": "SEBI (SCORES 2.0 & Designated Depository)",
+      "legal_basis": "SEBI Master Circular for Registrars to an Issue and Share Transfer Agents 2025",
+      "trigger_condition": "RTA (e.g. Link Intime, KFintech, Bigshare) fails to respond or process service request (demat, transmission, dividend, KYC) within 30 calendar days",
+      "step_by_step_process": [
+        {
+          "step": 1,
+          "action": "Send formal reminder via registered email to RTA Compliance Officer citing initial SRN / inward reference number."
+        },
+        {
+          "step": 2,
+          "action": "Lodge complaint on SEBI SCORES 2.0 (scores.sebi.gov.in) selecting the specific RTA and listed issuer company."
+        },
+        {
+          "step": 3,
+          "action": "Under SCORES 2.0, the complaint is auto-routed to the RTA and its Designated Body (Depository/Exchange). RTA must submit Action Taken Report (ATR) within 21 calendar days."
+        },
+        {
+          "step": 4,
+          "action": "If ATR is unsatisfactory, request First Level Review by Designated Body within 15 days, followed by SMART ODR if unresolved."
+        }
+      ],
+      "source_url": "https://scores.sebi.gov.in/faqs"
+    },
+    {
+      "playbook_id": "algo_trading_app_glitch_protocol",
+      "title": "Protocol for Trading App Crashes, Algorithmic Glitches, and Stop-Loss Failure",
+      "category": "broker_dispute",
+      "subcategory": "tech_glitch",
+      "jurisdiction": "SEBI / Stock Exchange Standing Committee on Technology Glitches",
+      "legal_basis": "SEBI Framework for Handling Technical Glitches by Stock Brokers (Circular SEBI/HO/MIRSD/TPD-1/P/CIR/2022/160)",
+      "trigger_condition": "Broker trading platform crash, API outage, or order routing glitch preventing order execution or stop-loss execution during market hours",
+      "step_by_step_process": [
+        {
+          "step": 1,
+          "action": "Take immediate timestamps, order logs, screenshot evidence, and call broker helpline to manually close positions if possible."
+        },
+        {
+          "step": 2,
+          "action": "Submit formal complaint to Stock Broker within 24 hours attaching order IDs and system error logs."
+        },
+        {
+          "step": 3,
+          "action": "Stock broker must log technical glitch event with Stock Exchange within 1 hour and submit Root Cause Analysis (RCA) report within 14 days."
+        },
+        {
+          "step": 4,
+          "action": "If broker denies compensation for financial loss caused by system outage, escalate to Stock Exchange Investor Grievance Cell and SMART ODR."
+        }
+      ],
+      "source_url": "https://www.sebi.gov.in/legal/circulars/nov-2022/framework-to-address-technical-glitches-in-stock-brokers-systems_65438.html"
+    },
+    {
+      "playbook_id": "dividend_tds_tax_claim",
+      "title": "TDS Deduction on Dividends and Submission of Form 15G / 15H",
+      "category": "corporate_action",
+      "subcategory": "dividend_tds",
+      "jurisdiction": "Income Tax Department (CBDT)",
+      "legal_basis": "Section 194 of Income Tax Act 1961 read with CBDT Rules",
+      "trigger_condition": "Listed company deducts 10% or 20% TDS on dividend payouts exceeding Rs 5,000 in a financial year",
+      "step_by_step_process": [
+        {
+          "step": 1,
+          "action": "Submit Form 15G (for individuals <60 yrs) or Form 15H (for senior citizens >=60 yrs) to Company RTA before record date to claim zero TDS deduction if total income is below taxable limit."
+        },
+        {
+          "step": 2,
+          "action": "Ensure PAN is linked with Aadhaar; unlinked PAN attracts higher 20% TDS rate under Section 206AA."
+        },
+        {
+          "step": 3,
+          "action": "If TDS has already been deducted and deposited with government, company/RTA cannot refund TDS directly. Investor must claim refund by filing Income Tax Return (ITR) for the financial year."
+        }
+      ],
+      "source_url": "https://incometaxindia.gov.in"
+    },
+    {
+      "playbook_id": "unlisted_pre_ipo_share_fraud",
+      "title": "Grievances Regarding Unlisted Shares, Pre-IPO Scams, and Unregistered Promoters",
+      "category": "jurisdiction_routing",
+      "subcategory": "unlisted_companies",
+      "jurisdiction": "Ministry of Corporate Affairs (MCA) / Civil Court / Cyber Crime",
+      "legal_basis": "Companies Act 2013 & Consumer Protection Act 2019",
+      "trigger_condition": "Promoter or unlisted dealer fails to deliver unlisted/pre-IPO shares or company vanishes after collecting funds",
+      "step_by_step_process": [
+        {
+          "step": 1,
+          "action": "SEBI Jurisdiction Limitation: SEBI does not regulate unlisted private company transactions or off-market deals between individuals unless issued under public issue prospectus."
+        },
+        {
+          "step": 2,
+          "action": "File complaint on MCA Portal (mca.gov.in) against Company Director/CIN under Companies Act Section 447 (Fraud)."
+        },
+        {
+          "step": 3,
+          "action": "If fake dealer / fake app involved in selling unlisted shares, file complaint on National Cyber Crime Reporting Portal (cybercrime.gov.in / Helpline 1930)."
+        }
+      ],
+      "source_url": "https://mca.gov.in"
+    },
+    {
+      "playbook_id": "non_sebi_jurisdiction_routing",
+      "title": "Out-of-Scope Grievance Routing Matrix for Non-SEBI Authorities",
+      "category": "jurisdiction_routing",
+      "subcategory": "external_authority",
+      "jurisdiction": "Multiple (RBI, IRDAI, Cyber Crime, MCA, NCLT)",
+      "trigger_condition": "Investor grievance falls outside SEBI remedial jurisdiction",
+      "routing_rules": [
+        {
+          "issue_type": "Bank Account Charges / FD Defaults / Payment Failures",
+          "correct_authority": "RBI Banking Ombudsman",
+          "portal": "https://cms.rbi.org.in/",
+          "helpline": "14448"
+        },
+        {
+          "issue_type": "Insurance Policy / ULIP / Claim Delay",
+          "correct_authority": "IRDAI Bima Bharosa Portal",
+          "portal": "https://bimabharosa.irdai.gov.in/",
+          "helpline": "155255"
+        },
+        {
+          "issue_type": "Telegram / WhatsApp Trading Scams / Fake App Fraud",
+          "correct_authority": "National Cyber Crime Reporting Portal & Local Police",
+          "portal": "https://cybercrime.gov.in/",
+          "helpline": "1930"
+        },
+        {
+          "issue_type": "Unlisted Company Mismanagement / Non-SEBI Corporate Disputes",
+          "correct_authority": "Ministry of Corporate Affairs (MCA) / NCLT",
+          "portal": "https://www.mca.gov.in/",
+          "helpline": "0120-2986700"
+        },
+        {
+          "issue_type": "Dividend TDS Refund / Tax Deductions",
+          "correct_authority": "Income Tax Department (CBDT)",
+          "portal": "https://incometax.gov.in/",
+          "helpline": "1800 180 1961"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+---
+id: "CHK_7b0bd3dcfd_031"
+title: "SEBI | Master Circular for Credit Rating Agencies"
+heading_lineage: "SEBI  Master Circular for Credit Rating Agencies"
+source_file: "SEBI  Master Circular for Credit Rating Agencies_9a2916edd75f524e.md"
+effective_date: "July 03, 2023"
+status: "active"
+category: "credit_rating_agencies"
+subcategories: ["cra_regulations"]
+jurisdiction: "SEBI"
+entity_types: ["credit_rating_agency"]
+user_aliases: []
+---
+
+SEBI (Debenture Trustee) Regulations, 1993 require the Debenture Trustees (DTs) to share information regarding the issuer companies that are their clients, with CRAs. The purpose of the Regulations is to enable CRAs to perform their obligations effectively. 23.2. Registered DTs and CRAs shall share information with each other as specified in the Annexure 17. DTs and CRAs may share any other information from time to time in respect of issues/issuer companies which would help them in effective discharge of their duties. 23.3. DTs and CRAs shall assign designated email addresses for sending and receiving such information and ensure appropriate action, if any, based on the information received. Securities and Exchange Board of India (Credit Rating Agencies) (Second Amendment) Regulations, 2018: Vide Gazette Notification No. SEBI/LAD -NRO/GN/2018/36 dated September 11, 2018, in respect of Securities and Exchange Board of India (Credit Rating Agencies) (Second Amendment) Regulations, 2018, as laid down under Regulation 9(f) of SEBI (Credit Rating Agencies) (Second Amendment) Regulations, 2018, a CRA may undertake the rating of financial instruments under the respective guidelines of the financial sector regulators/ authorities as specified in Annexure 18. CRAs may also undertake research activities, incidental to rating, such as research for Economy, Industries and Companies. 24A. Guidelines on the listed securities/instruments/products falling under the purview of other financial sector regulator/s or authority/ies’ Certain instruments/products/securities are regulated by other financial sector regulator/s or authority/ies and could be listed or unlisted. The issuers of such instruments/products/securities and any person connected therewith (such as CRAs) shall abide by the rules/regulations/directions/guidelines applicable to o r governing such [page 40] Page 40 of 103 instruments/products/securities as prescribed by such financial sector regulator or authority whether such instruments/products/securities be listed or unlisted. Further, if such instruments/products/securities are listed on a Recognised Stock Exchange, the rules/ regulations/ directions/ guidelines specified by the Board from time to time shall continue to be applicable. [page 41] Page 41 of 103 Chapter III : REPORTING AND DISCLOSURES Probability of Default Benchmark 25.1. In order to enable investors to discern the performance of a CRA vis -à-vis a

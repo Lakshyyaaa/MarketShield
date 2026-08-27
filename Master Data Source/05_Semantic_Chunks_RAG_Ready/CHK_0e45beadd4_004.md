@@ -1,0 +1,15 @@
+---
+id: "CHK_0e45beadd4_004"
+title: "SEBI | Information to be filed by schemes of AIFs availing dissolution period/additional liquidation period and conditions for in-specie distribution of assets of AIFs"
+heading_lineage: "SEBI  Information to be filed by schemes of AIFs availing dissolution period/additional liquidation period and conditions for in-specie distribution of assets of AIFs"
+source_file: "SEBI  Information to be filed by schemes of AIFs availing dissolution periodaddi_c185112b1a54b648.md"
+effective_date: "July 09, 2024"
+status: "active"
+category: "alternative_investments"
+subcategories: ["aif_regulations"]
+jurisdiction: "SEBI"
+entity_types: ["aif_manager"]
+user_aliases: []
+---
+
+Date of intimation to SEBI about the afo resaid investor consent/approval and about opting for the Dissolution Period 20. Percentage of value of unliquidated investments of the scheme, for which bid has been arranged by the AIF/manager [page 5] Page 5 of 8 Annexure II Format for Due Diligence Certificate to be submitted along with Information Memorandum to SEBI for availing dissolution period To, SECURITIES AND EXCHANGE BOARD OF INDIA Dear Sir / Madam, Sub.: Filing of information memorandum for availing dissolution period for (name of scheme), scheme of (name of AIF) On the basis of examination of information memorandum for availing dissolution period, private placement memorandum (PPM) of the scheme, supporting documents submitted by AIF and discussions held with AIF, its manager, sponsor, trustee, etc., we hereby confirm that: 1. We have independently exercised due-diligence regarding compliance of the AIF/aforesaid scheme of AIF with Regulation 29 of SEBI (Alternative Investment Funds) Regulations, 2012 (‘AIF Regulations’ ) to exercise the option for entering into dissolution period, including the veracity and adequacy of disclosures made in the information memorandum. 2. The information provided by the AIF to verify compliance with Regulation 29 of AIF Regulations and disclosures made in the information memorandum are true , fair, based on latest available information and in accordance with the requirements of Securities and Exchange Board of India (Alternative Investment Funds) Regulations, 2012, circulars, guidelines issued thereunder and other applicable legal requirements. PLACE: DATE: Signature of authorised signatory of Merchant Banker Name/designation of the authorised signatory, Name of Merchant Banker Enclosed: Annexure A - Information with respect to compliance with Regulat ion 29 of AIF Regulations and disclosures in the information memorandum submitted for (name of scheme) availing dissolution period, to be submitted along with the due diligence certificate [page 6] Page 6 of 8 Annexure A Information with respect to compliance with Regulation 29 of AIF Regulations and disclosures in the information memorandum submitted for (name of scheme) availing dissolution period, to be submitted along with the due diligence certificate S.No. Particulars Yes/No Remarks 1. Whether the AIF / manager has disc losed the

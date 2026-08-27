@@ -1,0 +1,15 @@
+---
+id: "CHK_c9ae4fb4bd_001"
+title: "SEBI | Adjudication order in the matter of Rajasthan Tube Manufacturing Company Limited"
+heading_lineage: "SEBI  Adjudication order in the matter of Rajasthan Tube Manufacturing Company Limited"
+source_file: "SEBI  Adjudication order in the matter of Rajasthan Tube Manufacturing Company L_bcb4aee023640a03.md"
+effective_date: "March 03, 2023"
+status: "active"
+category: "enforcement_orders"
+subcategories: ["adjudication_orders", "penalties"]
+jurisdiction: "SEBI"
+entity_types: ["violator_entity"]
+user_aliases: []
+---
+
+# SEBI | Adjudication order in the matter of Rajasthan Tube Manufacturing Company Limited Source PDF: https://www.sebi.gov.in/sebi_data/attachdocs/sep-2025/1756983903259_1.pdf Landing page: https://www.sebi.gov.in/enforcement/orders/sep-2025/adjudication-order-in-the-matter-of-rajasthan-tube-manufacturing-company-limited_96418.html [page 1] Adjudication order in the matter of Rajasthan Tube Manufacturing Company Limited Page 1 of 69 BEFORE THE ADJUDICATING OFFICER SECURITIES AND EXCHANGE BOARD OF INDIA [ADJUDICATION ORDER NO. Order/AK/RK/2025-26/ 31647-31657] ___________________________________________________________________ UNDER SECTION 15-I OF THE SECURITIES AND EXCHANGE BOARD OF INDIA ACT, 1992 READ WITH RULE 5 OF SEBI (PROCEDURE FOR HOLDING INQUIRY AND IMPOSING PENALTIES) RULES, 1995 AND SECTION 23 -I OF THE SECURITIES CONTRACTS (REGULATION) ACT, 1956 READ WITH RULE 4(1) OF THE SECURITIES CONTRACTS (REGULATIONS) (PROCEDURE FOR HOLDING INQUIRY AND IMPOSING PENALTIES) RULES, 2005, IN RESPECT OF: S.No Name of the Noticees PAN 1. Rajasthan Tube Manufacturing Company Limited AABCR1642P 2. Mr. Harish Chand Jain ABFPJ7588Q 3. Ms. Rajshree Jain ATCPP4599C 4. Mr. Pradeep Jain ADIPJ0462E 5. Ms. Deepika Jain ACEPJ7192A 6. Mr. Saurabh Jain AFCPJ5870N 7. Rajendra Steel Company CSHPS3967F 8. Jain Impex ADCPJ3259R 9. Mr. Deepesh Jain AGQPJ9415L 10. Mr. Mahendra Kumar Jain ACAPJ1335M 11. Mr. Sunil Kumar Jain ABOPJ9538R In the matter of “Rajasthan Tube Manufacturing Company Limited” ____________________________________________________________________ BACKGROUND 1. Securities and Exchange Board of India (hereinafter referred to as ‘SEBI’) received a letter dated March 03, 2023 from the O/o Principal Commissioner, Central Goods and Services Tax and Central Excise Commissionerate, Jaipur ( CGSTCEC) in respect of Rajasthan Tube Manufacturing Company Limited (hereinafter referred to as the ‘Company’ or ‘RTMCL’ or ‘Noticee 1’). Vide the said letter, CGSTCEC informed its findings related to movement of goods -less invoices by Noticee 1 to avail and pass on input tax credit [page 2] Adjudication order in the matter of Rajasthan Tube Manufacturing Company Limited Page 2 of 69 fraudulently and also inflated turnover in fraudulent manner by rotating the goods -less invoices amongst its related firms in contravention of the provision of Central GST Act, 2017. 2. Based on the above, SEBI conducted an investigation to ascertain whether the books and accounts of the Noticee 1 were inflated using artificial sales through a circuitous web of

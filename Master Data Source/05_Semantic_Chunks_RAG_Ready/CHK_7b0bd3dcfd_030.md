@@ -1,0 +1,15 @@
+---
+id: "CHK_7b0bd3dcfd_030"
+title: "SEBI | Master Circular for Credit Rating Agencies"
+heading_lineage: "SEBI  Master Circular for Credit Rating Agencies"
+source_file: "SEBI  Master Circular for Credit Rating Agencies_9a2916edd75f524e.md"
+effective_date: "July 03, 2023"
+status: "active"
+category: "credit_rating_agencies"
+subcategories: ["cra_regulations"]
+jurisdiction: "SEBI"
+entity_types: ["credit_rating_agency"]
+user_aliases: []
+---
+
+securities of the companies which have been rated by the CRA or whose securities/instruments/facilities have been rated by the CRA. b. The Compliance Officer of the CRA shall apply to the Chief Executive of the CRA for such prior approval. c. The CEO/Compliance Officer shall ensure that there is no conflict of interest while considering t he request for prior [page 38] Page 38 of 103 approval. d. Such approvals, if granted, shall be valid for 7 working days from the date of approval. 21.4.3.4. Disclosures a. Any person, who becomes an employee of the CRA, shall submit a statement of holding of all securities in respect of persons mentioned at para 21.4.2. above to the Compliance officer or Chief Executive, as the case may be, within 7 working days of joining CRA. b. All employees of CRA including the Access Persons shall submit the following details to the CEO/Compliance Officer, as the case may be: i. Details of purchase or sale transactions effected within 7 working days from the date of transaction. ii. A consolidated statement of holding of all securities within 30 working days from the end of the Financial Year. c. The members of the Rating Committee shall upfront declare / disclose their interest, if any, to the Chief Executive Officer or Compliance Officer, as per the policy of the CRA, in the securities/instruments/facilities that are considered for rating by the CRA. 21.4.3.5. Restrictions on employees holding ownership of securities of the issuer: A CRA shall ensure that employees involved in the rating process shall not have ownership of the securities of the issuer. Unsolicited Credit Ratings 22.1. In case of unsolicited credit ratings, i.e. the credit ratings not arising out of the agreement between a CRA and the issuer, credit rating symbol shall be accompanied by the word “UNSOLICITED” in the same font size. 22.2. A CRA shall monitor and disclose credit rating during the life of the rated securities, as if it were a solicited rating. [page 39] Page 39 of 103 Sharing of information regarding issuer companies between Debenture Trustees and CRAs 23.1.

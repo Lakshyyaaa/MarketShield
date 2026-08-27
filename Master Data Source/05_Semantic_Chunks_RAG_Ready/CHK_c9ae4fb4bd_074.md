@@ -1,0 +1,15 @@
+---
+id: "CHK_c9ae4fb4bd_074"
+title: "SEBI | Adjudication order in the matter of Rajasthan Tube Manufacturing Company Limited"
+heading_lineage: "SEBI  Adjudication order in the matter of Rajasthan Tube Manufacturing Company Limited"
+source_file: "SEBI  Adjudication order in the matter of Rajasthan Tube Manufacturing Company L_bcb4aee023640a03.md"
+effective_date: "March 03, 2023"
+status: "active"
+category: "enforcement_orders"
+subcategories: ["adjudication_orders", "penalties"]
+jurisdiction: "SEBI"
+entity_types: ["violator_entity"]
+user_aliases: []
+---
+
+functions relevant, in the instant ca se, as specified in Part C of Schedule II of LODR Regulations are as under: A(1): Oversight of the listed entity’s financial reporting process and disclosure of its financial information to ensure that the financial statement is correct, sufficient and credible. A(4)(e): Reviewing with the management, the annual financial statements and auditor’s report thereon, before submission to the board for approval, with particular reference to compliance with listing and other legal requirements relating to the financial statements. A(5): Reviewing with the management, the quarterly financial st atements before submission to the board for approval. A(11): Evaluation of internal financial controls and risk management systems. A(12): Reviewing, with the management, performance of statutory and internal auditors, adequacy of the internal control systems; 20.8 It is pertinent to note here that the Audit Committee members are expected to be independent of the management and act as gatekeepers/ trustees of shareholders. Commonly dissent and confrontation are perceived to be signs of independence. Audit Committee members have to look beyond what is presented by the management, raise questions without any fear or favour on the proposals placed before them, consider the impact of proposals from the perspective of minority investors and provide [page 64] Adjudication order in the matter of Rajasthan Tube Manufacturing Company Limited Page 64 of 69 objective inputs and advice, wherever required, which in the instant case, Noticees 3 and 9-11 failed to do or question the figures reported in the financial statements of the Noticee 1 or review the integrity of internal controls of Noticee 1 despite having attended the meetings as mentioned above. Thus, their submission is bereft of merits. 20.9 In view of the foregoing, it stands established that Noticees 3, 9-11 have violated Regulation 18(3) r/w Para A (1), A(4)(e), A(5), A(11), and A(12) of Part C of Schedule II, Regulations 4(2)(f)(i)(2),4(2)(f)(ii)(1),(2),(6),(7),(8),4(2)(f)(iii)(1),(3),(6), (7), (12) of LODR Regulations, and Section 21 of SCRA. 21 To sum it all up, I note that a scheme was orchestrated by Noticee 1 and its management

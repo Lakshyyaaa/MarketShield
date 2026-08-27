@@ -1,0 +1,15 @@
+---
+id: "CHK_2a89b3febc_003"
+title: "SEBI | Framework for Category I and II Alternative Investment Funds (AIFs) to create encumbrance on their holding of equity of investee companies"
+heading_lineage: "SEBI  Framework for Category I and II Alternative Investment Funds AIFs to create encumbrance on their holding of equity of investee companies"
+source_file: "SEBI  Framework for Category I and II Alternative Investment Funds AIFs to creat_66d9f4a56a535f7b.md"
+effective_date: "April 26, 2024"
+status: "active"
+category: "alternative_investments"
+subcategories: ["aif_regulations"]
+jurisdiction: "SEBI"
+entity_types: ["aif_manager"]
+user_aliases: []
+---
+
+In case of default by the borrower investee company, Category I or Category II AIF shall ensure that the fund or its investors are not subject to any liability over and above the equity of the borrower investee company encumbered by the AIF. 3.8. The aforesaid flexibility of creating encumbrance on equity investment shall not be interpreted as allowing schemes of Category I and II AIFs to extend any form of guarantee for investee company. [page 3] Page 3 of 3 3.9. Schemes of Category I or Category II AIFs shall not create encumbrance on their investments in foreign investee companies. 4. The pilot Standar d Setting Forum for AIFs (SFA) in consultation with SEBI shall formulate implementation standards to ensure that the encumbrance created on equity of investee compan y by Category I or Category II AIFs, is only utilized for facilitation of debt raising at the infrastructure sector investee company as stated in para 2 above . Managers of such AIFs shall adopt and adhere to such implementation standards. Such standards shall be published on websites of the industry associations which are part of the SFA, i.e., Indian Venture and Alternate Capital Association (IVCA), PE VC CFO Association and Trustee Association of India. 5. The trustee/sponsor of AIF, as the case may be, shall ensure that the ‘Compliance Test Report’ prepared by the manager in terms of para 15.2 of Master Circular No. SEBI/HO/AFD/PoD1/P/CIR/2023/130 for AIFs dated July 31 , 2023, includes compliance with the provisions of this circular. 6. The circular shall come into force with immediate effect. 7. This circular is issued with the approval of the competent authority. 8. This circular is issued in exercise of powers conferred under Section 11(1) of the Securities and Exchange Board of India Act, 1992 to protect the interest s of investors in securities and to promote the development of, and to regulate the securities market. 9. The circular is available on SEBI website at www.sebi.gov.in under the categories “Legal framework - Circulars" and "Info for - Alternative Investment Funds”. Yours faithfully, Sanjay Singh Bhati Deputy General Manager

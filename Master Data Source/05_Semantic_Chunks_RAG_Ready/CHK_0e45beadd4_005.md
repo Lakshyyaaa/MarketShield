@@ -1,0 +1,15 @@
+---
+id: "CHK_0e45beadd4_005"
+title: "SEBI | Information to be filed by schemes of AIFs availing dissolution period/additional liquidation period and conditions for in-specie distribution of assets of AIFs"
+heading_lineage: "SEBI  Information to be filed by schemes of AIFs availing dissolution period/additional liquidation period and conditions for in-specie distribution of assets of AIFs"
+source_file: "SEBI  Information to be filed by schemes of AIFs availing dissolution periodaddi_c185112b1a54b648.md"
+effective_date: "July 09, 2024"
+status: "active"
+category: "alternative_investments"
+subcategories: ["aif_regulations"]
+jurisdiction: "SEBI"
+entity_types: ["aif_manager"]
+user_aliases: []
+---
+
+following details to investors prior to seeking their consent for opting of dissolution period by the scheme of AIF – i. Proposed tenure of the Dissolution Period, ii. Details of unliquidated investments, iii. An indicative range of bid value arranged for a minimum of 25% of the value of its unliquidated investments, (representing consolidated value of all unliquidated investments of the scheme’s investment portfolio) iv. Valuation of the unliquidated investments carried out by two independent valuers. 2. Whether investors of the scheme have bee n informed regarding the following before seeking consent for dissolution period – i. After obtaining approval of at least seventy- five percent of the investors by value of their investment in the scheme for entering into dissolution period, in case the manage r fails to arrange bid for a minimum of 25% of the value of its unliquidated investments , the scheme can still opt for dissolution period ii. No further extension or Liquidation Period shall be available to the scheme after the expiry of Dissolution Period iii. If the scheme of the AIF fails to sell the unliquidated investments during the Dissolution Period, such investments shall be mandatorily distributed in -specie to the investors iv. The manager of the AIF shall not charge management fee during the Dissolution Period v. The scheme of the AIF shall not accept any fresh commitment from any investor and shall not make any new investment during the Dissolution Period. [page 7] Page 7 of 8 S.No. Particulars Yes/No Remarks 3. Whether approval of at least seventy five percent of the investors by value of their investment in the scheme of the AIF has been obtained for entering into dissolution period? 4. Whether the AIF/manager intimated SEBI about obtaining investor consent and investors’ decision to enter dissolution period prior to expiry of liquidation period of the scheme? 5. Whether the tenure of the dissolution period of the scheme more than original tenure of the scheme? 6. Whether the AIF/manager arranged bid for a minimum of 25% of value of unliquidated investments of the scheme? 7.

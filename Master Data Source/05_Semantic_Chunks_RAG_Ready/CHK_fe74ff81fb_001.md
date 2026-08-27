@@ -1,0 +1,15 @@
+---
+id: "CHK_fe74ff81fb_001"
+title: "SEBI | Registered Credit Rating Agencies"
+heading_lineage: "SEBI  Registered Credit Rating Agencies"
+source_file: "SEBI  Registered Credit Rating Agencies_4e1599fab0bcaf77.md"
+effective_date: "2024-04-01"
+status: "active"
+category: "investor_grievance"
+subcategories: ["scores_2.0", "smart_odr", "complaint_redressal"]
+jurisdiction: "SEBI"
+entity_types: ["stock_broker", "depository_participant", "rta", "listed_company"]
+user_aliases: ["scores 2.0 complaint", "21 days atr timeline", "smart odr"]
+---
+
+# SEBI | Registered Credit Rating Agencies Source: https://www.sebi.gov.in/otherentry/aug-2002/registered-credit-rating-agencies_20330.html SEBI | Registered Credit Rating Agencies Home » Others Registered Credit Rating Agencies Aug 01, 2002 CRISIL Limited CRISIL House Central Avenue Hiranandani Business Park Powai Mumbai 400 076 Tel: + 91 (22) 56913001 – 09 Fax: + 91 (22) 56913010 Website: www.crisil.com Email: info@crisil.com 2. Fitch Ratings India Private Ltd. Apeejay House, 6th Floor 3 Dinshaw Vachha Road Churchgate Mumbai 400 020 Tel: + 91 (022) 56370920-23 Fax: + 91 (022) 56370924 Website: www.fitchratings.com 3. ICRA Limited 1105, Kailash Building, 11 th Floor 26, Kasturba Gandhi Marg New Delhi 110 001 Tel: + 91 (11) 23357940 – 50 Fax: + 91 (11) 23357014 Website: www.icra.in Email: info@icraindia.com 4. Credit Analysis & Research Ltd. (CARE) 4th Floor, Godrej Coliseum Somaiya Hospital Road Behind Everard Nagar Off Eastern Express Highway, Sion (E) Mumbai 400 022 Tel: + 91 (22) 566 02871-73 Fax: + 91 (22) 566 02876 Website: www.careratings.com Email: care@careratings.com 5. Brickwork Ratings India Private Limited 3 rd Floor, Raj Alkaa Park 29/3 & 32/2, Kalena Agrahara Bannerghatta Road, Bangalore – 560 076 Tel: +91 (80) 4040 9940 Fax: +91 (80) 4040 9941 Website: www.brickworkratings.com Email: i nfo@brickworkratings.com 6. SME Rating Agency of India Ltd. (SMERA) Unit No. 102, 1 st Floor Sumer Plaza Marol Maroshi Road Marol Andheri (East) Mumbai 400 059 Tel: + 91 (22) 67141144-45 Fax: + 91 (22) 67141142 Website: www.smera.in Email: info@smera.in

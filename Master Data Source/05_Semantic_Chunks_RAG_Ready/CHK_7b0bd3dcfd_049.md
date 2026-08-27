@@ -1,0 +1,15 @@
+---
+id: "CHK_7b0bd3dcfd_049"
+title: "SEBI | Master Circular for Credit Rating Agencies"
+heading_lineage: "SEBI  Master Circular for Credit Rating Agencies"
+source_file: "SEBI  Master Circular for Credit Rating Agencies_9a2916edd75f524e.md"
+effective_date: "July 03, 2023"
+status: "active"
+category: "credit_rating_agencies"
+subcategories: ["cra_regulations"]
+jurisdiction: "SEBI"
+entity_types: ["credit_rating_agency"]
+user_aliases: []
+---
+
+The Market Data Advisory Committee (MDAC), a standing committee constituted by SEBI, comprising of representatives from stock exchanges, depositories and other market participants, examined the existing industry classification structures, across sectors, and developed a harmonised four level industry classification framework for adoption by all stakeholders and for all relevant processes/ purposes in Indian securities market. 37.2. As the standardized framework will help bring about uniformity in the classifications being used across sectors and in securities market, CRAs are advised to use this standardized industry classification published by recognized Stock Exchanges for the purpose of rating exercise, peer benchmarking, research activities including research for Economy, Industries and Companies etc. 37.3. Further, as the standardized industry classification will be reviewed and published by Stock Exchanges on periodical basis, in view of s ame, CRAs are directed to follow the standardized industry classification published by Stock Exchanges from time to time. 37.4. Monitoring: Monitoring of implementation of standardized industry classification shall be done in terms of the half -yearly internal audit for CRAs, mandated under Regulation 22 of the SEBI (Credit Rating Agencies) Regulations, 1999 and circulars issued thereunder. [page 63] Page 63 of 103 Firewall between CRAs and their Affiliates: 38.1. SEBI (Credit Rating Agencies) Regulations, 1999 inter- alia required CRAs to segregate certain activities to a separate entity under Regulation 9(f) of SEBI (Credit Rating Agencies) Regulations, 1999 (hereinafter referred to as “non-rating associate or subsidiary or group entity” or collectively as “non-rating entities”). 38.2. In view of the above, the following measures are mandated to strengthen the firewall between SEBI-registered CRAs and their non-rating entities: 38.2.1. CRAs shall formulate a policy on separation or firewall practices wit h the non-rating entities and document the same in their internal operational manuals or governing document. Such policy, and revisions thereto, shall be ratified by the Board of Directors of the CRAs and the policy may cover inter alia the following: 38.2.1.1. Nature and extent of sharing of infrastructure, officials/employees or resources, if any, between the CRA and the non -rating entity, including specification on whether such arrangement is temporary. 38.2.1.2.

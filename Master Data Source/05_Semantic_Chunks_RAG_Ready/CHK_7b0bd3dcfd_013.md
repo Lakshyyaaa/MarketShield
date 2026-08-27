@@ -1,0 +1,15 @@
+---
+id: "CHK_7b0bd3dcfd_013"
+title: "SEBI | Master Circular for Credit Rating Agencies"
+heading_lineage: "SEBI  Master Circular for Credit Rating Agencies"
+source_file: "SEBI  Master Circular for Credit Rating Agencies_9a2916edd75f524e.md"
+effective_date: "July 03, 2023"
+status: "active"
+category: "credit_rating_agencies"
+subcategories: ["cra_regulations"]
+jurisdiction: "SEBI"
+entity_types: ["credit_rating_agency"]
+user_aliases: []
+---
+
+CRAs have to be proactive in early detection of defaults/ delays in making payments. In this regard, CRAs are required to track the servicing of debt [page 17] Page 17 of 103 obligations for each securit y rated by them, ISIN -wise, and look for potential deterioration in financials which might lead to defaults/ delays, particularly before/ around the due date(s) for servicing of debt obligations, on the basis of monitoring of indicators including, but not restricted to, the following: 9.1.1.1. Earnings Before Interest, Taxes, Depreciation, and Amortization (EBITDA) not being sufficient to meet even the interest payments for last 3 years 9.1.1.2. Deterioration in liquidity conditions of the Issuer 9.1.1.3. Abnormal increase in borrowing cost of the Issuer 9.1.1.4. Any other information indicating deterioration in credit quality/ debt servicing capability of the Issuer. 9.1.2. While carrying out “Monitoring of Repayment Schedules”, CRAs shall analyse the deterioration in the liquidity conditions of the issuer and also take into account any asset-liability mismatch. 9.1.3. The CRA shall also monitor the Exchange website for disclosures made by the Issuer in this regard. 9.2. Material Events requiring a review 9.2.1. CRAs shall carry out a review of the ratings upon the occurrence of or announcement/ news of material events including, but not restricted to, the following: 9.2.1.1. Quarterly/ Half-yearly/ Annual results 9.2.1.2. Merger/ Demerger/ Amalgamation/ Acquisition 9.2.1.3. Corporate debt restructuring, reference to NCLT and winding-up petition filed by any party /creditors. 9.2.1.4. Significant decline in share prices/bond prices of the issuer or group companies which is not linked to overall market movement 9.2.1.5. Significant increase in debt level or cost of debt of the issuer company 9.2.1.6. Losses, sharp revenue de -growth etc. based on publicly disclosed financial statements, which are not in line with CRA’s earlier estimates 9.2.1.7. Granting, withdrawal, surrender, cancellation or suspension of key licenses or regulatory approvals. 9.2.1.8. Disruption/ commencement/ postponement of operations of any unit or [page 18] Page 18 of 103 division of the listed entity. 9.2.1.9. Any attachment or prohibitory orders against the Issuer 9.2.1.10. Any rating action taken by an International Rating Agency with respect

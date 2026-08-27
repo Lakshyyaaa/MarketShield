@@ -1,0 +1,15 @@
+---
+id: "CHK_2a89b3febc_001"
+title: "SEBI | Framework for Category I and II Alternative Investment Funds (AIFs) to create encumbrance on their holding of equity of investee companies"
+heading_lineage: "SEBI  Framework for Category I and II Alternative Investment Funds AIFs to create encumbrance on their holding of equity of investee companies"
+source_file: "SEBI  Framework for Category I and II Alternative Investment Funds AIFs to creat_66d9f4a56a535f7b.md"
+effective_date: "April 26, 2024"
+status: "active"
+category: "alternative_investments"
+subcategories: ["aif_regulations"]
+jurisdiction: "SEBI"
+entity_types: ["aif_manager"]
+user_aliases: []
+---
+
+# SEBI | Framework for Category I and II Alternative Investment Funds (AIFs) to create encumbrance on their holding of equity of investee companies Source PDF: https://www.sebi.gov.in/sebi_data/attachdocs/apr-2024/1714143915476.pdf Landing page: https://www.sebi.gov.in/legal/circulars/apr-2024/framework-for-category-i-and-ii-alternative-investment-funds-aifs-to-create-encumbrance-on-their-holding-of-equity-of-investee-companies_83067.html [page 1] Page 1 of 3 CIRCULAR SEBI/HO/AFD/PoD1/CIR/2024/027 April 26, 2024 To, All Alternative Investment Funds Sir / Madam, Sub: Framework for Category I and II Alternative Investment Funds (AIFs) to create encumbrance on their holding of equity of investee companies 1. To provide ease of doing business and flexibility to Category I and II AIFs to create encumbrance on their holding of equity in investee companies to facilitate raising of debt by such investee companies , SEBI (Alternative Investment Funds) Regulations, 2012 (“AIF Regulations”) have been amended and notified on April 25, 2024. Copy of the notification is available at link. 2. Accordingly, i n terms of provisos to Regulation 1 6(1)(c) and 17(c) of AIF Regulations, Category I and Category II AIFs may create encumbrance on equity of investee company, which is in the business of development, operation or management of projects in any of the infrastructure sub -sectors listed in the Harmonised Master List of Infrastructure issued by the Central Government, only for the purpose of borrowing by such investee company and subject to such conditions as may be specified by the Board from time to time. 3. In this regard, the following conditions are specified: 3.1. Existing schemes of Category I or Category II AIFs who have not on-boarded any investors prior to April 25, 2024, may create encumbrance on equity of investee company for the purpose of borrowing of the said investee company as specified in para 2 above , subject to explicit disclosure with respect to creation of such encumbrance in this regard and disclosure of associated risks in their Private Placement Memorandums (PPMs). 3.2. Any encumbrances already created by a scheme of Category I or Category II AIF prior to April 25, 2024, on the securities of investee compan y for the purpose of borrowing of such investee compan y, may continue if such

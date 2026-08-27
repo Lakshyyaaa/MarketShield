@@ -1,0 +1,15 @@
+---
+id: "CHK_e75b7fca8e_001"
+title: "SEBI | SEBI (Credit Rating Agencies) (Second Amendment) Regulations, 2011"
+heading_lineage: "SEBI  SEBI Credit Rating Agencies Second Amendment Regulations 2011"
+source_file: "SEBI  SEBI Credit Rating Agencies Second Amendment Regulations 2011_5cf6024aa02a4f35.md"
+effective_date: "DECEMBER 27, 2011"
+status: "active"
+category: "credit_rating_agencies"
+subcategories: ["cra_regulations"]
+jurisdiction: "SEBI"
+entity_types: ["credit_rating_agency"]
+user_aliases: []
+---
+
+# SEBI | SEBI (Credit Rating Agencies) (Second Amendment) Regulations, 2011 Source PDF: https://www.sebi.gov.in/sebi_data/attachdocs/1330409621249.pdf Landing page: https://www.sebi.gov.in/legal/regulations/dec-2011/sebi-credit-rating-agencies-second-amendment-regulations-2011_22225.html [page 1] 1 THE GAZETTE OF INDIA EXTRAORDINARY PART –III – SECTION 4 PUBLISHED BY AUTHORITY NEW DELHI, DECEMBER 27, 2011 SECURITIES AND EXCHANGE BOARD OF INDIA NOTIFICATION Mumbai, the 27th December, 2011 SECURITIES AND EXCHANGE BOARD OF INDIA (CREDIT RATING AGENCIES) (SECOND AMENDMENT) REGULATIONS, 2011 No. LAD-NRO/GN/2011-12/31/39022 - In exercise of the powe rs conferred by section 30 of the Securities and Exchange Board of India Act, 1992 (15 of 1992), the Board hereby makes the following Regulations to amend the Securities and Exchange Board of India (Credit Rating Agencies) Regulations, 1999, namely:- 1. These Regulations may be called the Securi ties and Exchange Boar d of India (Credit Rating Agencies) (Second Amendment) Regulations, 2011. 2. They shall come into force on the date of their publication in the Official Gazette. 3. In regulation 14 of the Securities and Ex change Board of India (Credit Rating Agencies) Regulations, 1999, the clause (g) shall be substituted with the following, namely: - “(g) the client shall agree to obtain a rating for any is sue of debt securities in accordance with the relevant regulations.” U. K. SINHA CHAIRMAN SECURITIES AND EXCHANGE BOARD OF INDIA [page 2] 2 Footnotes: 1. The principal regulations, SEBI (Credit Rati ng Agencies) Regulations, 1999 were issued under S.O. No. 547 (E) dated July 7, 1999 published in the Gazette of India. 2. SEBI (Credit Rating Agencies) Regulations, 1999 were subsequently amended on- (a) March 28, 2000 by the SEBI (Appeal to Se curities Appellate Tr ibunal) (Amendment) Regulations, 2000 published in Official Gazette vide S.O. No. 278(E). (b) May 29, 2001, by the SEBI (Investment Advice by Intermediaries) (Amendment) (Regulations), 2001 vide S.O. No. 476 (E). (c) September 27, 2002 by the SEBI (Procedure for Holding Enquiry by Enquiry Officer and Imposing Penalty) Regulations, 2002 vide No. S.O. No.1045 (E). (d) February 19, 2003 by SEBI (Credit Rati ng Agencies) (Amendment) Regulations, 2003 vide S.O. No. 203 (E).

@@ -1,0 +1,15 @@
+---
+id: "CHK_0e45beadd4_002"
+title: "SEBI | Information to be filed by schemes of AIFs availing dissolution period/additional liquidation period and conditions for in-specie distribution of assets of AIFs"
+heading_lineage: "SEBI  Information to be filed by schemes of AIFs availing dissolution period/additional liquidation period and conditions for in-specie distribution of assets of AIFs"
+source_file: "SEBI  Information to be filed by schemes of AIFs availing dissolution periodaddi_c185112b1a54b648.md"
+effective_date: "July 09, 2024"
+status: "active"
+category: "alternative_investments"
+subcategories: ["aif_regulations"]
+jurisdiction: "SEBI"
+entity_types: ["aif_manager"]
+user_aliases: []
+---
+
+notification of the Securities and Exchange Board of India (Alternative Investment Funds) (Second Amendment) Regulations, 2024 (i.e., on or before July 24, 2024), such schemes may be granted an additional liquidation period, subject to conditions and in the manner as may be specified by SEBI. The conditions in this regard have been specified in Para 4 o f SEBI circular no. SEBI/HO/AFD/PoD1/CIR/2024/026 dated April 26, 2024. 6. In this regard, schemes of AIFs which are intending to avail the additional/fresh liquidation period in terms of aforesaid provisions, shall submit information to SEBI regarding the s ame as per the format given at Annexure III, for grant of the additional liquidation period. C. In specie distribution of investments of AIFs – 7. In terms of Regulation 29(9 ) of AIF Regulations, para 23.2 of SEBI Master circular no. SEBI/HO/AFD-1/AFD-1-PoD/P/CIR/2024/39 dated May 07, 2024 for AIFs and para 3 of SEBI circular no. SEBI/HO/AFD/PoD1/CIR/2024/026 dated April 26, 2024 specify conditions and modalities for carrying out in specie distribution of unliquidated investments of a scheme of an AIF during liquidation period and for carrying out mandatory in specie distribution of unliquidated investments , respectively. 8. Further, with respect to carrying out in specie distribution of investments of a scheme of an AIF in terms of Regulation 29(8) of AIF Regulations , it is clarified that such in specie distribution (other than the aforesaid mandatory in specie distribution), shall be carried out after obtaining approval of at least seventy -five percent of the investors by value of their investment in the scheme of the AIF. 9. The manager, trustee and key management personnel of AIF and manager shall be responsible for compliance with the provisions prescribed above. 10. The trustee/ sponsor, as the case may be, shall ensure that the ‘Compliance Test Report’ prepared by the manager in terms of Chapter 15 of SEBI Master Circular no. SEB I/HO/AFD-1/AFD-1-PoD/P/CIR/2024/39 dated May 07, 2024 for AIFs, includes compliance with the provisions of this circular. 11. This circular shall come into force with immediate effect. 12.

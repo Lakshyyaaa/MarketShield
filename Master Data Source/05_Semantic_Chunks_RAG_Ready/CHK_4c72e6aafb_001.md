@@ -1,0 +1,15 @@
+---
+id: "CHK_4c72e6aafb_001"
+title: "SEBI | Temporary relaxation in processing of documents pertaining to FPIs due to COVID-19"
+heading_lineage: "SEBI  Temporary relaxation in processing of documents pertaining to FPIs due to COVID-19"
+source_file: "SEBI  Temporary relaxation in processing of documents pertaining to FPIs due to _62a9dde5f7fab281.md"
+effective_date: "August 31, 2020"
+status: "active"
+category: "foreign_portfolio_investors"
+subcategories: ["fpi_regulations"]
+jurisdiction: "SEBI"
+entity_types: ["fpi", "custodian"]
+user_aliases: []
+---
+
+# SEBI | Temporary relaxation in processing of documents pertaining to FPIs due to COVID-19 Source PDF: https://www.sebi.gov.in/sebi_data/attachdocs/aug-2020/1598872791117.pdf Landing page: https://www.sebi.gov.in/legal/circulars/aug-2020/temporary-relaxation-in-processing-of-documents-pertaining-to-fpis-due-to-covid-19_47446.html [page 1] CIRCULAR SEBI/HO/FPI&C/CIR/P/2020/162 August 31, 2020 To, 1. All Foreign Portfolio Investors ("FPIs") through their Designated Depository Participants ("DDPs")/ Custodian of Securities. 2. Designated Depository Participants ("DDPs")/ Custodians. 3. All Recognized Stock Exchanges/ Clearing Corporations 4. All recognized Stock Exchanges and Clearing Corporations in International Financial Services Centres 5. The Depositories (NSDL and CDSL) 6. Stock Brokers through Recognized Stock Exchanges 7. Depository Participants through Depositories 8. KYC Registrations Agencies (KRAs) Dear Sir / Madam, Subject: Temporary relaxation in processing of documents pertaining to FPIs due to COVID-19 1. SEBI vide Circular No. SEBI/HO/FPI& C/CIR/P/2020/056 dated March 30, 2020 had prescribed temporary relaxation in processing of documents pertaining to FPIs due to COVID-19. Further, vide Circular No. SEBI/HO/FPI&C/CIR/P/2020/104 dated June 23, 2020, the temporary relaxations were extended till August 31, 2020. 2. It is understood that while lockdown has been lifted in many jurisdictions, certain jurisdictions continue to be under lockdown in view of the prevailing situation due to COVID-19 pandemic. 3. In view of the representations received from various stakeholders, it has been decided that for the entities from jurisdictions which are still under lockdown, the temporary relaxations shall be extended to the entities from such jurisdictions till the time lockdown is lifted from such jurisdictions. However, in-transit applications shall be processed on the basis of provisions of aforesaid circular dated March 30, 2020. 4. It may be noted that for the entities from jurisdictions where lockdown has already been lifted, the relaxation provided under the aforesaid circular dated March 30, 2020 shall not be applicable. 5. All other terms and conditions specified in the aforesaid circular dated March 30, 2020 shall remain unchanged. 6. This circular is issued in exercise of powers conferred under Section 11(1) of the Securities and Exchange Board of India Act, 1992 and Sub-rule 14(i) of Rule 9 of the Prevention of Money-laundering (Maintenance of Records) Rules, 2005 to protect the

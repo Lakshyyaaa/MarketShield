@@ -1,0 +1,15 @@
+---
+id: "CHK_7b0bd3dcfd_001"
+title: "SEBI | Master Circular for Credit Rating Agencies"
+heading_lineage: "SEBI  Master Circular for Credit Rating Agencies"
+source_file: "SEBI  Master Circular for Credit Rating Agencies_9a2916edd75f524e.md"
+effective_date: "July 03, 2023"
+status: "active"
+category: "credit_rating_agencies"
+subcategories: ["cra_regulations"]
+jurisdiction: "SEBI"
+entity_types: ["credit_rating_agency"]
+user_aliases: []
+---
+
+# SEBI | Master Circular for Credit Rating Agencies Source PDF: https://www.sebi.gov.in/sebi_data/attachdocs/jul-2023/1688447359788.pdf Landing page: https://www.sebi.gov.in/legal/master-circulars/jul-2023/master-circular-for-credit-rating-agencies_73416.html [page 1] MASTER CIRCULAR SEBI/HO/DDHS/DDHS-POD2/P/CIR/2023/ 111 July 03, 2023 To, All Registered Credit Rating Agencies, All Registered Debenture Trustees, Issuers who have listed and/or propose to list Non-Convertible Securities, Securitized Debt Instruments, Security Receipts, Municipal Debt Securities or Commercial Paper Recognized Stock Exchanges, All Depositories registered with SEBI Dear Sir / Madam, Subject: Master Circular for Credit Rating Agencies I. Securities and Exchange Board of India (Credit Rating Agencies) Regulations, 1999 (“CRA Regulations”) prescribes guidelines for registration of Credit Rating Agencies (CRAs), general obligations of CRAs, manner of inspection and investigation and code of c onduct applicable on CRAs. Multiple circulars have been issued, over the years, covering the operational and procedural aspects thereof. II. In order to enable the industry and other users to have access to all the applicable circulars/ directions at one place, Master Circular for CRAs has been prepared. III. This Master Circular is a compilation of the existing circulars as on July 03, 2023, with consequent changes. The stipulations contained in these circulars have been detailed chapter -wise in this master circular. Accordingly, the list of existing circulars for CRAs which have been superseded by this master Circular is placed [page 2] at Annexure A. IV. Notwithstanding such rescission,- a. anything done or any action taken or purported to have been done or taken under the rescinded circulars, prior to such rescission, shall be deemed to have been done or taken under the corresponding provisions of this Master Circular; b. any application made to the Board under the rescinded circulars, prior to such rescission, and pending before it shall be deemed to have been made under the corresponding provisions of these regulations; V. This circular is issued in exercise of the powers conferred by Section 11 (1) of Securities and Exchange Board of India Act, 1992 read with the provisions of Regulation 20 of Securities and Exchange Board of India (Credit Rating Agencies) Regulations, 1999, to protect the interest of investors in securities and to promote

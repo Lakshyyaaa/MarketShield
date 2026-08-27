@@ -1,0 +1,15 @@
+---
+id: "CHK_8fbe0d4cf0_001"
+title: "SEBI | Circular on Review of provisions regarding valuation of debt and money market instruments due to the COVID - 19 pandemic"
+heading_lineage: "SEBI  Circular on Review of provisions regarding valuation of debt and money market instruments due to the COVID - 19 pandemic"
+source_file: "SEBI  Circular on Review of provisions regarding valuation of debt and money mar_60393a88cd0d96b2.md"
+effective_date: "October 01, 2020"
+status: "active"
+category: "debenture_trustees"
+subcategories: ["debt_securities", "debenture_trustee"]
+jurisdiction: "SEBI"
+entity_types: ["debenture_trustee", "issuer"]
+user_aliases: []
+---
+
+# SEBI | Circular on Review of provisions regarding valuation of debt and money market instruments due to the COVID - 19 pandemic Source PDF: https://www.sebi.gov.in/sebi_data/attachdocs/oct-2020/1601558395329.pdf Landing page: https://www.sebi.gov.in/legal/circulars/oct-2020/circular-on-review-of-provisions-regarding-valuation-of-debt-and-money-market-instruments-due-to-the-covid-19-pandemic_47779.html [page 1] Page 1 of 2 CIRCULAR SEBI/HO/IMD/DF4/CIR/P/2020/192 October 01, 2020 All Mutual Funds (MFs)/Asset Management Companies (AMCs)/ Trustee Companies/ Boards of Trustees of Mutual Funds/ Association of Mutual Funds in India (AMFI)/ Debenture Trustees (DTs) Sir / Madam, Subject: Review of provisions regarding valuation of debt and money market instruments due to the COVID - 19 pandemic. 1. In terms of the SEBI Circular No. SEBI/HO/IMD/DF4/CIR/P/2019/102 dated September 24, 2019 , valuation agencies engaged by AMFI recognize default of a security under clause 5.1.1.2 and 9.1.2. The said provisions were relaxed vide SEBI Circular No. SEBI/HO/IMD/DF3/CIR/2020/70 dated April 23, 2020 till the period of moratorium permitted by Reserve Bank of India (RBI). 2. SEBI, vide Circular No. SEBI/HO/MIRSD/CRADT/CIR/P/2020/160 dated August 31, 2020 has provided relaxation to Credit Rating Agencies in recognition of default for restructuring by the lender/ investors solely due to COVID-19 related stress. 3. In line with the same, discretion needs to be provided to valuation agencies engaged by AMCs/AMFI for recognition of default in case proposal of restructuring of debt is solely due to COVID -19 related stress. For the said purpose, any proposal of restructuring received by Debenture Trustees shall be communicated to investors immediately. Further, any proposal received by Mutual Funds from lenders/issuer/Debenture Trustees shall be reported immediately to the valuation agencies (along with the other material information required for the purpose of valuation), Credit Rating Agencies and AMFI. AMFI, on receipt of such information , shall immediately disseminate it to its members. [page 2] Page 2 of 2 4. Further, if the valuation agency , based on its assessment of the proposal , is of the view that the proposed restructuring is solely due to fallout of COVID -19 pandemic then the valuation agency may not consider the restructuring / non receipt of the dues as a default for the purpose of valuation of money market or debt securities held by Mutual Funds.

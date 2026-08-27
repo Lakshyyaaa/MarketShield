@@ -1,0 +1,15 @@
+---
+id: "CHK_cacca34a17_001"
+title: "SEBI | Periodical Report- Grant of prior approval to Debenture Trustees"
+heading_lineage: "SEBI  Periodical Report- Grant of prior approval to Debenture Trustees"
+source_file: "SEBI  Periodical Report- Grant of prior approval to Debenture Trustees_cc9f3486280bebcb.md"
+effective_date: "June 20, 2011"
+status: "active"
+category: "debenture_trustees"
+subcategories: ["debt_securities", "debenture_trustee"]
+jurisdiction: "SEBI"
+entity_types: ["debenture_trustee", "issuer"]
+user_aliases: []
+---
+
+# SEBI | Periodical Report- Grant of prior approval to Debenture Trustees Source PDF: https://www.sebi.gov.in/sebi_data/attachdocs/1310550706665.pdf Landing page: https://www.sebi.gov.in/legal/circulars/jun-2011/periodical-report-grant-of-prior-approval-to-debenture-trustees_20003.html [page 1] Page 1 of 2 ¼ããÀ¦ããè¾ã ¹ãÆãä¦ã¼ãîãä¦ã ‚ããõÀ ãäÌããä¶ã½ã¾ã ºããñ¡Ã Securities and Exchange Board of India CIRCULAR CIR/MIRSD/10/2011 June 20, 2011 To All Debenture Trustees registered with SEBI Dear Sir/ Madam, Sub: Periodical Report- Grant of prior approval to Debenture Trustees 1. SEBI (Debenture Trustees) Regulati ons, 1993 {hereinafter referred to as "the said Regulations"}, have been amended vide Notification No. LAD- NRO/GN/2011-12/03/12650 dated April 19, 2011 {hereinafter referred to as "the said amendment"}, a copy of which is available on SEBI website www.sebi.gov.in . 2. With the said amendment, the require ment of taking prior approval by the Debenture Trustees from SEBI for change in status or constitution has been dispensed with. However, the Debenture Trustees are required to take prior approval from SEBI for change in control. 3. Pursuant to the afores aid notification, commencing from the quarter ended June 30, 2011, all Debenture Trustees shall report the following change(s) to SEBI in the quarterly reports s ubmitted in accordance with SEBI Circular No. MIRSD/DPS-2/DT/Cir-14/2008 dated May 06, 2008. a. Amalgamation, demerger, conso lidation or any other kind of corporate restructuring falling within the scope of section 391 of the Companies Act, 1956 (1 of 1956) or the corresponding provision of any other law for the time being in force b. Change in Director, including managing director/ whole-time director c. Change in shareholding not re sulting in change in control [page 2] Page 2 of 2 4. If there is no change during the relevant quarter, it shall be indicated in the report. 5. This circular is issued in exercise of powers conferred under Section 11(1) of the Securities and Ex change Board of India Ac t, 1992, to protect the interests of investors in securities and to promote the development of, and to regulate the securities market. 6. This circular is av ailable on SEBI website ( www.sebi.gov.in) under the categories “Legal Framework” and “Circulars”. Yours faithfully, Ruchi Chojer Deputy General Manager Phone No. 022-26449310 Email id: ruchic@sebi.gov.in

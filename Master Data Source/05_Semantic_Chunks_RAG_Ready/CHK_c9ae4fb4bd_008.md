@@ -1,0 +1,15 @@
+---
+id: "CHK_c9ae4fb4bd_008"
+title: "SEBI | Adjudication order in the matter of Rajasthan Tube Manufacturing Company Limited"
+heading_lineage: "SEBI  Adjudication order in the matter of Rajasthan Tube Manufacturing Company Limited"
+source_file: "SEBI  Adjudication order in the matter of Rajasthan Tube Manufacturing Company L_bcb4aee023640a03.md"
+effective_date: "March 03, 2023"
+status: "active"
+category: "enforcement_orders"
+subcategories: ["adjudication_orders", "penalties"]
+jurisdiction: "SEBI"
+entity_types: ["violator_entity"]
+user_aliases: []
+---
+
+material matters including the financial situation, performance, ownership, and governance of the listed entity, in the following manner: (i) Information shall be p repared and disclosed in accordance with the prescribed standards of accounting, financial and non-financial disclosure. (f) Responsibilities of the board of directors: The board of directors of the listed entity shall have the following responsibilities: [page 7] Adjudication order in the matter of Rajasthan Tube Manufacturing Company Limited Page 7 of 69 (i) Disclosure of information: (1) Members of board of directors and key managerial personnel shall disclose to the board of directors whether they, directly, indirectly, or on behalf of third parties, have a material interest in any transaction or matter directly affecting the listed entity. (2) The board of directors and senior management shall conduct themselves so as to meet the expectations of operational transparency to stakeholders while at the same time maintaining confidentiality of information in order to foster a culture of good decision-making. (ii) Key functions of the board of directors- (1) Reviewing and guiding corporate strategy, major plans of action, risk policy, annual budgets and business plans, setting performance objectives, monitoring implementation and corporate performance, and overseeing major capital expenditures, acquisitions and divestments. (2) Monitoring the effectiveness of the listed entity’s governance practices and making changes as needed. ……….. (6) Monitoring and managing potential conflicts of interest of management, members of the board of directors and shareholders, including misuse of corporate assets and abuse in related party transactions. (7) Ensuring the integrity of the listed entity’s acco unting and financial reporting systems, including the independent audit, and that appropriate systems of control are in place, in particular, systems for risk management, financial and operational control, and compliance with the law and relevant standards. (8) Overseeing the process of disclosure and communications. (iii) Other responsibilities: (1) The board of directors shall provide strategic guidance to the listed entity, ensure effective monitoring of the management and shall be accountable to the listed entity and the shareholders. ……..
