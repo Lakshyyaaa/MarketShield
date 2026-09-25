@@ -923,19 +923,30 @@ def get_stock_investment_guide(ticker: str):
 
 
 # -----------------------------------------------------------------------------
-# Checkify / Multimodal Scam Detection Endpoints
+# DeBERTa Threat Engine / Scam Detection Endpoints
 # -----------------------------------------------------------------------------
+@app.on_event("startup")
+async def startup_event():
+    # Warm up DeBERTa PyTorch model asynchronously in background
+    try:
+        from deberta_engine import get_pytorch_model
+        import threading
+        threading.Thread(target=get_pytorch_model, daemon=True).start()
+    except Exception as e:
+        print(f"Startup pre-warm notice: {e}")
+
+
 @app.get("/api/demo-cases")
 @app.get("/api/scam/demo-cases")
 def api_demo_cases():
-    from scam_engine import get_demo_seed_cases
+    from deberta_engine import get_demo_seed_cases
     return get_demo_seed_cases()
 
 
 @app.get("/api/history")
 @app.get("/api/scam/history")
 def api_history():
-    from scam_engine import get_scam_history
+    from deberta_engine import get_scam_history
     return get_scam_history()
 
 
@@ -947,7 +958,7 @@ async def api_analyze(
     url: Optional[str] = Form(None),
     image: Optional[UploadFile] = File(None)
 ):
-    from scam_engine import run_scam_analysis
+    from deberta_engine import run_deberta_scam_analysis
 
     # Check if JSON payload was provided instead of multipart form
     if not text and not url and not image:
@@ -970,7 +981,7 @@ async def api_analyze(
     if not text and not url and not image_bytes:
         raise HTTPException(status_code=400, detail="Provide text, a url, and/or an image to analyze.")
 
-    res = run_scam_analysis(text=text, url=url, image_bytes=image_bytes, image_name=image_name)
+    res = run_deberta_scam_analysis(text=text, url=url, image_bytes=image_bytes, image_name=image_name)
     if "error" in res:
         raise HTTPException(status_code=400, detail=res["error"])
     return res

@@ -56,7 +56,7 @@ const config: Config = {
       fontFamily: {
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
         display: ["var(--font-display)", "system-ui", "sans-serif"],
-        mono: ["var(--font-mono)", "monospace"],
+        mono: ["var(--font-mono)", "var(--font-sans)", "system-ui", "sans-serif"],
       },
       spacing: {
         "4.5": "1.125rem",

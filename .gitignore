@@ -21,6 +21,10 @@ backend/.venv/
 *$py.class
 *.so
 .pytest_cache/
+*.pt
+*.pth
+*.bin
+*.safetensors
 
 # Environment Variables & Secrets (Keep your credentials safe)
 .env

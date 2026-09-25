@@ -1,12 +1,14 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
   Users,
   ShieldAlert,
   BarChart3,
+  Calendar,
+  ArrowUpDown,
   Scale,
   LogOut,
   Search,
@@ -18,6 +20,7 @@ import {
   Cpu,
   Sparkles,
   Layers,
+  Calculator,
   Activity,
   MessageCircle,
   Repeat2,
@@ -32,6 +35,7 @@ import {
   Trash2,
   Newspaper,
   ChevronDown,
+  ChevronUp,
   User,
   Check,
   X,
@@ -62,6 +66,9 @@ import {
   Globe,
   Siren,
   Camera,
+  Mic,
+  FileSpreadsheet,
+  Link2,
 } from "lucide-react";
 import clsx from "clsx";
 import { useSession, signIn, signOut } from "next-auth/react";
@@ -180,6 +187,7 @@ interface TweetPost {
     verified: boolean;
   };
   timestamp: string;
+  createdAt?: number;
   stockTag?: string;
   content: string;
   isFlagged?: boolean;
@@ -206,6 +214,7 @@ const INITIAL_TWEETS: TweetPost[] = [
       verified: true,
     },
     timestamp: "2m ago",
+    createdAt: Date.now() - 2 * 60 * 1000,
     stockTag: "$NIFTY50",
     content: "Momentum is building across banking stocks today. Watching HDFC Bank & ICICI closely as open interest builds at current call resistance. Risk score 22/100 (Low Risk).",
     likes: 248,
@@ -253,6 +262,7 @@ const INITIAL_TWEETS: TweetPost[] = [
       verified: true,
     },
     timestamp: "14m ago",
+    createdAt: Date.now() - 14 * 60 * 1000,
     stockTag: "⚠ SCAM ALERT",
     content: "🚨 FLAGGED FRAUD ALERT: Detected 12 coordinated Telegram channels offering guaranteed 300% monthly returns on NSE futures. Registered advisors NEVER guarantee daily returns. Target domain flagged in Threat Scanner.",
     isFlagged: true,
@@ -290,6 +300,7 @@ const INITIAL_TWEETS: TweetPost[] = [
       verified: true,
     },
     timestamp: "35m ago",
+    createdAt: Date.now() - 35 * 60 * 1000,
     stockTag: "$RELIANCE",
     content: "Reliance Industries ($RELIANCE) consolidating above ₹1,450. Retail sentiment is Bullish (82% Confidence) with solid accumulation support. Fundamentals remain rock solid.",
     likes: 189,
@@ -299,7 +310,7 @@ const INITIAL_TWEETS: TweetPost[] = [
     reposts: 24,
     isReposted: false,
     bookmarks: 41,
-    isBookmarked: false,
+    isBookmarked: true,
     replies: [],
     isRepliesOpen: false,
   },
@@ -311,11 +322,12 @@ const INITIAL_TWEETS: TweetPost[] = [
       avatar: "AN",
       verified: true,
     },
-    timestamp: "48m ago",
+    timestamp: "2d ago",
+    createdAt: Date.now() - 2 * 86400 * 1000,
     stockTag: "$BANKNIFTY",
     content: "Bank Nifty holding steady above 51,200 support. PSU banks and private lenders displaying constructive price action heading into tomorrow's weekly settlement.",
     likes: 96,
-    isLiked: false,
+    isLiked: true,
     dislikes: 1,
     isDisliked: false,
     reposts: 15,
@@ -333,7 +345,8 @@ const INITIAL_TWEETS: TweetPost[] = [
       avatar: "RM",
       verified: false,
     },
-    timestamp: "1h ago",
+    timestamp: "5d ago",
+    createdAt: Date.now() - 5 * 86400 * 1000,
     stockTag: "$HDFCBANK",
     content: "HDFC Bank showing healthy delivery percentages across NSE & BSE. Clean institutional buying detected by MarketShield volume radar.",
     likes: 74,
@@ -355,7 +368,8 @@ const INITIAL_TWEETS: TweetPost[] = [
       avatar: "DS",
       verified: true,
     },
-    timestamp: "2h ago",
+    timestamp: "12d ago",
+    createdAt: Date.now() - 12 * 86400 * 1000,
     stockTag: "$TCS",
     content: "TCS and large-cap IT showing resilience with strong constant currency deal wins. AI risk index verified at 15/100 (Safe).",
     likes: 62,
@@ -369,6 +383,106 @@ const INITIAL_TWEETS: TweetPost[] = [
     replies: [],
     isRepliesOpen: false,
   },
+];
+
+interface DashboardSectionTickerProps {
+  items: string[];
+}
+
+const DashboardSectionTicker: React.FC<DashboardSectionTickerProps> = ({ items }) => {
+  // Multiply items for continuous seamless loop
+  const repeated = [...items, ...items, ...items, ...items, ...items, ...items];
+
+  return (
+    <div className="relative w-full overflow-hidden bg-sage-1/40 border border-black/8 py-2.5 rounded-xl select-none shadow-2xs">
+      {/* Left and Right Subtle Fade Gradients */}
+      <div className="absolute left-0 top-0 bottom-0 w-12 sm:w-20 bg-gradient-to-r from-white via-white/80 to-transparent z-10 pointer-events-none" />
+      <div className="absolute right-0 top-0 bottom-0 w-12 sm:w-20 bg-gradient-to-l from-white via-white/80 to-transparent z-10 pointer-events-none" />
+
+      {/* Infinite Scrolling Track */}
+      <div className="flex w-max animate-section-ticker hover:[animation-play-state:paused] items-center">
+        {repeated.map((item, idx) => (
+          <div key={idx} className="flex items-center gap-3 sm:gap-4 px-3 sm:px-4 shrink-0">
+            <span className="text-xs sm:text-[12.5px] font-mono font-bold tracking-wider text-forest whitespace-nowrap">
+              {item}
+            </span>
+            <span className="text-black/30 text-xs select-none">·</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+interface SearchItem {
+  symbol: string;
+  name: string;
+  exchange: string;
+  sector: string;
+  price?: string;
+  pctChange?: string;
+  isUp?: boolean;
+}
+
+const ALL_INDIAN_STOCKS: SearchItem[] = [
+  { symbol: "^NSEI", name: "NIFTY 50", exchange: "NSE", sector: "Index" },
+  { symbol: "^BSESN", name: "SENSEX", exchange: "BSE", sector: "Index" },
+  { symbol: "^NSEBANK", name: "BANK NIFTY", exchange: "NSE", sector: "Index" },
+  { symbol: "^INDIAVIX", name: "INDIA VIX", exchange: "NSE", sector: "Volatility Index" },
+  { symbol: "ADANIENT.NS", name: "Adani Enterprises Ltd", exchange: "NSE", sector: "Conglomerate" },
+  { symbol: "ADANIPORTS.NS", name: "Adani Ports & SEZ Ltd", exchange: "NSE", sector: "Logistics & Ports" },
+  { symbol: "ADANIPOWER.NS", name: "Adani Power Ltd", exchange: "NSE", sector: "Power Generation" },
+  { symbol: "ADANIGREEN.NS", name: "Adani Green Energy Ltd", exchange: "NSE", sector: "Renewable Energy" },
+  { symbol: "ATGL.NS", name: "Adani Total Gas Ltd", exchange: "NSE", sector: "City Gas Distribution" },
+  { symbol: "ADANIENSOL.NS", name: "Adani Energy Solutions Ltd", exchange: "NSE", sector: "Power Transmission" },
+  { symbol: "AWL.NS", name: "Adani Wilmar Ltd", exchange: "NSE", sector: "FMCG" },
+  { symbol: "AMBUJACEM.NS", name: "Ambuja Cements Ltd (Adani)", exchange: "NSE", sector: "Cement" },
+  { symbol: "ACC.NS", name: "ACC Limited (Adani)", exchange: "NSE", sector: "Cement" },
+  { symbol: "NDTV.NS", name: "New Delhi Television Ltd (Adani)", exchange: "NSE", sector: "Media" },
+  { symbol: "RELIANCE.NS", name: "Reliance Industries Ltd", exchange: "NSE", sector: "Energy & Retail" },
+  { symbol: "TCS.NS", name: "Tata Consultancy Services Ltd", exchange: "NSE", sector: "Technology" },
+  { symbol: "TATAMOTORS.NS", name: "Tata Motors Ltd", exchange: "NSE", sector: "Automobile" },
+  { symbol: "TATASTEEL.NS", name: "Tata Steel Ltd", exchange: "NSE", sector: "Metals & Mining" },
+  { symbol: "TATAPOWER.NS", name: "Tata Power Company Ltd", exchange: "NSE", sector: "Power & Utilities" },
+  { symbol: "TATACONSUM.NS", name: "Tata Consumer Products Ltd", exchange: "NSE", sector: "FMCG" },
+  { symbol: "TITAN.NS", name: "Titan Company Ltd (Tata)", exchange: "NSE", sector: "Consumer Goods" },
+  { symbol: "TRENT.NS", name: "Trent Limited (Tata Retail)", exchange: "NSE", sector: "Retail" },
+  { symbol: "VOLTAS.NS", name: "Voltas Ltd (Tata)", exchange: "NSE", sector: "Consumer Electronics" },
+  { symbol: "TATAELXSI.NS", name: "Tata Elxsi Ltd", exchange: "NSE", sector: "Technology" },
+  { symbol: "HDFCBANK.NS", name: "HDFC Bank Ltd", exchange: "NSE", sector: "Banking & Finance" },
+  { symbol: "ICICIBANK.NS", name: "ICICI Bank Ltd", exchange: "NSE", sector: "Banking & Finance" },
+  { symbol: "SBIN.NS", name: "State Bank of India", exchange: "NSE", sector: "Banking & Finance" },
+  { symbol: "KOTAKBANK.NS", name: "Kotak Mahindra Bank Ltd", exchange: "NSE", sector: "Banking & Finance" },
+  { symbol: "AXISBANK.NS", name: "Axis Bank Ltd", exchange: "NSE", sector: "Banking & Finance" },
+  { symbol: "BAJFINANCE.NS", name: "Bajaj Finance Ltd", exchange: "NSE", sector: "Financial Services" },
+  { symbol: "INFY.NS", name: "Infosys Limited", exchange: "NSE", sector: "Technology" },
+  { symbol: "WIPRO.NS", name: "Wipro Limited", exchange: "NSE", sector: "Technology" },
+  { symbol: "HCLTECH.NS", name: "HCL Technologies Ltd", exchange: "NSE", sector: "Technology" },
+  { symbol: "MARUTI.NS", name: "Maruti Suzuki India Ltd", exchange: "NSE", sector: "Automobile" },
+  { symbol: "M&M.NS", name: "Mahindra & Mahindra Ltd", exchange: "NSE", sector: "Automobile" },
+  { symbol: "LT.NS", name: "Larsen & Toubro Ltd", exchange: "NSE", sector: "Infrastructure" },
+  { symbol: "ITC.NS", name: "ITC Limited", exchange: "NSE", sector: "FMCG" },
+  { symbol: "HINDUNILVR.NS", name: "Hindustan Unilever Ltd", exchange: "NSE", sector: "FMCG" },
+  { symbol: "SUNPHARMA.NS", name: "Sun Pharmaceutical Industries", exchange: "NSE", sector: "Healthcare" },
+  { symbol: "HAL.NS", name: "Hindustan Aeronautics Ltd", exchange: "NSE", sector: "Defence" },
+  { symbol: "BEL.NS", name: "Bharat Electronics Ltd", exchange: "NSE", sector: "Defence" },
+  { symbol: "HBLPOWER.NS", name: "HBL Power Systems Ltd (HBL Engineering)", exchange: "NSE", sector: "Engineering & Power Systems" },
+  { symbol: "POLYCAB.NS", name: "Polycab India Ltd", exchange: "NSE", sector: "Electricals & Wires" },
+  { symbol: "BOSCHLTD.NS", name: "Bosch Limited", exchange: "NSE", sector: "Auto Ancillaries" },
+  { symbol: "KPITTECH.NS", name: "KPIT Technologies Ltd", exchange: "NSE", sector: "IT & Engineering R&D" },
+  { symbol: "PERSISTENT.NS", name: "Persistent Systems Ltd", exchange: "NSE", sector: "Technology" },
+  { symbol: "COALINDIA.NS", name: "Coal India Ltd", exchange: "NSE", sector: "Mining" },
+  { symbol: "MAZDOCK.NS", name: "Mazagon Dock Shipbuilders", exchange: "NSE", sector: "Defence & Shipbuilding" },
+  { symbol: "COCHINSHIP.NS", name: "Cochin Shipyard Ltd", exchange: "NSE", sector: "Shipbuilding" },
+  { symbol: "DIXON.NS", name: "Dixon Technologies Ltd", exchange: "NSE", sector: "Electronics Mfg" },
+  { symbol: "BHEL.NS", name: "Bharat Heavy Electricals Ltd", exchange: "NSE", sector: "Engineering" },
+  { symbol: "ZOMATO.NS", name: "Zomato Limited", exchange: "NSE", sector: "Consumer Tech" },
+  { symbol: "PAYTM.NS", name: "One97 Communications (Paytm)", exchange: "NSE", sector: "Fintech" },
+  { symbol: "JIOFIN.NS", name: "Jio Financial Services", exchange: "NSE", sector: "Financial Services" },
+  { symbol: "SUZLON.NS", name: "Suzlon Energy Ltd", exchange: "NSE", sector: "Renewable Energy" },
+  { symbol: "IREDA.NS", name: "IREDA", exchange: "NSE", sector: "Renewable Finance" },
+  { symbol: "IRFC.NS", name: "Indian Railway Finance Corporation", exchange: "NSE", sector: "Railways" },
+  { symbol: "RVNL.NS", name: "Rail Vikas Nigam Ltd", exchange: "NSE", sector: "Railways" },
 ];
 
 interface CommunityTwitterFeedProps {
@@ -388,9 +502,188 @@ const CommunityTwitterFeed: React.FC<CommunityTwitterFeedProps> = ({ currentUser
   const [replyInputs, setReplyInputs] = useState<Record<string, string>>({});
   const [isLoadingPosts, setIsLoadingPosts] = useState(false);
 
-  // Filter states
-  const [sortFilter, setSortFilter] = useState<"latest" | "trending" | "scams">("latest");
-  const [stockTypeFilter, setStockTypeFilter] = useState<string>("ALL");
+  // Collapsible state
+  const [isFiltersOpen, setIsFiltersOpen] = useState(true);
+
+  // Filter states (Scam alerts removed)
+  const [sortFilter, setSortFilter] = useState<"latest" | "trending" | "oldest">("latest");
+  const [savedFilter, setSavedFilter] = useState<boolean>(false);
+  const [likedFilter, setLikedFilter] = useState<boolean>(false);
+  const [dateFilter, setDateFilter] = useState<"all" | "today" | "week" | "month">("all");
+
+  // Stock Search state (same search mechanism as Stock Analysis)
+  const [stockSearchQuery, setStockSearchQuery] = useState("");
+  const [selectedStock, setSelectedStock] = useState<SearchItem | null>(null);
+  const [stockSearchResults, setStockSearchResults] = useState<SearchItem[]>([]);
+  const [isStockSearching, setIsStockSearching] = useState(false);
+  const [showStockDropdown, setShowStockDropdown] = useState(false);
+  const stockSearchContainerRef = useRef<HTMLDivElement>(null);
+
+  // Instant local & debounced remote stock search
+  useEffect(() => {
+    const q = stockSearchQuery.trim().toUpperCase();
+    if (!q || q.length < 1) {
+      setStockSearchResults([]);
+      setIsStockSearching(false);
+      setShowStockDropdown(false);
+      return;
+    }
+
+    // 1. Instant local search (<1ms) with smart multi-word token matching
+    const queryWords = q.split(/\s+/).filter(Boolean);
+    const localMatches = ALL_INDIAN_STOCKS.filter((s) => {
+      const targetText = `${s.symbol} ${s.name} ${s.sector}`.toUpperCase();
+      const allWordsMatch = queryWords.every((w) => targetText.includes(w));
+      const symbolMatch = s.symbol.toUpperCase().replace(".NS", "").startsWith(queryWords[0]);
+      return allWordsMatch || symbolMatch;
+    });
+
+    if (localMatches.length > 0) {
+      setStockSearchResults(localMatches.slice(0, 8));
+      setShowStockDropdown(true);
+    } else {
+      const cleanTicker = q.replace(/[^A-Z0-9]/g, "");
+      if (cleanTicker.length >= 2) {
+        setStockSearchResults([
+          {
+            symbol: `${cleanTicker}.NS`,
+            name: `${q} (Search NSE Ticker)`,
+            exchange: "NSE",
+            sector: "Equity",
+          },
+        ]);
+        setShowStockDropdown(true);
+      } else {
+        setStockSearchResults([]);
+        setShowStockDropdown(false);
+      }
+    }
+
+    // 2. Fetch backend search
+    const timer = setTimeout(async () => {
+      setIsStockSearching(true);
+      try {
+        const res = await fetch(`/api/stocks/search?q=${encodeURIComponent(stockSearchQuery.trim())}`);
+        if (res.ok) {
+          const remoteData: SearchItem[] = await res.json();
+          if (remoteData && remoteData.length > 0) {
+            setStockSearchResults((prev) => {
+              const combined = [...remoteData];
+              prev.forEach((item) => {
+                if (!combined.some((c) => c.symbol === item.symbol)) {
+                  combined.push(item);
+                }
+              });
+              return combined.slice(0, 8);
+            });
+            setShowStockDropdown(true);
+          }
+        }
+      } catch (e) {
+        console.warn("Stock search fetch error:", e);
+      } finally {
+        setIsStockSearching(false);
+      }
+    }, 150);
+
+    return () => clearTimeout(timer);
+  }, [stockSearchQuery]);
+
+  // Close search dropdown on click outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (stockSearchContainerRef.current && !stockSearchContainerRef.current.contains(e.target as Node)) {
+        setShowStockDropdown(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleSelectFeedStock = (item: SearchItem) => {
+    setSelectedStock(item);
+    setShowStockDropdown(false);
+    setStockSearchQuery("");
+  };
+
+  const handleClearSelectedStock = () => {
+    setSelectedStock(null);
+    setStockSearchQuery("");
+  };
+
+  const savedCount = useMemo(() => posts.filter((p) => p.isBookmarked).length, [posts]);
+  const likedCount = useMemo(() => posts.filter((p) => p.isLiked).length, [posts]);
+
+  const hasActiveFilters = Boolean(
+    selectedStock ||
+    stockSearchQuery.trim() ||
+    savedFilter ||
+    likedFilter ||
+    dateFilter !== "all" ||
+    sortFilter !== "latest"
+  );
+
+  const resetFilters = () => {
+    setSelectedStock(null);
+    setStockSearchQuery("");
+    setSavedFilter(false);
+    setLikedFilter(false);
+    setDateFilter("all");
+    setSortFilter("latest");
+  };
+
+  const filteredPosts = useMemo(() => {
+    const now = Date.now();
+    return posts
+      .filter((post) => {
+        // Stock filter (via selectedStock or stockSearchQuery)
+        const activeSearch = (selectedStock ? selectedStock.symbol.replace(".NS", "") : stockSearchQuery.trim()).toUpperCase();
+        if (activeSearch) {
+          const postContent = post.content.toUpperCase();
+          const postTag = (post.stockTag || "").toUpperCase().replace("$", "");
+          const stockNameWord = selectedStock?.name?.toUpperCase().split(" ")[0] || "";
+
+          const matchesTag = postTag.includes(activeSearch) || activeSearch.includes(postTag);
+          const matchesContent = postContent.includes(activeSearch);
+          const matchesName = stockNameWord.length > 2 && postContent.includes(stockNameWord);
+
+          if (!matchesTag && !matchesContent && !matchesName) {
+            return false;
+          }
+        }
+
+        // Saved filter
+        if (savedFilter && !post.isBookmarked) {
+          return false;
+        }
+
+        // Liked filter
+        if (likedFilter && !post.isLiked) {
+          return false;
+        }
+
+        // Date filter
+        if (dateFilter !== "all") {
+          const postTime = post.createdAt || now;
+          const diffMs = now - postTime;
+          if (dateFilter === "today" && diffMs > 24 * 60 * 60 * 1000) return false;
+          if (dateFilter === "week" && diffMs > 7 * 24 * 60 * 60 * 1000) return false;
+          if (dateFilter === "month" && diffMs > 30 * 24 * 60 * 60 * 1000) return false;
+        }
+
+        return true;
+      })
+      .sort((a, b) => {
+        if (sortFilter === "trending") {
+          return (b.likes + b.reposts) - (a.likes + a.reposts);
+        }
+        if (sortFilter === "oldest") {
+          return (a.createdAt || 0) - (b.createdAt || 0);
+        }
+        // default / latest
+        return (b.createdAt || 0) - (a.createdAt || 0);
+      });
+  }, [posts, selectedStock, stockSearchQuery, savedFilter, likedFilter, dateFilter, sortFilter]);
 
   // Load community posts from Supabase
   const loadPostsFromSupabase = useCallback(async () => {
@@ -408,6 +701,7 @@ const CommunityTwitterFeed: React.FC<CommunityTwitterFeedProps> = ({ currentUser
             verified: true,
           },
           timestamp: new Date(p.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+          createdAt: p.created_at ? new Date(p.created_at).getTime() : Date.now(),
           stockTag: p.stock_tag,
           content: p.content,
           likes: p.likes_count,
@@ -455,6 +749,7 @@ const CommunityTwitterFeed: React.FC<CommunityTwitterFeedProps> = ({ currentUser
         verified: true,
       },
       timestamp: "Just now",
+      createdAt: Date.now(),
       stockTag: selectedTag,
       content,
       likes: 0,
@@ -753,51 +1048,86 @@ const CommunityTwitterFeed: React.FC<CommunityTwitterFeedProps> = ({ currentUser
         </div>
 
         {/* INTERACTIVE FILTERS */}
-        <div className="space-y-3 bg-white rounded-2xl border border-black/10 p-4 shadow-sm">
-          {/* Row 1: Primary View Mode Tabs */}
-          <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-black/5 text-xs font-sans">
-            <div className="flex items-center gap-1.5 bg-sage-1/60 p-1 rounded-xl border border-black/5">
+        <div className="bg-white rounded-2xl border border-black/10 p-4 shadow-sm space-y-3.5">
+          {/* Top Header: Title + Post Count badge + Reset Filters + Online count + Collapse Toggle */}
+          <div className="flex flex-wrap items-center justify-between gap-2.5 pb-2.5 border-b border-black/5 text-xs font-sans">
+            <div className="flex items-center gap-2">
               <button
                 type="button"
-                onClick={() => setSortFilter("latest")}
-                className={clsx(
-                  "px-3 py-1.5 rounded-lg font-bold transition-all",
-                  sortFilter === "latest"
-                    ? "bg-forest text-lemongrass shadow-sm"
-                    : "text-black/60 hover:text-black hover:bg-white"
-                )}
+                onClick={() => setIsFiltersOpen(!isFiltersOpen)}
+                className="flex items-center gap-1.5 text-forest font-bold text-xs hover:text-moss transition-colors cursor-pointer group"
+                title={isFiltersOpen ? "Collapse filter controls" : "Expand filter controls"}
               >
-                Latest Discussions
+                <Filter className="w-3.5 h-3.5 text-forest/70 group-hover:text-forest" />
+                <span className="uppercase tracking-wider font-mono text-[11px]">Filters & Feed Controls</span>
+                {isFiltersOpen ? (
+                  <ChevronUp className="w-3.5 h-3.5 text-black/50 ml-0.5 group-hover:text-black transition-transform" />
+                ) : (
+                  <ChevronDown className="w-3.5 h-3.5 text-black/50 ml-0.5 group-hover:text-black transition-transform" />
+                )}
               </button>
 
-              <button
-                type="button"
-                onClick={() => setSortFilter("trending")}
-                className={clsx(
-                  "px-3 py-1.5 rounded-lg font-bold transition-all",
-                  sortFilter === "trending"
-                    ? "bg-forest text-lemongrass shadow-sm"
-                    : "text-black/60 hover:text-black hover:bg-white"
-                )}
-              >
-                Trending 🔥
-              </button>
+              <span className="text-[11px] px-2 py-0.5 rounded-full bg-forest/5 text-forest/80 font-mono font-medium">
+                Showing {filteredPosts.length} of {posts.length}
+              </span>
 
-              <button
-                type="button"
-                onClick={() => setSortFilter("scams")}
-                className={clsx(
-                  "px-3 py-1.5 rounded-lg font-bold transition-all",
-                  sortFilter === "scams"
-                    ? "bg-red-600 text-white shadow-sm"
-                    : "text-red-700 hover:bg-red-50"
-                )}
-              >
-                Scam Reports ⚠
-              </button>
+              {/* When collapsed and has active filters, show compact preview badges */}
+              {!isFiltersOpen && hasActiveFilters && (
+                <div className="hidden sm:flex items-center gap-1.5 text-[10px] font-mono">
+                  {selectedStock && (
+                    <span className="px-2 py-0.5 rounded-md bg-forest text-lemongrass font-bold">
+                      ${selectedStock.symbol.replace(".NS", "")}
+                    </span>
+                  )}
+                  {stockSearchQuery && !selectedStock && (
+                    <span className="px-2 py-0.5 rounded-md bg-forest text-lemongrass font-bold">
+                      &quot;{stockSearchQuery}&quot;
+                    </span>
+                  )}
+                  {savedFilter && (
+                    <span className="px-2 py-0.5 rounded-md bg-forest text-lemongrass font-bold">
+                      Saved ({savedCount})
+                    </span>
+                  )}
+                  {likedFilter && (
+                    <span className="px-2 py-0.5 rounded-md bg-forest text-lemongrass font-bold">
+                      Liked ({likedCount})
+                    </span>
+                  )}
+                  {dateFilter !== "all" && (
+                    <span className="px-2 py-0.5 rounded-md bg-forest text-lemongrass font-bold">
+                      {dateFilter === "today" ? "24h" : dateFilter === "week" ? "7d" : "30d"}
+                    </span>
+                  )}
+                </div>
+              )}
             </div>
 
             <div className="flex items-center gap-2">
+              {hasActiveFilters && (
+                <button
+                  type="button"
+                  onClick={resetFilters}
+                  className="flex items-center gap-1 text-[11px] font-bold text-black/60 hover:text-red-600 px-2 py-1 rounded-lg hover:bg-red-50 transition-colors cursor-pointer"
+                >
+                  <RotateCcw className="w-3 h-3" />
+                  <span>Reset Filters</span>
+                </button>
+              )}
+
+              <button
+                type="button"
+                onClick={() => setIsFiltersOpen(!isFiltersOpen)}
+                className="px-2.5 py-1 rounded-lg border border-black/10 hover:bg-sage-1/30 text-[11px] font-medium text-black/70 flex items-center gap-1 transition-all cursor-pointer"
+              >
+                <span>{isFiltersOpen ? "Collapse" : "Expand"}</span>
+                {isFiltersOpen ? (
+                  <ChevronUp className="w-3 h-3 text-black/50" />
+                ) : (
+                  <ChevronDown className="w-3 h-3 text-black/50" />
+                )}
+              </button>
+
               <span className="flex items-center gap-1.5 text-emerald-700 font-bold text-xs bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200 font-sans">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
                 342 Online
@@ -805,102 +1135,257 @@ const CommunityTwitterFeed: React.FC<CommunityTwitterFeedProps> = ({ currentUser
             </div>
           </div>
 
-          {/* Row 2: Stock Type Filter Pills Bar */}
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs font-sans">
-            <span className="text-xs font-bold text-black/50 uppercase tracking-wider shrink-0 mr-1">
-              STOCK TYPE:
-            </span>
+          {/* Collapsible Content */}
+          {isFiltersOpen && (
+            <div className="space-y-3.5 animate-in fade-in slide-in-from-top-2 duration-150">
+              {/* Row 1: Primary View Mode Tabs (All Feed, Saved, Liked, Trending) - Scam alerts removed */}
+              <div className="flex flex-wrap items-center gap-1.5 text-xs font-sans">
+                <span className="text-[11px] font-bold text-black/40 uppercase tracking-wider shrink-0 font-mono mr-1">
+                  VIEW:
+                </span>
 
-            {[
-              { id: "ALL", label: "All Stocks" },
-              { id: "$NIFTY50", label: "$NIFTY50" },
-              { id: "$BANKNIFTY", label: "$BANKNIFTY" },
-              { id: "$RELIANCE", label: "$RELIANCE" },
-              { id: "$HDFCBANK", label: "$HDFCBANK" },
-              { id: "$TCS", label: "$TCS" },
-              { id: "⚠ SCAM ALERT", label: "⚠ Scam Alerts" },
-            ].map((st) => {
-              const isSelected = stockTypeFilter === st.id;
-              const isScam = st.id.includes("SCAM");
-              return (
                 <button
-                  key={st.id}
                   type="button"
-                  onClick={() => setStockTypeFilter(st.id)}
+                  onClick={() => {
+                    setSortFilter("latest");
+                    setSavedFilter(false);
+                    setLikedFilter(false);
+                  }}
                   className={clsx(
-                    "px-3 py-1.5 rounded-xl font-bold whitespace-nowrap transition-all shrink-0 border text-xs flex items-center gap-1.5 font-mono",
-                    isSelected
-                      ? isScam
-                        ? "bg-red-600 text-white border-red-600 shadow-sm"
-                        : "bg-forest text-lemongrass border-forest shadow-sm"
+                    "px-3 py-1.5 rounded-xl font-bold transition-all text-xs border cursor-pointer",
+                    sortFilter === "latest" && !savedFilter && !likedFilter
+                      ? "bg-forest text-lemongrass border-forest shadow-sm"
                       : "bg-sage-1/40 text-black/70 hover:text-black border-black/10 hover:border-black/20"
                   )}
                 >
-                  <span>{st.label}</span>
+                  All Feed
                 </button>
-              );
-            })}
-          </div>
+
+                {/* Saved Filter Pill */}
+                <button
+                  type="button"
+                  onClick={() => setSavedFilter(!savedFilter)}
+                  className={clsx(
+                    "px-3 py-1.5 rounded-xl font-bold transition-all text-xs flex items-center gap-1.5 border cursor-pointer",
+                    savedFilter
+                      ? "bg-forest text-lemongrass border-forest shadow-sm"
+                      : "bg-sage-1/40 text-black/70 hover:text-black border-black/10 hover:border-black/20"
+                  )}
+                >
+                  <Bookmark className={clsx("w-3.5 h-3.5", savedFilter ? "fill-lemongrass text-lemongrass" : "text-black/50")} />
+                  <span>Saved</span>
+                  <span className={clsx(
+                    "text-[10px] px-1.5 py-0.2 rounded-full font-mono font-bold",
+                    savedFilter ? "bg-white/20 text-lemongrass" : "bg-black/10 text-black/60"
+                  )}>
+                    {savedCount}
+                  </span>
+                </button>
+
+                {/* Liked Filter Pill */}
+                <button
+                  type="button"
+                  onClick={() => setLikedFilter(!likedFilter)}
+                  className={clsx(
+                    "px-3 py-1.5 rounded-xl font-bold transition-all text-xs flex items-center gap-1.5 border cursor-pointer",
+                    likedFilter
+                      ? "bg-forest text-lemongrass border-forest shadow-sm"
+                      : "bg-sage-1/40 text-black/70 hover:text-black border-black/10 hover:border-black/20"
+                  )}
+                >
+                  <Heart className={clsx("w-3.5 h-3.5", likedFilter ? "fill-lemongrass text-lemongrass" : "text-black/50")} />
+                  <span>Liked</span>
+                  <span className={clsx(
+                    "text-[10px] px-1.5 py-0.2 rounded-full font-mono font-bold",
+                    likedFilter ? "bg-white/20 text-lemongrass" : "bg-black/10 text-black/60"
+                  )}>
+                    {likedCount}
+                  </span>
+                </button>
+
+                {/* Trending Pill */}
+                <button
+                  type="button"
+                  onClick={() => setSortFilter(sortFilter === "trending" ? "latest" : "trending")}
+                  className={clsx(
+                    "px-3 py-1.5 rounded-xl font-bold transition-all text-xs flex items-center gap-1 border cursor-pointer",
+                    sortFilter === "trending"
+                      ? "bg-forest text-lemongrass border-forest shadow-sm"
+                      : "bg-sage-1/40 text-black/70 hover:text-black border-black/10 hover:border-black/20"
+                  )}
+                >
+                  <span>Trending</span>
+                  <span>🔥</span>
+                </button>
+              </div>
+
+              {/* Row 2: Stock Search (Same search mechanism as Stock Analysis, no static options) */}
+              <div className="flex flex-wrap items-center gap-2 pt-1 pb-1">
+                <span className="text-[11px] font-bold text-black/40 uppercase tracking-wider shrink-0 font-mono flex items-center gap-1">
+                  <Search className="w-3 h-3 text-black/40" />
+                  SEARCH STOCK:
+                </span>
+
+                {/* Search Input with Autocomplete Dropdown */}
+                <div className="relative flex-1 min-w-[240px] max-w-md" ref={stockSearchContainerRef}>
+                  <Search className="w-3.5 h-3.5 text-black/40 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  <input
+                    type="text"
+                    placeholder="Search stocks (e.g. Reliance, TCS, INFY)..."
+                    value={stockSearchQuery}
+                    onFocus={() => { if (stockSearchResults.length > 0) setShowStockDropdown(true); }}
+                    onChange={(e) => {
+                      setStockSearchQuery(e.target.value);
+                      if (selectedStock) setSelectedStock(null);
+                    }}
+                    className="pl-8 pr-8 py-1.5 bg-white border border-black/15 rounded-lg text-xs w-full focus:outline-none focus:border-forest font-sans shadow-xs"
+                  />
+                  {isStockSearching && (
+                    <Loader2 className="w-3.5 h-3.5 text-forest animate-spin absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  )}
+                  {stockSearchQuery && !isStockSearching && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setStockSearchQuery("");
+                        setShowStockDropdown(false);
+                      }}
+                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-black/40 hover:text-black p-0.5 cursor-pointer"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  )}
+
+                  {/* Autocomplete Dropdown */}
+                  {showStockDropdown && stockSearchResults.length > 0 && (
+                    <div className="absolute left-0 top-full mt-1.5 w-72 sm:w-80 bg-white border border-black/12 rounded-lg shadow-xl z-50 overflow-hidden divide-y divide-black/5 animate-in fade-in zoom-in-95 duration-150 font-sans">
+                      <div className="px-3 py-1.5 bg-sage-1/40 text-[10px] font-mono font-bold text-black/50 uppercase flex justify-between">
+                        <span>Matching NSE Securities</span>
+                        <span className="text-moss">LIVE QUOTE</span>
+                      </div>
+                      <div className="max-h-60 overflow-y-auto">
+                        {stockSearchResults.map((item) => (
+                          <button
+                            key={item.symbol}
+                            type="button"
+                            onClick={() => handleSelectFeedStock(item)}
+                            className="w-full px-3 py-2 text-left hover:bg-sage-1/50 transition-colors flex items-center justify-between gap-2 cursor-pointer"
+                          >
+                            <div className="min-w-0">
+                              <div className="flex items-center gap-1.5">
+                                <span className="font-mono font-bold text-forest text-xs">{item.symbol}</span>
+                                <span className="px-1.5 py-0.2 rounded text-[9px] font-mono font-bold bg-black/5 text-black/60 border border-black/5">
+                                  {item.exchange}
+                                </span>
+                              </div>
+                              <div className="text-[11px] text-black/60 truncate">{item.name}</div>
+                            </div>
+                            {item.price && (
+                              <div className="text-right shrink-0 font-mono">
+                                <div className="text-xs font-bold text-forest">{item.price}</div>
+                                <div className={clsx("text-[10px] font-bold", item.isUp ? "text-emerald-700" : "text-amber-700")}>
+                                  {item.pctChange}
+                                </div>
+                              </div>
+                            )}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Selected Stock Badge */}
+                {selectedStock && (
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-forest text-lemongrass text-xs font-mono font-bold border border-forest shadow-xs">
+                    <span>Filtered: ${selectedStock.symbol.replace(".NS", "")}</span>
+                    <button
+                      type="button"
+                      onClick={handleClearSelectedStock}
+                      className="p-0.5 hover:bg-white/20 rounded-md transition-colors text-lemongrass cursor-pointer"
+                      title="Clear stock filter"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Row 3: Date Filter & Sort Order */}
+              <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-black/5 text-xs font-sans">
+                <div className="flex items-center gap-1.5 overflow-x-auto">
+                  <span className="text-[11px] font-bold text-black/40 uppercase tracking-wider shrink-0 mr-1 font-mono flex items-center gap-1">
+                    <Calendar className="w-3 h-3 text-black/40" />
+                    DATE:
+                  </span>
+                  {[
+                    { id: "all", label: "All Time" },
+                    { id: "today", label: "Today (24h)" },
+                    { id: "week", label: "This Week" },
+                    { id: "month", label: "This Month" },
+                  ].map((df) => {
+                    const isSelected = dateFilter === df.id;
+                    return (
+                      <button
+                        key={df.id}
+                        type="button"
+                        onClick={() => setDateFilter(df.id as any)}
+                        className={clsx(
+                          "px-2.5 py-1 rounded-lg font-medium transition-all text-xs border font-sans cursor-pointer",
+                          isSelected
+                            ? "bg-forest text-lemongrass font-bold border-forest shadow-sm"
+                            : "bg-sage-1/30 text-black/60 hover:text-black border-black/10"
+                        )}
+                      >
+                        {df.label}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Date Sort Order Toggle */}
+                <div className="flex items-center gap-1">
+                  <span className="text-[11px] font-bold text-black/40 uppercase tracking-wider font-mono mr-1">
+                    ORDER:
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setSortFilter(sortFilter === "oldest" ? "latest" : "oldest")}
+                    className={clsx(
+                      "px-2.5 py-1 rounded-lg font-medium text-xs border flex items-center gap-1 font-sans transition-all cursor-pointer",
+                      sortFilter === "oldest"
+                        ? "bg-forest text-lemongrass font-bold border-forest shadow-sm"
+                        : "bg-sage-1/30 text-black/70 hover:text-black border-black/10"
+                    )}
+                  >
+                    <ArrowUpDown className="w-3 h-3" />
+                    <span>{sortFilter === "oldest" ? "Oldest First ↑" : "Newest First ↓"}</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Empty State when no discussions match filter */}
-        {posts.filter((post) => {
-          if (stockTypeFilter !== "ALL") {
-            if (stockTypeFilter === "⚠ SCAM ALERT") {
-              if (!post.isFlagged && !post.stockTag?.includes("SCAM")) return false;
-            } else {
-              if (post.stockTag !== stockTypeFilter && !post.content.includes(stockTypeFilter)) {
-                return false;
-              }
-            }
-          }
-          if (sortFilter === "scams") {
-            return post.isFlagged || post.stockTag?.includes("SCAM");
-          }
-          return true;
-        }).length === 0 && (
-            <div className="p-8 text-center bg-white rounded-2xl border border-black/10 space-y-3">
-              <div className="text-2xl">🔍</div>
-              <div className="text-sm font-bold text-forest font-display">No discussions found for {stockTypeFilter}</div>
-              <p className="text-xs text-black/60 font-sans">Try selecting another stock type or clear your active filters.</p>
-              <button
-                type="button"
-                onClick={() => {
-                  setStockTypeFilter("ALL");
-                  setSortFilter("latest");
-                }}
-                className="px-4 py-1.5 rounded-lg bg-forest text-lemongrass font-sans text-xs font-bold shadow-sm"
-              >
-                Reset Filters
-              </button>
-            </div>
-          )}
+        {filteredPosts.length === 0 && (
+          <div className="p-8 text-center bg-white rounded-2xl border border-black/10 space-y-3">
+            <div className="text-2xl">🔍</div>
+            <div className="text-sm font-bold text-forest font-display">No discussions found matching active filters</div>
+            <p className="text-xs text-black/60 font-sans">Try adjusting your stock filter, date range, or saved/liked filters.</p>
+            <button
+              type="button"
+              onClick={resetFilters}
+              className="px-4 py-1.5 rounded-lg bg-forest text-lemongrass font-sans text-xs font-bold shadow-sm"
+            >
+              Reset Filters
+            </button>
+          </div>
+        )}
 
         {/* Feed Posts */}
         <div className="space-y-3">
-          {posts
-            .filter((post) => {
-              if (stockTypeFilter !== "ALL") {
-                if (stockTypeFilter === "⚠ SCAM ALERT") {
-                  if (!post.isFlagged && !post.stockTag?.includes("SCAM")) return false;
-                } else {
-                  if (post.stockTag !== stockTypeFilter && !post.content.includes(stockTypeFilter)) {
-                    return false;
-                  }
-                }
-              }
-              if (sortFilter === "scams") {
-                return post.isFlagged || post.stockTag?.includes("SCAM");
-              }
-              return true;
-            })
-            .sort((a, b) => {
-              if (sortFilter === "trending") {
-                return (b.likes + b.reposts) - (a.likes + a.reposts);
-              }
-              return 0;
-            })
-            .map((tweet) => (
+          {filteredPosts.map((tweet) => (
               <article
                 key={tweet.id}
                 className="bg-white rounded-2xl border border-black/10 p-5 shadow-sm hover:shadow-md transition-all space-y-3.5 text-left"
@@ -1371,16 +1856,6 @@ interface HistoryResponse {
   isUp: boolean;
 }
 
-interface SearchItem {
-  symbol: string;
-  name: string;
-  exchange: string;
-  sector: string;
-  price?: string;
-  pctChange?: string;
-  isUp?: boolean;
-}
-
 // Helper component to render rich structured Markdown (tables, headings, lists, bold text, callouts)
 function FormattedMarkdown({ content }: { content: string }) {
   if (!content) return null;
@@ -1556,12 +2031,56 @@ function FormattedMarkdown({ content }: { content: string }) {
   return <div className="space-y-1 text-left font-sans">{blocks}</div>;
 }
 
+const extractUrlFromText = (text: string): string | null => {
+  if (!text) return null;
+  const match = text.match(
+    /\b(?:https?:\/\/)?(?:www\.)?([a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\.(?:com|in|co|org|net|io|info|xyz|club|online|site|vip|live|shop|biz|me|app|top|tech|store|gov\.in|co\.in|org\.in))(?:\/[^\s]*)?/i
+  );
+  return match ? match[0].trim() : null;
+};
+
+const renderUnderlinedKeyTerms = (text: string, isBull: boolean) => {
+  if (!text) return null;
+  const termRegex = /\b(\d+(?:\.\d+)?%|\$\d+(?:\.\d+)?\s*(?:Billion|Million|Trillion|B|M)?|₹\d+(?:,\d+)*(?:\.\d+)?\s*(?:Lakh|Crore|Cr)?|\d+\s*(?:GW|visits|years|months|quarters)|EBITDA|ARPU|TCV|PE|D\/E|IPO|BFSI|CAGR|ROCE|free cash flows?|recurring revenues?|operating margins?|margin compression|valuation multiple|market share|Generative AI|constant-currency|telecom tariff|demand recovery|net headcount|credit-to-deposit ratio|cyclical|capex|order book)\b/gi;
+
+  const parts: (string | JSX.Element)[] = [];
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+
+  while ((match = termRegex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push(text.substring(lastIndex, match.index));
+    }
+    const matchedTerm = match[0];
+    parts.push(
+      <span
+        key={match.index}
+        className={clsx(
+          "underline underline-offset-4 decoration-2 font-semibold",
+          isBull ? "decoration-emerald-600 text-forest" : "decoration-amber-700 text-black"
+        )}
+      >
+        {matchedTerm}
+      </span>
+    );
+    lastIndex = match.index + matchedTerm.length;
+  }
+
+  if (lastIndex < text.length) {
+    parts.push(text.substring(lastIndex));
+  }
+
+  return parts;
+};
+
 export default function DashboardPage() {
   // Landing tab is MARKET by default
   const [activeTab, setActiveTab] = useState<DashboardTab>("market");
   const [searchQuery, setSearchQuery] = useState("");
   const [scanText, setScanText] = useState<string>("");
   const [scanTargetUrl, setScanTargetUrl] = useState<string>("");
+  const [inlineUrlInput, setInlineUrlInput] = useState<string>("");
+  const [isAnalyzingInlineUrl, setIsAnalyzingInlineUrl] = useState<boolean>(false);
 
   // Real Market Data States
   const [indices, setIndices] = useState<IndexSummary[]>([
@@ -1612,7 +2131,7 @@ export default function DashboardPage() {
     text: string;
     time: string;
     recommendation?: {
-      action: "ACCUMULATE" | "CONSIDER" | "HOLD" | "WATCH" | "AVOID";
+      action: string;
       actionClass: string;
       confidence: number;
       patternName: string;
@@ -1641,26 +2160,24 @@ export default function DashboardPage() {
     const isUp = quote?.isUp ?? true;
     const pct = quote?.rawPctChange || 0.5;
 
-    let action: "ACCUMULATE" | "CONSIDER" | "HOLD" | "WATCH" | "AVOID" = "CONSIDER";
-    let actionClass = "bg-emerald-100 text-emerald-900 border-emerald-300";
-    let patternName = "Ascending Channel + SMA 20 Support Confluence";
-    let confidence = 88;
-    let targetPct = "+4.8%";
+    let action = "MONITORING";
+    let actionClass = "bg-white/10 text-white border-white/20";
+    let patternName = "Ascending Channel + SMA 20 Support Telemetry";
+    let confidence = 84;
+    let targetPct = "+4.2%";
     let stopLossPct = "-1.9%";
 
     if (pct > 1.2) {
-      action = "ACCUMULATE";
-      actionClass = "bg-emerald-100 text-emerald-900 border-emerald-400 font-extrabold";
-      patternName = "Bullish Momentum Breakout above SMA 20 Resistance";
-      confidence = 92;
-      targetPct = "+6.4%";
+      action = "POSITIVE BIAS";
+      patternName = "Momentum Testing SMA 20 Resistance Band";
+      confidence = 88;
+      targetPct = "+5.4%";
       stopLossPct = "-2.1%";
     } else if (pct < -0.8) {
-      action = "WATCH";
-      actionClass = "bg-amber-100 text-amber-900 border-amber-300";
-      patternName = "Mean-Reversion Pullback Testing 20 EMA Support";
+      action = "CONSOLIDATION";
+      patternName = "Mean-Reversion Pullback Testing 20 EMA Support Band";
       confidence = 76;
-      targetPct = "+3.8%";
+      targetPct = "+3.4%";
       stopLossPct = "-2.4%";
     }
 
@@ -1672,8 +2189,8 @@ export default function DashboardPage() {
     return {
       id: String(Date.now()),
       sender: "ai",
-      time: "Just now",
-      text: `AI Pattern Engine evaluated ${sym} (${name}) at ₹${price.toLocaleString("en-IN", { maximumFractionDigits: 2 })} with live multi-factor technical telemetry.`,
+      time: "",
+      text: `MarketShield Technical Telemetry analyzed ${sym} (${name}) at ₹${price.toLocaleString("en-IN", { maximumFractionDigits: 2 })} with live multi-factor indicators. Statistical model telemetry only; no Buy or Sell recommendations.`,
       recommendation: {
         action,
         actionClass,
@@ -1684,10 +2201,8 @@ export default function DashboardPage() {
         targetPct,
         stopLoss: `₹${stopLossP.toLocaleString("en-IN", { maximumFractionDigits: 2 })}`,
         stopLossPct,
-        riskReward: "1 : 2.7",
-        summary: isUp
-          ? "Consistent higher-low candlestick structure confirmed above 20-period moving average with sustained buyer accumulation."
-          : "Healthy consolidation range near support. Recommend waiting for confirmation on breakout or staggered entry on dips."
+        riskReward: "1 : 2.5",
+        summary: "Objective telemetry indicators for risk awareness. Independent verification recommended before allocating capital."
       }
     };
   }, []);
@@ -1710,7 +2225,7 @@ export default function DashboardPage() {
       id: String(Date.now()),
       sender: "user",
       text: query,
-      time: "Just now",
+      time: "",
     };
 
     setAiMessages((prev) => [...prev, userMsg]);
@@ -1908,23 +2423,23 @@ export default function DashboardPage() {
           : {
             id: "tech_analysis",
             sender: "ai" as const,
-            time: "Just now",
-            text: "Technical analysis indicating positive momentum.",
+            time: "",
+            text: "Technical telemetry observation indicating trend support levels.",
             recommendation: {
-              action: "ACCUMULATE" as const,
-              actionClass: "bg-emerald-100 text-emerald-800 border-emerald-300",
-              confidence: 85,
-              patternName: "Ascending Channel / 20-Day SMA Support",
+              action: "MONITORING" as const,
+              actionClass: "bg-white/10 text-white border-white/20",
+              confidence: 82,
+              patternName: "SMA 20 Support Telemetry",
               entryZone: "Current Support Band",
               targetPrice: "₹3,150.00",
               targetPct: "+5.6%",
               stopLoss: "₹2,880.00",
               stopLossPct: "-3.4%",
               riskReward: "1 : 2.4",
-              summary: "Trading firmly above short-term moving average support."
+              summary: "Observed price channel relative to historical moving average support."
             }
           };
-        replyText = `[TECHNICAL TELEMETRY & MOMENTUM PROFILE] · ${sym}\n\n• Trend Pattern: ${report.recommendation?.patternName || "Ascending Channel"}\n• Recommended Entry Zone: ${report.recommendation?.entryZone || "Support Band"}\n• Target 1 (T1): ${report.recommendation?.targetPrice || "₹3,150.00"} (${report.recommendation?.targetPct || "+5.6%"})\n• Stop Loss (SL): ${report.recommendation?.stopLoss || "₹2,880.00"} (${report.recommendation?.stopLossPct || "-3.4%"})\n• Risk / Reward: ${report.recommendation?.riskReward || "1 : 2.4"}\n\nCONFLUENCE: ${report.recommendation?.confidence || 86}% confluence across SMA 20 and volume accumulation.`;
+        replyText = `[TECHNICAL TELEMETRY & PRICE LEVELS] · ${sym}\n\n• Trend Pattern: ${report.recommendation?.patternName || "Consolidation Channel"}\n• Observed Pivot Band: ${report.recommendation?.entryZone || "Support Band"}\n• Resistance Level (R1): ${report.recommendation?.targetPrice || "₹3,150.00"} (${report.recommendation?.targetPct || "+5.6%"})\n• Support Level (S1): ${report.recommendation?.stopLoss || "₹2,880.00"} (${report.recommendation?.stopLossPct || "-3.4%"})\n• Risk / Reward Profile: ${report.recommendation?.riskReward || "1 : 2.4"}\n\nNOTE: Factual indicator telemetry provided for risk observation. Does not constitute a Buy or Sell recommendation.`;
       }
       // 12. General Audit / Full Report
       else {
@@ -1944,7 +2459,7 @@ export default function DashboardPage() {
         id: String(Date.now() + 1),
         sender: "ai",
         text: replyText,
-        time: "Just now",
+        time: "",
       };
 
       setAiMessages((prev) => [...prev, aiMsg]);
@@ -2011,67 +2526,6 @@ export default function DashboardPage() {
     "SUZLON.NS": { name: "Suzlon Energy Ltd", price: 68.45, delta: 2.15, pct: "+3.24%", isUp: true },
     "IREDA.NS": { name: "IREDA", price: 232.10, delta: 6.40, pct: "+2.84%", isUp: true },
   };
-
-  const ALL_INDIAN_STOCKS = [
-    { symbol: "^NSEI", name: "NIFTY 50", exchange: "NSE", sector: "Index" },
-    { symbol: "^BSESN", name: "SENSEX", exchange: "BSE", sector: "Index" },
-    { symbol: "^NSEBANK", name: "BANK NIFTY", exchange: "NSE", sector: "Index" },
-    { symbol: "^INDIAVIX", name: "INDIA VIX", exchange: "NSE", sector: "Volatility Index" },
-    { symbol: "ADANIENT.NS", name: "Adani Enterprises Ltd", exchange: "NSE", sector: "Conglomerate" },
-    { symbol: "ADANIPORTS.NS", name: "Adani Ports & SEZ Ltd", exchange: "NSE", sector: "Logistics & Ports" },
-    { symbol: "ADANIPOWER.NS", name: "Adani Power Ltd", exchange: "NSE", sector: "Power Generation" },
-    { symbol: "ADANIGREEN.NS", name: "Adani Green Energy Ltd", exchange: "NSE", sector: "Renewable Energy" },
-    { symbol: "ATGL.NS", name: "Adani Total Gas Ltd", exchange: "NSE", sector: "City Gas Distribution" },
-    { symbol: "ADANIENSOL.NS", name: "Adani Energy Solutions Ltd", exchange: "NSE", sector: "Power Transmission" },
-    { symbol: "AWL.NS", name: "Adani Wilmar Ltd", exchange: "NSE", sector: "FMCG" },
-    { symbol: "AMBUJACEM.NS", name: "Ambuja Cements Ltd (Adani)", exchange: "NSE", sector: "Cement" },
-    { symbol: "ACC.NS", name: "ACC Limited (Adani)", exchange: "NSE", sector: "Cement" },
-    { symbol: "NDTV.NS", name: "New Delhi Television Ltd (Adani)", exchange: "NSE", sector: "Media" },
-    { symbol: "RELIANCE.NS", name: "Reliance Industries Ltd", exchange: "NSE", sector: "Energy & Retail" },
-    { symbol: "TCS.NS", name: "Tata Consultancy Services Ltd", exchange: "NSE", sector: "Technology" },
-    { symbol: "TATAMOTORS.NS", name: "Tata Motors Ltd", exchange: "NSE", sector: "Automobile" },
-    { symbol: "TATASTEEL.NS", name: "Tata Steel Ltd", exchange: "NSE", sector: "Metals & Mining" },
-    { symbol: "TATAPOWER.NS", name: "Tata Power Company Ltd", exchange: "NSE", sector: "Power & Utilities" },
-    { symbol: "TATACONSUM.NS", name: "Tata Consumer Products Ltd", exchange: "NSE", sector: "FMCG" },
-    { symbol: "TITAN.NS", name: "Titan Company Ltd (Tata)", exchange: "NSE", sector: "Consumer Goods" },
-    { symbol: "TRENT.NS", name: "Trent Limited (Tata Retail)", exchange: "NSE", sector: "Retail" },
-    { symbol: "VOLTAS.NS", name: "Voltas Ltd (Tata)", exchange: "NSE", sector: "Consumer Electronics" },
-    { symbol: "TATAELXSI.NS", name: "Tata Elxsi Ltd", exchange: "NSE", sector: "Technology" },
-    { symbol: "HDFCBANK.NS", name: "HDFC Bank Ltd", exchange: "NSE", sector: "Banking & Finance" },
-    { symbol: "ICICIBANK.NS", name: "ICICI Bank Ltd", exchange: "NSE", sector: "Banking & Finance" },
-    { symbol: "SBIN.NS", name: "State Bank of India", exchange: "NSE", sector: "Banking & Finance" },
-    { symbol: "KOTAKBANK.NS", name: "Kotak Mahindra Bank Ltd", exchange: "NSE", sector: "Banking & Finance" },
-    { symbol: "AXISBANK.NS", name: "Axis Bank Ltd", exchange: "NSE", sector: "Banking & Finance" },
-    { symbol: "BAJFINANCE.NS", name: "Bajaj Finance Ltd", exchange: "NSE", sector: "Financial Services" },
-    { symbol: "INFY.NS", name: "Infosys Limited", exchange: "NSE", sector: "Technology" },
-    { symbol: "WIPRO.NS", name: "Wipro Limited", exchange: "NSE", sector: "Technology" },
-    { symbol: "HCLTECH.NS", name: "HCL Technologies Ltd", exchange: "NSE", sector: "Technology" },
-    { symbol: "MARUTI.NS", name: "Maruti Suzuki India Ltd", exchange: "NSE", sector: "Automobile" },
-    { symbol: "M&M.NS", name: "Mahindra & Mahindra Ltd", exchange: "NSE", sector: "Automobile" },
-    { symbol: "LT.NS", name: "Larsen & Toubro Ltd", exchange: "NSE", sector: "Infrastructure" },
-    { symbol: "ITC.NS", name: "ITC Limited", exchange: "NSE", sector: "FMCG" },
-    { symbol: "HINDUNILVR.NS", name: "Hindustan Unilever Ltd", exchange: "NSE", sector: "FMCG" },
-    { symbol: "SUNPHARMA.NS", name: "Sun Pharmaceutical Industries", exchange: "NSE", sector: "Healthcare" },
-    { symbol: "HAL.NS", name: "Hindustan Aeronautics Ltd", exchange: "NSE", sector: "Defence" },
-    { symbol: "BEL.NS", name: "Bharat Electronics Ltd", exchange: "NSE", sector: "Defence" },
-    { symbol: "HBLPOWER.NS", name: "HBL Power Systems Ltd (HBL Engineering)", exchange: "NSE", sector: "Engineering & Power Systems" },
-    { symbol: "POLYCAB.NS", name: "Polycab India Ltd", exchange: "NSE", sector: "Electricals & Wires" },
-    { symbol: "BOSCHLTD.NS", name: "Bosch Limited", exchange: "NSE", sector: "Auto Ancillaries" },
-    { symbol: "KPITTECH.NS", name: "KPIT Technologies Ltd", exchange: "NSE", sector: "IT & Engineering R&D" },
-    { symbol: "PERSISTENT.NS", name: "Persistent Systems Ltd", exchange: "NSE", sector: "Technology" },
-    { symbol: "COALINDIA.NS", name: "Coal India Ltd", exchange: "NSE", sector: "Mining" },
-    { symbol: "MAZDOCK.NS", name: "Mazagon Dock Shipbuilders", exchange: "NSE", sector: "Defence & Shipbuilding" },
-    { symbol: "COCHINSHIP.NS", name: "Cochin Shipyard Ltd", exchange: "NSE", sector: "Shipbuilding" },
-    { symbol: "DIXON.NS", name: "Dixon Technologies Ltd", exchange: "NSE", sector: "Electronics Mfg" },
-    { symbol: "BHEL.NS", name: "Bharat Heavy Electricals Ltd", exchange: "NSE", sector: "Engineering" },
-    { symbol: "ZOMATO.NS", name: "Zomato Limited", exchange: "NSE", sector: "Consumer Tech" },
-    { symbol: "PAYTM.NS", name: "One97 Communications (Paytm)", exchange: "NSE", sector: "Fintech" },
-    { symbol: "JIOFIN.NS", name: "Jio Financial Services", exchange: "NSE", sector: "Financial Services" },
-    { symbol: "SUZLON.NS", name: "Suzlon Energy Ltd", exchange: "NSE", sector: "Renewable Energy" },
-    { symbol: "IREDA.NS", name: "IREDA", exchange: "NSE", sector: "Renewable Finance" },
-    { symbol: "IRFC.NS", name: "Indian Railway Finance Corporation", exchange: "NSE", sector: "Railways" },
-    { symbol: "RVNL.NS", name: "Rail Vikas Nigam Ltd", exchange: "NSE", sector: "Railways" },
-  ];
 
   const synthesizeDynamicHistory = useCallback((sym: string, range: string, basePrice?: number): HistoryResponse => {
     const stockInfo = STOCK_BASE_PRICES[sym] || { name: sym, price: basePrice || 24000, delta: 15, pct: "+0.5%", isUp: true };
@@ -2598,9 +3052,21 @@ export default function DashboardPage() {
   const [activeNetworkNode, setActiveNetworkNode] = useState<any | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
+  const [attachedDoc, setAttachedDoc] = useState<File | null>(null);
+  const [attachedAudio, setAttachedAudio] = useState<File | null>(null);
+  const [showUrlField, setShowUrlField] = useState<boolean>(false);
   const [copilotExplanations, setCopilotExplanations] = useState<Record<string, any>>({});
   const [copilotLoading, setCopilotLoading] = useState<Record<string, boolean>>({});
+  const [overviewCollapsed, setOverviewCollapsed] = useState<boolean>(false);
+  const [uploadsForensicsFlapped, setUploadsForensicsFlapped] = useState<boolean | null>(null);
+  const [explanationCollapsed, setExplanationCollapsed] = useState<boolean>(false);
+  const [summaryCollapsed, setSummaryCollapsed] = useState<boolean>(false);
+  const [scammedCollapsed, setScammedCollapsed] = useState<boolean>(false);
+  const [companyOverviewCollapsed, setCompanyOverviewCollapsed] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const docInputRef = useRef<HTMLInputElement>(null);
+  const audioInputRef = useRef<HTMLInputElement>(null);
+  const protectTextareaRef = useRef<HTMLTextAreaElement>(null);
 
   const fetchCheckifyHistory = useCallback(async () => {
     try {
@@ -2620,7 +3086,7 @@ export default function DashboardPage() {
       const res = await fetch("/api/demo-cases");
       if (res.ok) {
         const data = await res.json();
-        setDemoSeedCases(data.cases || []);
+        setDemoSeedCases(Array.isArray(data) ? data : (data.cases || []));
       }
     } catch {
       // quiet
@@ -3206,6 +3672,15 @@ SIGNATURE OF THE COMPLAINANT / AUTHORIZED LEGAL HEIR
     }
   };
 
+  const handleProtectInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setScanText(e.target.value);
+    setScanTargetUrl("");
+    if (protectTextareaRef.current) {
+      protectTextareaRef.current.style.height = "auto";
+      protectTextareaRef.current.style.height = `${Math.min(380, Math.max(100, protectTextareaRef.current.scrollHeight))}px`;
+    }
+  };
+
   const getGrievanceSeverity = (result: any, text: string): number => {
     if (!result) return 0;
     if (result.category === "irrelevant_query" || result.action_taken === "IRRELEVANT_QUERY") {
@@ -3324,6 +3799,12 @@ SIGNATURE OF THE COMPLAINANT / AUTHORIZED LEGAL HEIR
     if (!textToAnalyze) return;
     if (queryOverride) {
       setGrievanceText(queryOverride);
+      setTimeout(() => {
+        if (grievanceTextareaRef.current) {
+          grievanceTextareaRef.current.style.height = "auto";
+          grievanceTextareaRef.current.style.height = `${Math.min(380, Math.max(100, grievanceTextareaRef.current.scrollHeight))}px`;
+        }
+      }, 50);
     }
 
     // Immediately blank previous scores, severity, and result so UI resets first
@@ -3456,52 +3937,201 @@ SIGNATURE OF THE COMPLAINANT / AUTHORIZED LEGAL HEIR
     setScanText("");
     setScanTargetUrl("");
     setAttachedFiles([]);
+    setAttachedDoc(null);
+    setAttachedAudio(null);
     setSelectedImagePreview(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
+    if (docInputRef.current) docInputRef.current.value = "";
+    if (audioInputRef.current) audioInputRef.current.value = "";
+    if (protectTextareaRef.current) protectTextareaRef.current.style.height = "100px";
     setCheckifyResult(null);
     setCheckifyTab("overview");
     setNaiveMode(false);
+    setOverviewCollapsed(false);
+    setUploadsForensicsFlapped(null);
+    setExplanationCollapsed(false);
+    setSummaryCollapsed(false);
+    setScammedCollapsed(false);
+    setInlineUrlInput("");
+    setIsAnalyzingInlineUrl(false);
     if (!silent) {
       setToastMessage("Reset console to clean state");
       setTimeout(() => setToastMessage(null), 2500);
     }
   };
 
-  const handleSelectSeedCase = async (c: any) => {
+  const handleDocFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length > 0) {
+      setAttachedDoc(files[0]);
+      setToastMessage(`Document attached: ${files[0].name}`);
+      setTimeout(() => setToastMessage(null), 2500);
+    }
+  };
+
+  const handleAudioFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length > 0) {
+      setAttachedAudio(files[0]);
+      setToastMessage(`Audio clip attached: ${files[0].name}`);
+      setTimeout(() => setToastMessage(null), 2500);
+    }
+  };
+
+  const handleSelectSeedCase = (c: any) => {
     setScanText(c.text || "");
     setScanTargetUrl(c.url || "");
     setAttachedFiles([]);
+    setAttachedDoc(null);
+    setAttachedAudio(null);
     setSelectedImagePreview(null);
-    setIsScanning(true);
-    try {
-      const formData = new FormData();
-      if (c.text) formData.append("text", c.text);
-      if (c.url) formData.append("url", c.url);
 
-      const res = await fetch("/api/analyze", {
-        method: "POST",
-        body: formData,
-      });
-      if (!res.ok) throw new Error("Seed case analysis failed");
-      const data = await res.json();
-      setCheckifyResult(data);
-      setCheckifyTab("overview");
-      fetchCheckifyHistory();
-    } catch (err: any) {
-      setToastMessage("Error: " + err.message);
-      setTimeout(() => setToastMessage(null), 3000);
-    } finally {
-      setIsScanning(false);
+    // Auto-resize textarea to accommodate preset text smoothly
+    setTimeout(() => {
+      if (protectTextareaRef.current) {
+        protectTextareaRef.current.style.height = "auto";
+        protectTextareaRef.current.style.height = `${Math.min(380, Math.max(100, protectTextareaRef.current.scrollHeight))}px`;
+        protectTextareaRef.current.focus();
+      }
+    }, 50);
+
+    setToastMessage(`Loaded preset: "${c.label}". Click 'Analyse' to scan.`);
+    setTimeout(() => setToastMessage(null), 3000);
+  };
+
+  // Helper to render transcript text with Streamlit-parity scam highlighting
+  const renderHighlightedOverviewText = (text: string, result: any) => {
+    if (!text) return "No text available.";
+
+    // If input was rejected by financial guardrail, show plain text with clear guardrail notice
+    if (result?.is_financial === false) {
+      return (
+        <div className="space-y-3">
+          <p className="leading-relaxed text-forest">{text}</p>
+          <div className="p-3 bg-rose-50 border border-rose-200 rounded-lg text-rose-800 text-xs font-mono">
+            ⛔ Input rejected by Financial Guardrail: No financial, trading, or predatory scam terms identified.
+          </div>
+        </div>
+      );
     }
+
+    // If backend provided pre-computed highlighted_html from DeBERTa/Groq engine, render directly
+    if (result?.highlighted_html) {
+      return (
+        <div
+          className="leading-relaxed"
+          dangerouslySetInnerHTML={{ __html: result.highlighted_html }}
+        />
+      );
+    }
+
+    const rawKeywords: string[] = [];
+
+    // 1. From words_depicting_scam
+    if (result?.words_depicting_scam && Array.isArray(result.words_depicting_scam)) {
+      result.words_depicting_scam.forEach((item: any) => {
+        if (item?.word) rawKeywords.push(String(item.word).trim());
+      });
+    }
+
+    // 2. From reasons & findings evidence
+    const allFindings = [
+      ...(result?.reasons || []),
+      ...(result?.findings || []),
+      ...(result?.modules?.content?.findings || []),
+    ];
+    allFindings.forEach((f: any) => {
+      if (f?.evidence) {
+        const parts = String(f.evidence)
+          .split(/[;,\n]+/)
+          .map((s: string) => s.replace(/["“”]/g, "").trim());
+        parts.forEach((p: string) => {
+          if (p.length >= 2) rawKeywords.push(p);
+        });
+      }
+    });
+
+    // 3. From entities / handles / domains / IDs
+    if (result?.paymentHandles) rawKeywords.push(...result.paymentHandles);
+    if (result?.domain) rawKeywords.push(result.domain);
+    if (result?.identity?.claimedNumber) rawKeywords.push(result.identity.claimedNumber);
+    if (result?.entities?.upiHandles) rawKeywords.push(...result.entities.upiHandles);
+    if (result?.entities?.stocks) rawKeywords.push(...result.entities.stocks);
+    if (result?.entities?.pctClaims) {
+      result.entities.pctClaims.forEach((pct: any) => {
+        if (pct) rawKeywords.push(String(pct));
+      });
+    }
+
+    // 4. Fallback common keywords if present in text
+    const fallbackTerms = [
+      "guaranteed", "sure shot", "vip group", "seats left", "exclusive ipo",
+      "kyc failure", "blocked today", "sebi verification", "tax clearance",
+      "tax fee", "payout", "allotment", "free tips", "100% profit", "paisa double",
+      "double your money", "unfreeze", "advance fee", "transfer immediately",
+      "no risk", "limited seats", "congratulations", "urgent"
+    ];
+    fallbackTerms.forEach((term) => {
+      if (text.toLowerCase().includes(term)) {
+        rawKeywords.push(term);
+      }
+    });
+
+    // Deduplicate and sort longest first so multi-word phrases match before substrings
+    const uniqueKeywords = Array.from(new Set(rawKeywords.map((k) => k.trim()).filter(Boolean)))
+      .sort((a, b) => b.length - a.length);
+
+    if (uniqueKeywords.length === 0) {
+      return text;
+    }
+
+    const escaped = uniqueKeywords.map((k) => k.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+    const regex = new RegExp(`(${escaped.join("|")})`, "gi");
+    const parts = text.split(regex);
+
+    return parts.map((part, index) => {
+      const isMatch = uniqueKeywords.some((k) => k.toLowerCase() === part.toLowerCase());
+      if (isMatch) {
+        return (
+          <mark
+            key={index}
+            className="scam-highlight"
+          >
+            {part}
+          </mark>
+        );
+      }
+      return <span key={index}>{part}</span>;
+    });
   };
 
   const handleRunScan = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     const text = scanText.trim();
-    const url = scanTargetUrl.trim();
     const file = attachedFiles[0];
-    if (!text && !url && !file) {
-      setToastMessage("Enter a message, link, or upload a screenshot first.");
+
+    let combinedText = text;
+    if (attachedDoc) {
+      combinedText = (combinedText + `\n[Attached Document: ${attachedDoc.name}]`).trim();
+    }
+    if (attachedAudio) {
+      combinedText = (combinedText + `\n[Attached Audio Note: ${attachedAudio.name}]`).trim();
+    }
+
+    // Extract URL directly from input text if present
+    const inTextUrl = extractUrlFromText(combinedText);
+    let finalUrl = "";
+    if (inTextUrl) {
+      // If a link is already in the input text, ALWAYS use that link only
+      finalUrl = inTextUrl;
+      setScanTargetUrl("");
+    } else if (scanTargetUrl.trim()) {
+      // Only use manual URL if no link exists in the input text
+      finalUrl = scanTargetUrl.trim();
+    }
+
+    if (!combinedText && !finalUrl && !file && !attachedDoc && !attachedAudio) {
+      setToastMessage("Enter a message, link, or upload a media file first.");
       setTimeout(() => setToastMessage(null), 2500);
       return;
     }
@@ -3509,8 +4139,8 @@ SIGNATURE OF THE COMPLAINANT / AUTHORIZED LEGAL HEIR
     setIsScanning(true);
     try {
       const formData = new FormData();
-      if (text) formData.append("text", text);
-      if (url) formData.append("url", url);
+      if (combinedText) formData.append("text", combinedText);
+      if (finalUrl) formData.append("url", finalUrl);
       if (file) formData.append("image", file);
 
       const res = await fetch("/api/analyze", {
@@ -3525,7 +4155,11 @@ SIGNATURE OF THE COMPLAINANT / AUTHORIZED LEGAL HEIR
 
       const data = await res.json();
       data._uploadedImagePreview = selectedImagePreview;
+      data._hasUploadedMedia = Boolean(file || attachedDoc || attachedAudio || selectedImagePreview);
       setCheckifyResult(data);
+      if (file || selectedImagePreview || data.ocr?.available) {
+        setUploadsForensicsFlapped(true);
+      }
       setCheckifyTab("overview");
       fetchCheckifyHistory();
     } catch (err: any) {
@@ -3534,6 +4168,52 @@ SIGNATURE OF THE COMPLAINANT / AUTHORIZED LEGAL HEIR
       setTimeout(() => setToastMessage(null), 3500);
     } finally {
       setIsScanning(false);
+    }
+  };
+
+  const handleAnalyzeInlineUrl = async (customUrl?: string) => {
+    let target = (customUrl || inlineUrlInput).trim();
+    if (!target) {
+      setToastMessage("Please enter a URL first.");
+      setTimeout(() => setToastMessage(null), 2500);
+      return;
+    }
+    if (!target.startsWith("http://") && !target.startsWith("https://")) {
+      target = "https://" + target;
+    }
+
+    setIsAnalyzingInlineUrl(true);
+    try {
+      const formData = new FormData();
+      const existingText = scanText.trim() || checkifyResult?.input?.text || "";
+      if (existingText) formData.append("text", existingText);
+      formData.append("url", target);
+      if (attachedFiles[0]) formData.append("image", attachedFiles[0]);
+
+      const res = await fetch("/api/analyze", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) {
+        const errJson = await res.json().catch(() => ({}));
+        throw new Error(errJson.detail || errJson.error || "Link analysis failed");
+      }
+
+      const data = await res.json();
+      data._uploadedImagePreview = selectedImagePreview;
+      data._hasUploadedMedia = Boolean(attachedFiles[0] || attachedDoc || attachedAudio || selectedImagePreview);
+      setCheckifyResult(data);
+      setScanTargetUrl(target);
+      setInlineUrlInput("");
+      setToastMessage("Link forensics updated successfully.");
+      setTimeout(() => setToastMessage(null), 2500);
+    } catch (err: any) {
+      console.error("Link analysis failed:", err);
+      setToastMessage("Failed to inspect link: " + (err.message || "Network error"));
+      setTimeout(() => setToastMessage(null), 3500);
+    } finally {
+      setIsAnalyzingInlineUrl(false);
     }
   };
 
@@ -3591,6 +4271,10 @@ SIGNATURE OF THE COMPLAINANT / AUTHORIZED LEGAL HEIR
         setTimeout(() => setToastMessage(null), 3000);
       }
     );
+  };
+
+  const handleDownloadPdf = () => {
+    window.print();
   };
 
   const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -3931,7 +4615,32 @@ SIGNATURE OF THE COMPLAINANT / AUTHORIZED LEGAL HEIR
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* 1. MARKET TAB (BLOOMBERG-STYLE FINANCIAL INTELLIGENCE TERMINAL) */}
         {activeTab === "market" && (
-          <div className="space-y-4 animate-in fade-in duration-300">
+          <div className="space-y-6 animate-in fade-in duration-300">
+            {/* Centered Main Title */}
+            <div className="text-center space-y-1.5">
+              <span className="text-[11px] sm:text-xs font-mono font-bold tracking-widest uppercase text-moss">
+                MARKET INTELLIGENCE
+              </span>
+              <h1 className="text-5xl sm:text-6xl font-semibold text-forest font-display tracking-tight">
+                Market
+              </h1>
+              <p className="text-sm sm:text-base text-black/60 font-sans max-w-xl mx-auto">
+                Real-time intelligence across Indian markets
+              </p>
+            </div>
+
+            {/* Section Infinite Ticker */}
+            <DashboardSectionTicker
+              items={[
+                "● MARKET INTELLIGENCE",
+                "NIFTY 50",
+                "SENSEX",
+                "BANK NIFTY",
+                "INDIA VIX",
+                "LIVE DATA",
+              ]}
+            />
+
             {/* Top Compact Ticker Ribbon */}
             <div className="grid grid-cols-2 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-black/8 bg-white border border-black/10 rounded-lg shadow-sm overflow-hidden">
               {indices.map((idx) => {
@@ -4347,7 +5056,7 @@ SIGNATURE OF THE COMPLAINANT / AUTHORIZED LEGAL HEIR
                               textAnchor="middle"
                               fill="#b2eb76"
                               fontSize="8.5"
-                              fontFamily="monospace"
+                              fontFamily="Inter, sans-serif"
                               fontWeight="bold"
                             >
                               PEAK: ₹{((peakCoord.pt.close ?? (peakCoord.pt as any).price ?? 0)).toFixed(0)}
@@ -4812,14 +5521,14 @@ SIGNATURE OF THE COMPLAINANT / AUTHORIZED LEGAL HEIR
             {isChatbotOpen && (
               <div className="fixed bottom-6 right-4 sm:right-6 z-50 w-[94vw] sm:w-[480px] md:w-[540px] max-w-[560px] h-[650px] max-h-[88vh] bg-white border border-black/15 rounded-2xl shadow-2xl overflow-hidden flex flex-col animate-in fade-in slide-in-from-bottom-6 zoom-in-95 duration-200">
                 {/* Pop-out Header */}
-                <div className="px-4 py-3 border-b border-black/8 bg-sage-1/40 flex items-center justify-between gap-2 shrink-0">
+                <div className="px-4 py-3 border-b border-black/10 bg-white flex items-center justify-between gap-2 shrink-0">
                   <div className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-lg bg-forest text-lemongrass flex items-center justify-center shadow-xs">
-                      <Bot className="w-4 h-4" />
+                    <div className="w-8 h-8 rounded-lg bg-[#17280E] text-white flex items-center justify-center shadow-xs">
+                      <Bot className="w-4 h-4 text-white" />
                     </div>
                     <div>
                       <div className="flex items-center gap-1.5">
-                        <h3 className="text-xs font-bold text-forest uppercase tracking-wider font-display">
+                        <h3 className="text-xs font-bold text-[#17280E] uppercase tracking-wider font-display">
                           AI COPILOT · {activeQuote?.symbol || activeSymbol}
                         </h3>
                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
@@ -4839,11 +5548,11 @@ SIGNATURE OF THE COMPLAINANT / AUTHORIZED LEGAL HEIR
                         className={clsx(
                           "px-2 py-0.5 rounded transition-all cursor-pointer",
                           aiCopilotTab === "guide"
-                            ? "bg-forest text-lemongrass shadow-2xs"
+                            ? "bg-[#17280E] text-white shadow-2xs"
                             : "text-black/60 hover:text-black"
                         )}
                       >
-                        Guide (RAG)
+                        Info
                       </button>
                       <button
                         type="button"
@@ -4851,11 +5560,11 @@ SIGNATURE OF THE COMPLAINANT / AUTHORIZED LEGAL HEIR
                         className={clsx(
                           "px-2 py-0.5 rounded transition-all cursor-pointer",
                           aiCopilotTab === "chat"
-                            ? "bg-forest text-lemongrass shadow-2xs"
+                            ? "bg-[#17280E] text-white shadow-2xs"
                             : "text-black/60 hover:text-black"
                         )}
                       >
-                        Ask Copilot
+                        Research Desk
                       </button>
                     </div>
 
@@ -4891,10 +5600,10 @@ SIGNATURE OF THE COMPLAINANT / AUTHORIZED LEGAL HEIR
                   </div>
                 </div>
 
-                {/* Sub-Header Disclaimer Notice */}
-                <div className="bg-amber-500/10 px-3.5 py-1.5 border-b border-amber-500/20 flex items-center gap-2 text-[10.5px] font-sans text-amber-950 shrink-0">
-                  <AlertTriangle className="w-3.5 h-3.5 text-amber-700 shrink-0" />
-                  <span className="truncate">
+                {/* Sub-Header Disclaimer Notice (Red background, white text, center aligned) */}
+                <div className="bg-red-600 px-3.5 py-1.5 flex items-center justify-center gap-2 text-xs font-sans text-white font-medium text-center shrink-0 w-full shadow-2xs">
+                  <AlertTriangle className="w-3.5 h-3.5 text-white shrink-0" />
+                  <span>
                     <strong>Notice:</strong> Grounded in public filings. No Buy/Sell calls.
                   </span>
                 </div>
@@ -4902,114 +5611,160 @@ SIGNATURE OF THE COMPLAINANT / AUTHORIZED LEGAL HEIR
                 {/* Content Stream: either RAG Guide or Chat Stream */}
                 {aiCopilotTab === "guide" ? (
                   <div className="flex-1 p-4 overflow-y-auto space-y-4 font-sans text-xs bg-[#fdfefc] text-left">
-                    {/* Sector, Market Cap & Performance Header Pill */}
+                    {/* Sector Classification: Green title block, White rest */}
                     {guideData && (
-                      <div className="bg-sage-1/35 border border-black/10 rounded-xl p-3 space-y-2">
-                        <div className="flex flex-wrap items-center justify-between gap-1 text-[11px] font-mono">
-                          <span className="font-bold text-forest">
-                            {guideData.facts.sector || "Energy & Conglomerate"}
-                          </span>
-                          <span className="text-black/50 text-[10px]">
-                            {guideData.facts.industry || "Core Enterprise"}
-                          </span>
+                      <div className="rounded-2xl overflow-hidden border border-black/10 shadow-sm">
+                        {/* Green Title Block (#17280E) */}
+                        <div className="bg-[#17280E] text-white p-3 sm:p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                          <div className="space-y-0.5">
+                            <span className="text-[9px] font-mono uppercase tracking-wider text-[#9EB88D] font-bold block">
+                              SECTOR CLASSIFICATION
+                            </span>
+                            <h2 className="text-sm sm:text-base font-display font-bold text-white tracking-tight">
+                              {guideData.facts.sector || "Energy & Conglomerate"}
+                            </h2>
+                            <p className="text-[11px] font-sans text-white/70">
+                              {guideData.facts.industry || "Core Enterprise Operations"}
+                            </p>
+                          </div>
+                          <div className="shrink-0 self-start sm:self-center">
+                            <span className="px-2 py-0.5 rounded-full text-[9.5px] font-mono font-bold bg-white/10 text-white border border-white/15 uppercase tracking-wide">
+                              STATUTORY GROUNDED
+                            </span>
+                          </div>
                         </div>
-                        <div className="grid grid-cols-3 gap-2 pt-1 border-t border-black/8 text-[10.5px]">
-                          <div>
-                            <div className="text-black/45 text-[9.5px] uppercase font-mono font-bold">Market Cap</div>
-                            <div className="font-bold text-forest">{guideData.facts.market_cap || "₹19.84L Cr"}</div>
-                          </div>
-                          <div>
-                            <div className="text-black/45 text-[9.5px] uppercase font-mono font-bold">1M Return</div>
-                            <div className="font-bold text-emerald-700">{guideData.facts.change_1m_pct || "+4.8%"}</div>
-                          </div>
-                          <div>
-                            <div className="text-black/45 text-[9.5px] uppercase font-mono font-bold">52W High</div>
-                            <div className="font-bold text-forest">{guideData.facts.fifty_two_week_high || "₹3,024"}</div>
+
+                        {/* White Content Section: Market Cap, 1M Return, 52W High */}
+                        <div className="bg-white p-3.5 sm:p-4 border-t border-black/10">
+                          <div className="grid grid-cols-3 gap-2">
+                            {/* Market Cap */}
+                            <div className="p-2.5 rounded-xl bg-sage-1/20 border border-black/8 space-y-0.5">
+                              <span className="text-[9px] font-mono uppercase font-bold text-black/50 tracking-wider block">
+                                Market Cap
+                              </span>
+                              <span className="text-xs sm:text-sm font-mono font-bold text-forest block truncate">
+                                {guideData.facts.market_cap || "₹19.84L Cr"}
+                              </span>
+                            </div>
+
+                            {/* 1M Return */}
+                            <div className="p-2.5 rounded-xl bg-sage-1/20 border border-black/8 space-y-0.5">
+                              <span className="text-[9px] font-mono uppercase font-bold text-black/50 tracking-wider block">
+                                1M Return
+                              </span>
+                              <span className={clsx(
+                                "text-xs sm:text-sm font-mono font-bold block truncate",
+                                (guideData.facts.change_1m_pct || "").startsWith("-")
+                                  ? "text-rose-600"
+                                  : "text-emerald-700"
+                              )}>
+                                {guideData.facts.change_1m_pct || "+4.8%"}
+                              </span>
+                            </div>
+
+                            {/* 52 Week High */}
+                            <div className="p-2.5 rounded-xl bg-sage-1/20 border border-black/8 space-y-0.5">
+                              <span className="text-[9px] font-mono uppercase font-bold text-black/50 tracking-wider block">
+                                52 Week High
+                              </span>
+                              <span className="text-xs sm:text-sm font-mono font-bold text-forest block truncate">
+                                {guideData.facts.fifty_two_week_high || "₹3,024"}
+                              </span>
+                            </div>
                           </div>
                         </div>
                       </div>
                     )}
 
-                    {/* DETERMINISTIC FINANCIAL FACTS (6 Grid Cards) */}
+                    {/* Deterministic Facts: Green title block, White rest (No emojis) */}
                     {guideData && (
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between text-[10.5px] font-mono text-black/50 uppercase font-bold border-b border-black/8 pb-1">
-                          <span>Deterministic Facts (0% LLM)</span>
-                          <span className="text-emerald-700">Grounded</span>
+                      <div className="rounded-2xl overflow-hidden border border-black/10 shadow-sm">
+                        {/* Green Title Block (#17280E) */}
+                        <div className="bg-[#17280E] text-white p-3 sm:p-3.5">
+                          <span className="text-[9px] font-mono uppercase tracking-wider text-[#9EB88D] font-bold block mb-0.5">
+                            QUANTITATIVE METRICS
+                          </span>
+                          <h2 className="text-sm sm:text-base font-display font-bold text-white tracking-tight">
+                            Deterministic Facts
+                          </h2>
+                          <p className="text-[11px] font-sans text-white/70 mt-0.5">
+                            Audited public regulatory filings &amp; mathematical data verification
+                          </p>
                         </div>
 
-                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-left">
-                          {/* Fact 1: Profitability */}
-                          <div className="p-2.5 rounded-xl bg-sage-1/25 border border-black/8 space-y-1">
-                            <div className="text-[10px] font-mono text-black/50 font-bold uppercase">Profitable</div>
-                            <div className="flex items-center gap-1.5">
-                              <span className={clsx("w-2 h-2 rounded-full", guideData.facts.profitable ? "bg-emerald-500" : "bg-rose-500")} />
-                              <span className="text-sm font-extrabold font-display text-forest">
-                                {guideData.facts.profitable ? "Yes" : "No"}
-                              </span>
+                        {/* White Content Section: 6 Grid Metric Cards (No emojis) */}
+                        <div className="bg-white p-3.5 sm:p-4 border-t border-black/10">
+                          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-left">
+                            {/* Fact 1: Profitability */}
+                            <div className="p-2.5 rounded-xl bg-sage-1/20 border border-black/8 space-y-0.5 hover:bg-sage-1/30 transition-colors">
+                              <div className="text-[9.5px] font-mono text-black/50 font-bold uppercase tracking-wider">Profitable</div>
+                              <div className="flex items-center gap-1.5">
+                                <span className={clsx("w-2 h-2 rounded-full", guideData.facts.profitable ? "bg-emerald-600" : "bg-rose-600")} />
+                                <span className="text-xs sm:text-sm font-extrabold font-display text-forest">
+                                  {guideData.facts.profitable ? "Yes" : "No"}
+                                </span>
+                              </div>
+                              <div className="text-[10px] text-black/60 truncate">
+                                {guideData.facts.profitable ? "Positive Net Income" : "Loss-making period"}
+                              </div>
                             </div>
-                            <div className="text-[10px] text-black/60 truncate">
-                              {guideData.facts.profitable ? "Positive Net Income" : "Loss-making period"}
-                            </div>
-                          </div>
 
-                          {/* Fact 2: Revenue Trend */}
-                          <div className="p-2.5 rounded-xl bg-sage-1/25 border border-black/8 space-y-1">
-                            <div className="text-[10px] font-mono text-black/50 font-bold uppercase">Revenue Trend</div>
-                            <div className="flex items-center gap-1 text-sm font-extrabold font-display text-forest">
-                              <span className={guideData.facts.revenue_trend.direction === "up" ? "text-emerald-700 font-bold" : "text-amber-700 font-bold"}>
-                                {guideData.facts.revenue_trend.direction === "up" ? "↑" : "↓"}
-                              </span>
-                              <span>{guideData.facts.revenue_trend.pct}%</span>
+                            {/* Fact 2: Revenue Trend (No emojis) */}
+                            <div className="p-2.5 rounded-xl bg-sage-1/20 border border-black/8 space-y-0.5 hover:bg-sage-1/30 transition-colors">
+                              <div className="text-[9.5px] font-mono text-black/50 font-bold uppercase tracking-wider">Revenue Trend</div>
+                              <div className="flex items-center gap-1 text-xs sm:text-sm font-extrabold font-display">
+                                <span className={guideData.facts.revenue_trend.direction === "up" ? "text-emerald-700 font-bold" : "text-amber-700 font-bold"}>
+                                  {guideData.facts.revenue_trend.direction === "up" ? "+" : "-"}{guideData.facts.revenue_trend.pct}%
+                                </span>
+                              </div>
+                              <div className="text-[10px] text-black/60 truncate">YoY top-line</div>
                             </div>
-                            <div className="text-[10px] text-black/60 truncate">YoY top-line</div>
-                          </div>
 
-                          {/* Fact 3: EPS Trend */}
-                          <div className="p-2.5 rounded-xl bg-sage-1/25 border border-black/8 space-y-1">
-                            <div className="text-[10px] font-mono text-black/50 font-bold uppercase">EPS Trend</div>
-                            <div className="flex items-center gap-1 text-sm font-extrabold font-display text-forest">
-                              <span className={guideData.facts.eps_trend.direction === "up" ? "text-emerald-700 font-bold" : "text-amber-700 font-bold"}>
-                                {guideData.facts.eps_trend.direction === "up" ? "↑" : "↓"}
-                              </span>
-                              <span>{guideData.facts.eps_trend.pct}%</span>
+                            {/* Fact 3: EPS Trend (No emojis) */}
+                            <div className="p-2.5 rounded-xl bg-sage-1/20 border border-black/8 space-y-0.5 hover:bg-sage-1/30 transition-colors">
+                              <div className="text-[9.5px] font-mono text-black/50 font-bold uppercase tracking-wider">EPS Trend</div>
+                              <div className="flex items-center gap-1 text-xs sm:text-sm font-extrabold font-display">
+                                <span className={guideData.facts.eps_trend.direction === "up" ? "text-emerald-700 font-bold" : "text-amber-700 font-bold"}>
+                                  {guideData.facts.eps_trend.direction === "up" ? "+" : "-"}{guideData.facts.eps_trend.pct}%
+                                </span>
+                              </div>
+                              <div className="text-[10px] text-black/60 truncate">YoY per-share</div>
                             </div>
-                            <div className="text-[10px] text-black/60 truncate">YoY per-share</div>
-                          </div>
 
-                          {/* Fact 4: Valuation Verdict */}
-                          <div className="p-2.5 rounded-xl bg-sage-1/25 border border-black/8 space-y-1">
-                            <div className="text-[10px] font-mono text-black/50 font-bold uppercase">Valuation</div>
-                            <div className="text-xs font-bold text-forest truncate">
-                              {guideData.facts.valuation.verdict}
+                            {/* Fact 4: Valuation Verdict */}
+                            <div className="p-2.5 rounded-xl bg-sage-1/20 border border-black/8 space-y-0.5 hover:bg-sage-1/30 transition-colors">
+                              <div className="text-[9.5px] font-mono text-black/50 font-bold uppercase tracking-wider">Valuation</div>
+                              <div className="text-xs font-bold text-forest truncate">
+                                {guideData.facts.valuation.verdict}
+                              </div>
+                              <div className="text-[10px] text-black/60 font-mono truncate">
+                                PE {guideData.facts.valuation.pe} vs {guideData.facts.valuation.sector_median_pe} Med
+                              </div>
                             </div>
-                            <div className="text-[10px] text-black/60 font-mono truncate">
-                              PE {guideData.facts.valuation.pe} vs {guideData.facts.valuation.sector_median_pe} Med
-                            </div>
-                          </div>
 
-                          {/* Fact 5: Balance Sheet */}
-                          <div className="p-2.5 rounded-xl bg-sage-1/25 border border-black/8 space-y-1">
-                            <div className="text-[10px] font-mono text-black/50 font-bold uppercase">Balance Sheet</div>
-                            <div className="text-xs font-bold text-forest truncate">
-                              {guideData.facts.balance_sheet.verdict}
+                            {/* Fact 5: Balance Sheet */}
+                            <div className="p-2.5 rounded-xl bg-sage-1/20 border border-black/8 space-y-0.5 hover:bg-sage-1/30 transition-colors">
+                              <div className="text-[9.5px] font-mono text-black/50 font-bold uppercase tracking-wider">Balance Sheet</div>
+                              <div className="text-xs font-bold text-forest truncate">
+                                {guideData.facts.balance_sheet.verdict}
+                              </div>
+                              <div className="text-[10px] text-black/60 font-mono truncate">
+                                D/E: {guideData.facts.balance_sheet.debt_to_equity}x
+                              </div>
                             </div>
-                            <div className="text-[10px] text-black/60 font-mono truncate">
-                              D/E: {guideData.facts.balance_sheet.debt_to_equity}x
-                            </div>
-                          </div>
 
-                          {/* Fact 6: Surveillance */}
-                          <div className="p-2.5 rounded-xl bg-sage-1/25 border border-black/8 space-y-1">
-                            <div className="text-[10px] font-mono text-black/50 font-bold uppercase">Surveillance</div>
-                            <div className="flex items-center gap-1">
-                              <span className={clsx("w-2 h-2 rounded-full", guideData.facts.surveillance.asm || guideData.facts.surveillance.gsm ? "bg-amber-500" : "bg-emerald-500")} />
-                              <span className="text-xs font-bold text-forest">
-                                {guideData.facts.surveillance.asm || guideData.facts.surveillance.gsm ? "Under Watch" : "Clean"}
-                              </span>
-                            </div>
-                            <div className="text-[10px] text-black/60 font-mono truncate">
-                              ASM: {guideData.facts.surveillance.asm ? "Yes" : "No"} · GSM: {guideData.facts.surveillance.gsm ? "Yes" : "No"}
+                            {/* Fact 6: Surveillance */}
+                            <div className="p-2.5 rounded-xl bg-sage-1/20 border border-black/8 space-y-0.5 hover:bg-sage-1/30 transition-colors">
+                              <div className="text-[9.5px] font-mono text-black/50 font-bold uppercase tracking-wider">Surveillance</div>
+                              <div className="flex items-center gap-1.5">
+                                <span className={clsx("w-2 h-2 rounded-full", guideData.facts.surveillance.asm || guideData.facts.surveillance.gsm ? "bg-amber-600" : "bg-emerald-600")} />
+                                <span className="text-xs font-bold text-forest">
+                                  {guideData.facts.surveillance.asm || guideData.facts.surveillance.gsm ? "Under Watch" : "Clean"}
+                                </span>
+                              </div>
+                              <div className="text-[10px] text-black/60 font-mono truncate">
+                                ASM: {guideData.facts.surveillance.asm ? "Yes" : "No"} · GSM: {guideData.facts.surveillance.gsm ? "Yes" : "No"}
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -5019,116 +5774,254 @@ SIGNATURE OF THE COMPLAINANT / AUTHORIZED LEGAL HEIR
                     {/* RAG-GROUNDED NARRATIVE CARDS */}
                     {guideData && (
                       <div className="space-y-3 pt-1">
-                        {/* What Does The Company Do? */}
-                        <div className="p-3.5 rounded-xl bg-white border border-black/10 shadow-2xs space-y-2">
-                          <div className="flex items-center justify-between">
-                            <div className="text-[11px] font-bold text-forest uppercase tracking-wider font-display">
-                              What Does The Company Do?
-                            </div>
-                            <span className="text-[9.5px] font-mono text-black/40">3-Line Read</span>
-                          </div>
-                          <p className="text-xs text-black/80 leading-relaxed">
-                            {guideData.narrative.company_overview.text}
-                          </p>
-                          <div className="flex flex-wrap items-center gap-1 pt-1">
-                            {guideData.narrative.company_overview.sources.map((s, idx) => (
-                              <span key={idx} className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[9.5px] font-mono bg-sage-1/40 text-forest border border-black/8">
-                                <FileText className="w-2.5 h-2.5 text-emerald-800" />
-                                <span>{s.doc} ({s.date})</span>
+                        {/* What Does The Company Do? (Green question box, White answer) */}
+                        <div className="rounded-2xl overflow-hidden border border-black/10 shadow-sm transition-all duration-200">
+                          {/* Green Question Box (#17280E) */}
+                          <button
+                            type="button"
+                            onClick={() => setCompanyOverviewCollapsed(!companyOverviewCollapsed)}
+                            className="w-full bg-[#17280E] text-white p-3 sm:p-3.5 flex items-center justify-between gap-3 text-left hover:bg-[#1a2d10] transition-colors cursor-pointer select-none"
+                            aria-expanded={!companyOverviewCollapsed}
+                          >
+                            <div className="space-y-0.5">
+                              <span className="text-[9px] font-mono uppercase tracking-wider text-[#9EB88D] font-bold block">
+                                BUSINESS PROFILE
                               </span>
-                            ))}
-                          </div>
+                              <h2 className="text-sm sm:text-base font-display font-bold text-white tracking-tight">
+                                What Does The Company Do?
+                              </h2>
+                            </div>
+                            <div className="flex items-center gap-2 shrink-0">
+                              <span className="text-xs font-mono font-medium text-white/60 hidden sm:inline-block">
+                                {!companyOverviewCollapsed ? "Collapse" : "Expand"}
+                              </span>
+                              <div className={clsx(
+                                "w-6 h-6 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 flex items-center justify-center text-white transition-transform duration-200",
+                                !companyOverviewCollapsed ? "rotate-180" : "rotate-0"
+                              )}>
+                                <ChevronDown className="w-3.5 h-3.5 text-white" />
+                              </div>
+                            </div>
+                          </button>
+
+                          {/* White Answer Section */}
+                          {!companyOverviewCollapsed && (
+                            <div className="bg-white p-3.5 sm:p-4 border-t border-black/10 space-y-2.5 animate-in fade-in duration-200">
+                              <p className="text-xs sm:text-[13px] font-sans text-black/80 leading-relaxed">
+                                {guideData.narrative.company_overview.text}
+                              </p>
+                              {guideData.narrative.company_overview.sources && guideData.narrative.company_overview.sources.length > 0 && (
+                                <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                                  {guideData.narrative.company_overview.sources.map((s, idx) => (
+                                    <span
+                                      key={idx}
+                                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[10px] font-mono bg-sage-1/40 text-forest border border-black/10 hover:bg-sage-1/60 transition-colors"
+                                    >
+                                      <FileText className="w-3 h-3 text-emerald-800" />
+                                      <span>{s.doc} ({s.date})</span>
+                                    </span>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          )}
                         </div>
 
-                        {/* Side-by-Side Bull Case & Bear Case */}
+                        {/* Side-by-Side Bull Case & Bear Case (Green Heading Bracket, White Text Centre, Permanently Open) */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                           {/* Bull Case */}
-                          <div className="p-3 rounded-xl bg-emerald-50/40 border border-emerald-600/20 space-y-2 flex flex-col justify-between">
-                            <div className="space-y-1.5">
-                              <div className="flex items-center gap-1.5 text-emerald-900 font-bold text-[11px] font-display">
-                                <TrendingUp className="w-3.5 h-3.5 text-emerald-700" />
-                                <span>Bull Case</span>
-                              </div>
-                              <p className="text-[11px] text-black/80 leading-relaxed">
-                                {guideData.narrative.bull_case.text}
-                              </p>
+                          <div className="rounded-2xl overflow-hidden border border-black/10 shadow-sm flex flex-col justify-between">
+                            {/* Green Heading Bracket (#17280E) */}
+                            <div className="bg-[#17280E] text-white p-3 sm:p-3.5">
+                              <span className="text-[9px] font-mono uppercase tracking-wider text-[#9EB88D] font-bold block mb-0.5">
+                                UPSIDE THESIS
+                              </span>
+                              <h3 className="text-sm font-display font-bold text-white tracking-tight">
+                                Bull Case
+                              </h3>
                             </div>
-                            <div className="pt-1.5 border-t border-emerald-600/10 flex flex-wrap items-center gap-1">
-                              {guideData.narrative.bull_case.sources.map((s, idx) => (
-                                <span key={idx} className="px-1.5 py-0.5 rounded text-[9px] font-mono bg-white text-emerald-900 border border-emerald-200">
-                                  {s.doc} ({s.date})
-                                </span>
-                              ))}
+
+                            {/* White Text Centre */}
+                            <div className="bg-white p-3.5 sm:p-4 border-t border-black/10 flex-1 flex flex-col justify-between space-y-2.5">
+                              <p className="text-xs sm:text-[13px] font-sans text-black/80 leading-relaxed">
+                                {renderUnderlinedKeyTerms(guideData.narrative.bull_case.text, true)}
+                              </p>
+
+                              {guideData.narrative.bull_case.sources && guideData.narrative.bull_case.sources.length > 0 && (
+                                <div className="pt-2 border-t border-black/8 flex flex-wrap items-center gap-1">
+                                  {guideData.narrative.bull_case.sources.map((s, idx) => (
+                                    <span
+                                      key={idx}
+                                      className="px-2 py-0.5 rounded text-[9.5px] font-mono bg-sage-1/40 text-forest border border-black/10 inline-flex items-center gap-1"
+                                    >
+                                      <FileText className="w-2.5 h-2.5 text-emerald-800" />
+                                      <span>{s.doc} ({s.date})</span>
+                                    </span>
+                                  ))}
+                                </div>
+                              )}
                             </div>
                           </div>
 
                           {/* Bear Case */}
-                          <div className="p-3 rounded-xl bg-amber-50/40 border border-amber-600/20 space-y-2 flex flex-col justify-between">
-                            <div className="space-y-1.5">
-                              <div className="flex items-center gap-1.5 text-amber-900 font-bold text-[11px] font-display">
-                                <TrendingDown className="w-3.5 h-3.5 text-amber-700" />
-                                <span>Bear Case</span>
-                              </div>
-                              <p className="text-[11px] text-black/80 leading-relaxed">
-                                {guideData.narrative.bear_case.text}
-                              </p>
+                          <div className="rounded-2xl overflow-hidden border border-black/10 shadow-sm flex flex-col justify-between">
+                            {/* Green Heading Bracket (#17280E) */}
+                            <div className="bg-[#17280E] text-white p-3 sm:p-3.5">
+                              <span className="text-[9px] font-mono uppercase tracking-wider text-[#9EB88D] font-bold block mb-0.5">
+                                DOWNSIDE RISKS
+                              </span>
+                              <h3 className="text-sm font-display font-bold text-white tracking-tight">
+                                Bear Case
+                              </h3>
                             </div>
-                            <div className="pt-1.5 border-t border-amber-600/10 flex flex-wrap items-center gap-1">
-                              {guideData.narrative.bear_case.sources.map((s, idx) => (
-                                <span key={idx} className="px-1.5 py-0.5 rounded text-[9px] font-mono bg-white text-amber-900 border border-amber-200">
-                                  {s.doc} ({s.date})
-                                </span>
+
+                            {/* White Text Centre */}
+                            <div className="bg-white p-3.5 sm:p-4 border-t border-black/10 flex-1 flex flex-col justify-between space-y-2.5">
+                              <p className="text-xs sm:text-[13px] font-sans text-black/80 leading-relaxed">
+                                {renderUnderlinedKeyTerms(guideData.narrative.bear_case.text, false)}
+                              </p>
+
+                              {guideData.narrative.bear_case.sources && guideData.narrative.bear_case.sources.length > 0 && (
+                                <div className="pt-2 border-t border-black/8 flex flex-wrap items-center gap-1">
+                                  {guideData.narrative.bear_case.sources.map((s, idx) => (
+                                    <span
+                                      key={idx}
+                                      className="px-2 py-0.5 rounded text-[9.5px] font-mono bg-sage-1/40 text-forest border border-black/10 inline-flex items-center gap-1"
+                                    >
+                                      <FileText className="w-2.5 h-2.5 text-emerald-800" />
+                                      <span>{s.doc} ({s.date})</span>
+                                    </span>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Major Risks & Watchpoints (Green Heading Bracket, White Text Centre) */}
+                        <div className="rounded-2xl overflow-hidden border border-black/10 shadow-sm flex flex-col justify-between">
+                          {/* Green Heading Bracket (#17280E) */}
+                          <div className="bg-[#17280E] text-white p-3 sm:p-3.5">
+                            <span className="text-[9px] font-mono uppercase tracking-wider text-[#9EB88D] font-bold block mb-0.5">
+                              REGULATORY &amp; MARKET THREATS
+                            </span>
+                            <h3 className="text-sm sm:text-base font-display font-bold text-white tracking-tight">
+                              Major Risks &amp; Watchpoints
+                            </h3>
+                          </div>
+
+                          {/* White Text Centre */}
+                          <div className="bg-white p-3.5 sm:p-4 border-t border-black/10 space-y-3">
+                            <div className="space-y-2.5">
+                              {guideData.narrative.major_risks.map((risk, idx) => (
+                                <div key={idx} className="flex items-start gap-2.5 text-xs sm:text-[13px] font-sans text-black/80 leading-relaxed">
+                                  <span className="w-1.5 h-1.5 rounded-full bg-amber-600 mt-1.5 shrink-0" />
+                                  <div className="space-y-1 flex-1">
+                                    <p>{renderUnderlinedKeyTerms(risk.text, false)}</p>
+                                    {risk.sources && risk.sources.length > 0 && (
+                                      <div className="flex flex-wrap items-center gap-1 pt-1">
+                                        {risk.sources.map((s, sIdx) => (
+                                          <span
+                                            key={sIdx}
+                                            className="px-2 py-0.5 rounded text-[9.5px] font-mono bg-sage-1/40 text-forest border border-black/10 inline-flex items-center gap-1"
+                                          >
+                                            <FileText className="w-2.5 h-2.5 text-emerald-800" />
+                                            <span>{s.doc} ({s.date})</span>
+                                          </span>
+                                        ))}
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
                               ))}
                             </div>
                           </div>
                         </div>
 
-                        {/* Major Risks */}
-                        <div className="p-3 rounded-xl bg-white border border-black/10 shadow-2xs space-y-2">
-                          <div className="flex items-center gap-1.5 text-forest font-bold text-[11px] font-display">
-                            <AlertTriangle className="w-3.5 h-3.5 text-amber-600" />
-                            <span>Major Risks &amp; Watchpoints</span>
+                        {/* What Would Change My View? (Green Heading Bracket, White Text Centre, 1,2,3 Bullet Points) */}
+                        <div className="rounded-2xl overflow-hidden border border-black/10 shadow-sm flex flex-col justify-between">
+                          {/* Green Heading Bracket (#17280E) */}
+                          <div className="bg-[#17280E] text-white p-3 sm:p-3.5">
+                            <span className="text-[9px] font-mono uppercase tracking-wider text-[#9EB88D] font-bold block mb-0.5">
+                              CATALYSTS &amp; PIVOT TRIGGERS
+                            </span>
+                            <h3 className="text-sm sm:text-base font-display font-bold text-white tracking-tight">
+                              What Would Change My View?
+                            </h3>
                           </div>
-                          <div className="space-y-1.5">
-                            {guideData.narrative.major_risks.map((risk, idx) => (
-                              <div key={idx} className="text-[11px] text-black/80 leading-relaxed pl-1">
-                                • {risk.text}
+
+                          {/* White Text Centre with 1, 2, 3 as Bullet Points */}
+                          <div className="bg-white p-3.5 sm:p-4 border-t border-black/10 space-y-3">
+                            {(() => {
+                              const rawText = guideData.narrative.what_would_change_my_view.text || "";
+                              const introMatch = rawText.match(/^(?:Watch for|Track|Key catalysts|Key triggers|Monitor)[:\s]*/i);
+                              const intro = introMatch ? introMatch[0].trim() : "";
+                              const remaining = introMatch ? rawText.substring(introMatch[0].length) : rawText;
+
+                              const bulletMatches = remaining.match(/(?:\(\d+\)|\b\d+[\.)])\s*[^;]+(?:;|\.|$)/g);
+                              const bullets = bulletMatches && bulletMatches.length > 0
+                                ? bulletMatches.map((b) => b.replace(/^(?:\(\d+\)|\b\d+[\.)])\s*/, "").replace(/[;\s.]+$/, "").trim())
+                                : remaining.split(/[;\n]/).map((s) => s.replace(/^(?:\(\d+\)|\b\d+[\.)])\s*/, "").trim()).filter(Boolean);
+
+                              return (
+                                <div className="space-y-2.5">
+                                  {intro && (
+                                    <p className="text-[11px] font-mono text-black/50 font-bold uppercase tracking-wider">
+                                      {intro}
+                                    </p>
+                                  )}
+                                  <div className="space-y-2">
+                                    {bullets.map((bullet, idx) => (
+                                      <div key={idx} className="flex items-start gap-2.5 text-xs sm:text-[13px] font-sans text-black/80 leading-relaxed">
+                                        <span className="w-5 h-5 rounded-full bg-forest text-white font-mono text-[10.5px] font-bold flex items-center justify-center shrink-0 mt-0.5">
+                                          {idx + 1}
+                                        </span>
+                                        <p className="flex-1 pt-0.5">
+                                          {renderUnderlinedKeyTerms(bullet, true)}
+                                        </p>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              );
+                            })()}
+
+                            {guideData.narrative.what_would_change_my_view.sources && guideData.narrative.what_would_change_my_view.sources.length > 0 && (
+                              <div className="pt-2 border-t border-black/8 flex flex-wrap items-center gap-1">
+                                {guideData.narrative.what_would_change_my_view.sources.map((s, idx) => (
+                                  <span
+                                    key={idx}
+                                    className="px-2 py-0.5 rounded text-[9.5px] font-mono bg-sage-1/40 text-forest border border-black/10 inline-flex items-center gap-1"
+                                  >
+                                    <FileText className="w-2.5 h-2.5 text-emerald-800" />
+                                    <span>{s.doc} ({s.date})</span>
+                                  </span>
+                                ))}
                               </div>
-                            ))}
+                            )}
                           </div>
                         </div>
 
-                        {/* What Would Change My View */}
-                        <div className="p-3 rounded-xl bg-emerald-50/30 border border-emerald-600/15 space-y-1.5">
-                          <div className="flex items-center gap-1.5 text-forest font-bold text-[11px] font-display">
-                            <Clock className="w-3.5 h-3.5 text-emerald-800" />
-                            <span>What Would Change My View?</span>
-                          </div>
-                          <p className="text-[11px] text-black/80 leading-relaxed">
-                            {guideData.narrative.what_would_change_my_view.text}
-                          </p>
-                        </div>
-
-                        {/* Beginner Takeaway Highlight Strip */}
-                        <div className="p-3.5 rounded-xl bg-forest text-white border border-forest-dark space-y-1 shadow-sm">
-                          <div className="flex items-center gap-1.5">
-                            <span className="px-1.5 py-0.5 rounded text-[9px] font-mono font-extrabold uppercase bg-lemongrass text-forest">
+                        {/* Beginner Takeaway: Normally placed, no background, no box */}
+                        {guideData.narrative.beginner_takeaway && (
+                          <div className="pt-1.5 pb-0.5 space-y-1 text-left">
+                            <span className="text-[10px] font-mono uppercase tracking-wider text-black/60 font-bold block">
                               BEGINNER TAKEAWAY
                             </span>
+                            <p className="text-xs sm:text-[13px] font-sans text-black/75 italic leading-relaxed">
+                              &ldquo;{guideData.narrative.beginner_takeaway}&rdquo;
+                            </p>
                           </div>
-                          <p className="text-xs font-bold text-lemongrass font-display leading-snug pt-0.5">
-                            &ldquo;{guideData.narrative.beginner_takeaway}&rdquo;
-                          </p>
-                        </div>
+                        )}
 
-                        {/* Switch to Chat CTA */}
+                        {/* Button to redirect to Chat tab */}
                         <button
                           type="button"
                           onClick={() => setAiCopilotTab("chat")}
-                          className="w-full py-2 bg-sage-1 hover:bg-sage-1/80 text-forest font-mono font-bold text-[11px] rounded-xl border border-black/10 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+                          className="w-full py-2.5 px-4 bg-[#17280E] hover:bg-[#1a2d10] text-white font-mono font-bold text-xs rounded-xl border border-black/10 shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer select-none"
                         >
-                          <MessageCircle className="w-3.5 h-3.5 text-moss" />
-                          <span>Ask Questions about {activeQuote?.symbol || activeSymbol} in Chat →</span>
+                          <MessageCircle className="w-4 h-4 text-white" />
+                          <span>Ask Questions in Research Desk →</span>
                         </button>
                       </div>
                     )}
@@ -5141,76 +6034,109 @@ SIGNATURE OF THE COMPLAINANT / AUTHORIZED LEGAL HEIR
                         <div
                           key={msg.id}
                           className={clsx(
-                            "flex flex-col gap-1",
+                            "flex flex-col gap-1 w-full",
                             msg.sender === "user" ? "items-end" : "items-start"
                           )}
                         >
-                          <div className="flex items-center gap-1.5 text-[10px] text-black/40 font-mono">
-                            <span>{msg.sender === "ai" ? "MARKETSHIELD COPILOT" : "YOU"}</span>
-                            <span>·</span>
-                            <span>{msg.time}</span>
-                          </div>
-
-                          <div
-                            className={clsx(
-                              "max-w-[92%] p-3 rounded-xl shadow-xs text-xs whitespace-pre-wrap",
-                              msg.sender === "user"
-                                ? "bg-forest text-lemongrass font-medium rounded-tr-xs"
-                                : "bg-white border border-black/10 text-black/90 rounded-tl-xs space-y-2.5"
-                            )}
-                          >
-                            <p className="leading-relaxed">{msg.text}</p>
-
-                            {/* Structured Recommendation Card if available */}
-                            {msg.recommendation && (
-                              <div className="bg-sage-1/40 border border-black/8 rounded-lg p-2.5 space-y-2 font-mono text-[11px]">
-                                <div className="flex items-center justify-between gap-2 border-b border-black/8 pb-2">
-                                  <div className="flex items-center gap-1.5">
-                                    <span className="text-[10px] text-black/50 uppercase">SUGGESTION:</span>
-                                    <span className={clsx("px-2 py-0.5 rounded text-xs font-extrabold border", msg.recommendation.actionClass)}>
-                                      {msg.recommendation.action}
-                                    </span>
-                                  </div>
-                                  <span className="text-[10px] text-emerald-800 font-bold bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">
-                                    {msg.recommendation.confidence}% CONFLUENCE
-                                  </span>
-                                </div>
-                                <div className="space-y-1 text-black/80">
-                                  <div className="flex justify-between gap-2 text-[10.5px]">
-                                    <span className="text-black/50">PATTERN:</span>
-                                    <span className="font-bold text-forest text-right truncate">{msg.recommendation.patternName}</span>
-                                  </div>
-                                  <div className="flex justify-between gap-2 text-[10.5px]">
-                                    <span className="text-black/50">ENTRY ZONE:</span>
-                                    <span className="font-bold text-forest">{msg.recommendation.entryZone}</span>
-                                  </div>
-                                  <div className="flex justify-between gap-2 text-[10.5px]">
-                                    <span className="text-black/50">TARGET (T1):</span>
-                                    <span className="font-bold text-emerald-700">{msg.recommendation.targetPrice} ({msg.recommendation.targetPct})</span>
-                                  </div>
-                                  <div className="flex justify-between gap-2 text-[10.5px]">
-                                    <span className="text-black/50">STOP LOSS (SL):</span>
-                                    <span className="font-bold text-amber-700">{msg.recommendation.stopLoss} ({msg.recommendation.stopLossPct})</span>
-                                  </div>
-                                </div>
+                          {msg.sender === "user" ? (
+                            /* User Message: Dark Green Box with White Text */
+                            <div className="max-w-[85%] rounded-2xl overflow-hidden border border-black/10 shadow-xs">
+                              <div className="bg-[#17280E] text-white px-3 py-1.5 flex items-center justify-between gap-2 border-b border-white/10">
+                                <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-[#9EB88D]">
+                                  YOU
+                                </span>
                               </div>
-                            )}
-                          </div>
+                              <div className="bg-[#17280E] text-white px-3.5 py-2.5 text-xs font-sans leading-relaxed">
+                                {msg.text}
+                              </div>
+                            </div>
+                          ) : (
+                            /* AI Message: Green Heading Bracket (#17280E), White Text Centre (Same as other cards) */
+                            <div className="max-w-[94%] w-full rounded-2xl overflow-hidden border border-black/10 shadow-sm text-left">
+                              {(() => {
+                                const match = msg.text.match(/^\[(.*?)\](?:\s*·\s*([^\n]+))?\n*/);
+                                const title = match ? match[1] : "Research Desk";
+                                const sub = match && match[2] ? match[2] : (activeQuote?.symbol || activeSymbol);
+                                const body = match ? msg.text.substring(match[0].length).trim() : msg.text;
+
+                                return (
+                                  <>
+                                    {/* Green Heading Bracket (#17280E) with White Text */}
+                                    <div className="bg-[#17280E] text-white p-2.5 sm:p-3 flex items-center justify-between gap-2">
+                                      <div className="space-y-0.5">
+                                        <span className="text-[9px] font-mono uppercase tracking-wider text-[#9EB88D] font-bold block">
+                                          {sub}
+                                        </span>
+                                        <h3 className="text-xs sm:text-sm font-display font-bold text-white tracking-tight flex items-center gap-1.5">
+                                          <Bot className="w-3.5 h-3.5 text-white shrink-0" />
+                                          <span>{title}</span>
+                                        </h3>
+                                      </div>
+                                    </div>
+
+                                    {/* White Content Area */}
+                                    <div className="bg-white p-3.5 sm:p-4 border-t border-black/10 space-y-3">
+                                      <p className="text-xs sm:text-[13px] font-sans text-black/85 leading-relaxed whitespace-pre-wrap">
+                                        {body}
+                                      </p>
+
+                                      {/* Recommendation Card in Green & White */}
+                                      {msg.recommendation && (
+                                        <div className="rounded-xl overflow-hidden border border-black/10 shadow-2xs font-mono text-[11px] mt-2">
+                                          <div className="bg-[#17280E] text-white px-3 py-1.5 flex items-center justify-between gap-2">
+                                            <div className="flex items-center gap-1.5">
+                                              <span className="text-[9.5px] text-[#9EB88D] font-bold uppercase">STATUS:</span>
+                                              <span className="px-2 py-0.5 rounded text-[11px] font-extrabold border bg-white/10 text-white border-white/20">
+                                                {msg.recommendation.action}
+                                              </span>
+                                            </div>
+                                            <span className="text-[9.5px] text-[#9EB88D] font-bold">
+                                              {msg.recommendation.confidence}% CONFLUENCE
+                                            </span>
+                                          </div>
+                                          <div className="bg-white p-3 space-y-1.5 text-black/80 border-t border-black/10">
+                                            <div className="flex justify-between gap-2 text-[11px]">
+                                              <span className="text-black/50">PATTERN:</span>
+                                              <span className="font-bold text-[#17280E] text-right truncate">{msg.recommendation.patternName}</span>
+                                            </div>
+                                            <div className="flex justify-between gap-2 text-[11px]">
+                                              <span className="text-black/50">PIVOT RANGE:</span>
+                                              <span className="font-bold text-[#17280E]">{msg.recommendation.entryZone}</span>
+                                            </div>
+                                            <div className="flex justify-between gap-2 text-[11px]">
+                                              <span className="text-black/50">RESISTANCE (R1):</span>
+                                              <span className="font-bold text-forest">{msg.recommendation.targetPrice} ({msg.recommendation.targetPct})</span>
+                                            </div>
+                                            <div className="flex justify-between gap-2 text-[11px]">
+                                              <span className="text-black/50">SUPPORT (S1):</span>
+                                              <span className="font-bold text-black/70">{msg.recommendation.stopLoss} ({msg.recommendation.stopLossPct})</span>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      )}
+                                    </div>
+                                  </>
+                                );
+                              })()}
+                            </div>
+                          )}
                         </div>
                       ))}
 
                       {isAiThinking && (
-                        <div className="flex items-center gap-2 text-[11px] font-mono text-black/50 bg-sage-1/50 px-3 py-2 rounded-lg border border-black/8 w-fit animate-pulse">
-                          <Sparkles className="w-3.5 h-3.5 text-moss animate-spin" />
-                          <span>Searching filings, fundamentals &amp; surveillance data...</span>
+                        <div className="rounded-xl overflow-hidden border border-black/10 shadow-2xs w-fit bg-white">
+                          <div className="flex items-center gap-2 text-[11px] font-mono text-[#17280E] px-3 py-2">
+                            <Sparkles className="w-3.5 h-3.5 text-[#17280E] animate-spin" />
+                            <span className="text-black/70">Searching filings, fundamentals &amp; surveillance data...</span>
+                          </div>
                         </div>
                       )}
 
                       <div ref={chatBottomRef} />
                     </div>
 
-                    {/* Quick Action Prompt Chips */}
-                    <div className="px-3 py-1.5 bg-sage-1/20 border-t border-black/8 flex items-center gap-1.5 overflow-x-auto shrink-0">
+                    {/* Quick Action Prompt Chips (Green & White) */}
+                    <div className="px-3 py-2 bg-white border-t border-black/10 flex items-center gap-1.5 overflow-x-auto shrink-0">
                       {[
                         "Sector & Industry",
                         "Values before 1 month",
@@ -5225,15 +6151,15 @@ SIGNATURE OF THE COMPLAINANT / AUTHORIZED LEGAL HEIR
                           key={chip}
                           type="button"
                           onClick={() => handleSendAiMessage(chip)}
-                          className="px-2.5 py-1 rounded-md text-[10.5px] font-mono bg-white border border-black/12 hover:border-forest hover:bg-sage-1 text-black/70 hover:text-forest whitespace-nowrap transition-colors shadow-2xs cursor-pointer"
+                          className="px-2.5 py-1 rounded-md text-[10.5px] font-mono bg-white border border-[#17280E]/20 hover:bg-[#17280E] text-[#17280E] hover:text-white whitespace-nowrap transition-colors shadow-2xs cursor-pointer"
                         >
                           {chip}
                         </button>
                       ))}
                     </div>
 
-                    {/* Interactive Query Bar */}
-                    <div className="p-2.5 border-t border-black/8 bg-white shrink-0">
+                    {/* Interactive Query Bar (Green & White) */}
+                    <div className="p-2.5 border-t border-black/10 bg-white shrink-0">
                       <form
                         onSubmit={(e) => {
                           e.preventDefault();
@@ -5243,22 +6169,23 @@ SIGNATURE OF THE COMPLAINANT / AUTHORIZED LEGAL HEIR
                       >
                         <input
                           type="text"
-                          placeholder={`Ask AI Copilot about ${activeQuote?.symbol || activeSymbol}...`}
+                          placeholder={`Ask Research Desk about ${activeQuote?.symbol || activeSymbol}...`}
                           value={aiInput}
                           onChange={(e) => setAiInput(e.target.value)}
-                          className="flex-1 px-3 py-2 bg-sage-1/30 border border-black/15 rounded-lg text-xs font-sans focus:outline-none focus:border-forest"
+                          className="flex-1 px-3 py-2 bg-white border border-black/15 rounded-lg text-xs font-sans text-black placeholder:text-black/40 focus:outline-none focus:border-[#17280E]"
                         />
                         <button
                           type="submit"
                           disabled={isAiThinking || !aiInput.trim()}
                           className={clsx(
-                            "p-2 rounded-lg font-bold transition-all shrink-0 flex items-center justify-center",
+                            "px-3 py-2 rounded-lg font-bold font-mono text-xs transition-all shrink-0 flex items-center gap-1.5",
                             aiInput.trim() && !isAiThinking
-                              ? "bg-forest text-lemongrass shadow-sm hover:bg-forest/90 cursor-pointer"
+                              ? "bg-[#17280E] text-white shadow-sm hover:bg-[#1a2d10] cursor-pointer"
                               : "bg-black/10 text-black/40 cursor-not-allowed"
                           )}
                         >
-                          <Send className="w-3.5 h-3.5" />
+                          <span>Send</span>
+                          <Send className="w-3.5 h-3.5 text-white" />
                         </button>
                       </form>
                     </div>
@@ -5271,7 +6198,7 @@ SIGNATURE OF THE COMPLAINANT / AUTHORIZED LEGAL HEIR
 
         {/* 2. PROTECT TAB (LIVE MULTIMODAL SCAM DETECTION & VERIFICATION CONSOLE) */}
         {activeTab === "protect" && (
-          <div className="space-y-4 animate-in fade-in duration-300">
+          <div className="w-full min-h-[650px] bg-white border border-black/10 rounded-2xl shadow-xs p-6 sm:p-10 space-y-8 text-left animate-in fade-in duration-300">
             {/* Floating Toast Notification */}
             {toastMessage && (
               <div className="fixed bottom-6 right-6 z-50 px-4 py-2.5 rounded-lg bg-forest text-lemongrass shadow-xl border border-lemongrass/30 text-xs font-mono font-bold flex items-center gap-2 animate-in fade-in slide-in-from-bottom-3 duration-200">
@@ -5280,526 +6207,1184 @@ SIGNATURE OF THE COMPLAINANT / AUTHORIZED LEGAL HEIR
               </div>
             )}
 
-            {/* Top Investigation Command Bar */}
-            <div className="bg-white border border-black/10 rounded-lg shadow-sm p-4 space-y-3.5">
-              <div className="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-black/8 text-xs">
-                <div className="flex items-center gap-2">
-                  <span className={clsx("w-2 h-2 rounded-full", isScanning ? "bg-amber-500 animate-ping" : "bg-emerald-500 animate-pulse")} />
-                  <h2 className="font-display font-bold text-forest text-sm sm:text-base tracking-tight">
-                    Threat Engine &amp; Multimodal Scam Detector
-                  </h2>
-                </div>
-                <div className="flex items-center gap-3 text-[10.5px] font-mono text-black/50">
-                  <span>ACTIVE PILLAR FUSION: <strong className="text-emerald-700 font-bold">DYNAMIC</strong></span>
-                  <span>•</span>
-                  <span>SEBI REGISTRY: <strong className="text-forest font-bold">INH/INA FORMAT VERIFIED</strong></span>
-                </div>
+            {/* Centered Main Title (Matching Grievances in Resolve) */}
+            <div className="text-center space-y-1.5">
+              <span className="text-[11px] sm:text-xs font-mono font-bold tracking-widest uppercase text-moss">
+                THREAT ENGINE
+              </span>
+              <h1 className="text-5xl sm:text-6xl font-semibold text-forest font-display tracking-tight">
+                Protect
+              </h1>
+              <p className="text-sm sm:text-base text-black/60 font-sans max-w-xl mx-auto">
+                Detect suspicious investment activity before it becomes a loss
+              </p>
+            </div>
+
+            {/* Section Infinite Ticker */}
+            <DashboardSectionTicker
+              items={[
+                "⚠ THREAT ENGINE",
+                "SCAM DETECTION",
+                "MESSAGE ANALYSIS",
+                "RISK INTELLIGENCE",
+                "PROTECT",
+              ]}
+            />
+
+            {/* Protect Input Box Section (Matching Grievances Input Box) */}
+            <div className="bg-sage-1/20 border border-black/10 rounded-xl p-5 sm:p-6 space-y-3.5 shadow-2xs">
+              <div className="flex items-center justify-between">
+                <label className="text-sm sm:text-base font-bold text-forest font-display flex items-center gap-2">
+                  <ShieldAlert className="w-4 h-4 text-moss" />
+                  <span>Protect Input Box</span>
+                </label>
+                {(scanText || scanTargetUrl || attachedFiles.length > 0 || attachedDoc || attachedAudio || checkifyResult) && (
+                  <button
+                    type="button"
+                    onClick={() => handleResetCheckify()}
+                    className="px-2.5 py-1 rounded-lg bg-rose-500 hover:bg-rose-600 text-white text-xs font-mono font-medium flex items-center gap-1 shadow-xs transition-colors cursor-pointer"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                    <span>Clear</span>
+                  </button>
+                )}
               </div>
 
-              {/* Multi-Input Form (Text + Link + Media Upload) */}
-              <form onSubmit={handleRunScan} className="space-y-3">
-                <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
-                  <div className="md:col-span-7 space-y-1">
-                    <label className="text-[10.5px] font-mono text-black/50 uppercase font-semibold flex items-center justify-between">
-                      <span>1. Message / Claim / Advisory Text</span>
-                      <span className="text-black/35 font-normal lowercase">Cmd+Enter to analyze</span>
-                    </label>
-                    <textarea
-                      rows={3}
-                      value={scanText}
-                      onChange={(e) => setScanText(e.target.value)}
-                      onKeyDown={(e) => {
-                        if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
-                          e.preventDefault();
-                          handleRunScan();
-                        }
+              {/* Dynamic Auto-Growing Textarea with Upload a file & Side Plain Text Analyse Button */}
+              <div className="flex flex-col md:flex-row items-stretch gap-3">
+                <div className="relative flex-1">
+                  <textarea
+                    ref={protectTextareaRef}
+                    rows={3}
+                    value={scanText}
+                    onChange={handleProtectInput}
+                    onKeyDown={(e) => {
+                      if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+                        e.preventDefault();
+                        handleRunScan();
+                      }
+                    }}
+                    placeholder="Describe or paste suspicious investment message, Telegram/WhatsApp tips, SMS, IPO allotment promise, guaranteed return offer, or broker payout fee demand..."
+                    className="w-full p-4 bg-white border border-black/15 focus:border-forest rounded-xl font-sans text-xs sm:text-sm text-black placeholder:text-black/40 focus:outline-none resize-none shadow-2xs transition-all leading-relaxed min-h-[100px] max-h-[380px] overflow-y-auto"
+                  />
+                </div>
+
+                {/* Hidden File Input */}
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleImageFileChange}
+                  accept="image/*,.pdf,.doc,.docx,.txt"
+                  className="hidden"
+                />
+
+                {/* Upload a file Button (Right before Analyse button) */}
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className={clsx(
+                    "px-4 py-4 rounded-xl border font-sans font-semibold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 shrink-0 cursor-pointer shadow-2xs select-none",
+                    attachedFiles.length > 0 || selectedImagePreview
+                      ? "bg-forest text-lemongrass border-forest font-bold"
+                      : "bg-white hover:bg-sage-1/40 border-black/15 text-forest"
+                  )}
+                >
+                  <Paperclip className="w-4 h-4 text-moss" />
+                  <span className="truncate max-w-[130px]">
+                    {attachedFiles.length > 0 ? attachedFiles[0].name : "Upload a file"}
+                  </span>
+                  {attachedFiles.length > 0 && (
+                    <span
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleClearFiles();
                       }}
-                      placeholder="Paste message, SMS, stock recommendation, Hindi/Hinglish guarantee, or fee solicitation..."
-                      className="w-full px-3 py-2 bg-sage-1/20 border border-black/15 rounded-lg text-xs font-mono text-forest placeholder:text-black/40 focus:outline-none focus:border-forest resize-y"
-                    />
-                  </div>
+                      className="ml-1 p-0.5 hover:bg-white/20 rounded text-rose-300 hover:text-white"
+                      title="Remove file"
+                    >
+                      ✕
+                    </span>
+                  )}
+                </button>
 
-                  <div className="md:col-span-5 space-y-2">
-                    <div className="space-y-1">
-                      <label className="text-[10.5px] font-mono text-black/50 uppercase font-semibold flex items-center justify-between">
-                        <span>2. Target Link / Channel URL</span>
-                        <span className="text-black/35 font-normal lowercase">Website / Telegram / Social</span>
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="e.g. t.me/channel, https://zer0dha.top, instagram.com/..."
-                        value={scanTargetUrl}
-                        onChange={(e) => setScanTargetUrl(e.target.value)}
-                        onKeyDown={(e) => {
-                          if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
-                            e.preventDefault();
-                            handleRunScan();
-                          }
-                        }}
-                        className="w-full px-3 py-2 bg-sage-1/20 border border-black/15 rounded-lg text-xs font-mono text-forest placeholder:text-black/40 focus:outline-none focus:border-forest"
-                      />
-                    </div>
+                {/* Side Plain Text Analyse Button (Green button with White text) */}
+                <button
+                  type="button"
+                  disabled={isScanning || (!scanText.trim() && attachedFiles.length === 0 && !scanTargetUrl.trim())}
+                  onClick={() => handleRunScan()}
+                  className={clsx(
+                    "px-8 py-4 rounded-xl font-sans font-bold text-sm sm:text-base shadow-sm transition-all flex items-center justify-center shrink-0 select-none cursor-pointer min-w-[130px]",
+                    (scanText.trim() || attachedFiles.length > 0 || scanTargetUrl.trim()) && !isScanning
+                      ? "bg-forest hover:bg-forest/90 text-white shadow-md"
+                      : "bg-forest/60 text-white/50 cursor-not-allowed opacity-60"
+                  )}
+                >
+                  {isScanning ? (
+                    <span className="flex items-center gap-2 text-white">
+                      <Loader2 className="w-4 h-4 animate-spin text-white" />
+                      <span>Analysing...</span>
+                    </span>
+                  ) : (
+                    <span className="text-white font-bold">Analyse</span>
+                  )}
+                </button>
+              </div>
 
-                    <div className="space-y-1">
-                      <label className="text-[10.5px] font-mono text-black/50 uppercase font-semibold">3. Screenshot / Evidence File</label>
-                      <div className="flex items-center gap-2">
-                        <input
-                          type="file"
-                          ref={fileInputRef}
-                          onChange={handleImageFileChange}
-                          accept="image/*"
-                          className="hidden"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => fileInputRef.current?.click()}
-                          className="flex-1 px-3 py-1.5 rounded-md bg-sage-1/50 hover:bg-sage-1 border border-black/12 text-forest text-xs font-medium flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
-                        >
-                          <Paperclip className="w-3.5 h-3.5 text-moss" />
-                          <span className="truncate">{attachedFiles.length > 0 ? attachedFiles[0].name : "Upload Screenshot (OCR + ELA)"}</span>
-                        </button>
-                        {attachedFiles.length > 0 && (
-                          <button
-                            type="button"
-                            onClick={handleClearFiles}
-                            className="p-1.5 rounded bg-red-50 text-red-700 hover:bg-red-100 border border-red-200 transition-colors"
-                            title="Remove screenshot"
-                          >
-                            <X className="w-3.5 h-3.5" />
-                          </button>
+              {/* Preset Test Cases from DeBERTa Threat Engine */}
+              <div className="flex items-center gap-1.5 overflow-x-auto text-[11px] pt-1">
+                <span className="font-mono text-black/45 shrink-0 uppercase text-[10px] font-semibold">Test Presets:</span>
+                {(demoSeedCases.length > 0 ? demoSeedCases : [
+                  { id: "withdrawal_extortion", label: "Withdrawal Fee Extortion", text: "Sir your profit of Rs 4,50,000 is ready in trading wallet. To release your withdrawal, you must first deposit 15% GST fee (Rs 67,500) to our personal bank account within 24 hours or your funds will be forfeited." },
+                  { id: "whatsapp_scam", label: "WhatsApp Scam Pitch", text: "Namaste Sir, our VIP institutional algorithmic trading group has 2 slots left. Deposit Rs 1,00,000 today and receive guaranteed Rs 25,000 daily fixed returns with 100% zero risk capital guarantee approved by SEBI certificate #INH99991111. Transfer to UPI immediately to confirm." },
+                  { id: "hindi_guarantee", label: "Hindi Guarantee (Paisa Double)", text: "गारंटी मुनाफा! सिर्फ 15 दिन में पैसा डबल। SEBI certified advisor join VIP group now pay Rs 4999 to tips@ybl" },
+                  { id: "vip_group_solicitation", label: "Urgent VIP Group Solicitation", text: "SURE SHOT Buy SUZLON at 47, target 95 in 10 days. Guaranteed profit. Pay Rs 2,999 to xyztips@okaxis for VIP group. Join t.me/xyzresearch now, only 5 seats left! - Amit Patel, XYZ Research Advisory, INH000004121" },
+                  { id: "ipo_allotment_scam", label: "IPO Allotment Scam", text: "Guaranteed HNI quota allotment for Tata Technologies IPO. Transfer application amount directly to our escrow account rajesh.wealth@axisbank to confirm allocation." },
+                  { id: "fake_registration", label: "Fake SEBI Registration", text: "I am a SEBI registered advisor, registration number INX999999999. Guaranteed monthly returns of 8% with zero risk. DM me on Telegram to join our VIP group." },
+                  { id: "phishing_clone", label: "Phishing Clone (zer0dha.top)", text: "Important notice: Complete your Zerodha KYC verification immediately to prevent account suspension.", url: "https://zer0dha-invest.top/login" },
+                  { id: "lookalike_domain", label: "Lookalike Domain (groww-pro.in)", text: "Special pre-IPO allotment allocation via Groww Pro portal.", url: "https://groww-pro-vip.in" },
+                  { id: "guaranteed_500", label: "Guaranteed Returns (500% ROI)", text: "GUARANTEED 500% returns in 30 days! Pay Rs 10,000 now to secure your slot. Limited seats, act fast!", url: "https://quickwealth100x.xyz" },
+                  { id: "option_signal", label: "Option Trading Signal", text: "BankNifty is poised for a massive 400-point breakout above 48200 tomorrow on expiry. Buy 48300 CE at 120 with stop loss at 85, target 240. Risk reward is 1:3. Heavy call writing seen at 48500 so trail profits accordingly." },
+                  { id: "legitimate_research", label: "Legitimate Research Note (SEBI RA)", text: "This is Deepa Krishnan, SEBI registered research analyst (INH000008841), sharing our quarterly outlook on large-cap IT. All equity investments carry market risk. Past returns are not an assurance of future performance. We do not provide assured return schemes.", url: "https://capitalcompass-research.in" },
+                  { id: "index_sip", label: "Regulated Index SIP", text: "For beginners with a 10-year horizon, ignore daily market noise and set up a monthly SIP of Rs 15,000 in a low-cost Nifty 50 Index Fund and Rs 10,000 in Parag Parikh Flexi Cap. Rebalance annually and maintain a 6-month emergency fund." },
+                  { id: "sebi_alert", label: "SEBI Investor Alert", text: "Caution to all investors: If you have been scammed by a fake Telegram group or cloned trading APK, immediately call national cybercrime helpline 1930 and file a complaint on cybercrime.gov.in within the golden hour." },
+                  { id: "personal_chat", label: "Personal Chat (Guardrail Test)", text: "Hey bro, are you free this Sunday evening around 7 PM? Let's catch up at the cafe near MG Road for coffee and watch the cricket match together. Let me know if you can make it!" },
+                  { id: "food_recipe", label: "Food Recipe (Guardrail Test)", text: "Can you give me an authentic recipe for homemade Hyderabadi chicken biryani including the exact marination time and spices needed for 4 people?" }
+                ]).map((c: any) => (
+                  <button
+                    key={c.id || c.label}
+                    type="button"
+                    onClick={() => handleSelectSeedCase(c)}
+                    className="px-2.5 py-1 rounded bg-white hover:bg-sage-1 border border-black/10 text-black/70 hover:text-forest whitespace-nowrap text-[10.5px] font-mono transition-colors cursor-pointer shadow-2xs"
+                  >
+                    {c.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Financial Guardrail Blocked Notification */}
+            {checkifyResult && checkifyResult.is_financial === false && (
+              <div className="p-5 rounded-xl bg-rose-50 border border-rose-300 text-forest space-y-2 animate-in fade-in duration-200">
+                <div className="flex items-center gap-2">
+                  <span className="px-2.5 py-0.5 rounded-full bg-rose-500 text-white text-xs font-mono font-bold">
+                    ⛔ Guardrail Blocked
+                  </span>
+                  <span className="px-2.5 py-0.5 rounded-full bg-rose-100 text-rose-800 text-xs font-mono font-semibold border border-rose-200">
+                    Non-Financial Message
+                  </span>
+                </div>
+                <h3 className="text-base font-bold text-rose-900 font-display">
+                  Input Rejected by Financial Guardrail
+                </h3>
+                <p className="text-xs sm:text-sm text-black/80">
+                  <b>Reason:</b> {checkifyResult.guardrail_reason}
+                </p>
+                <p className="text-xs text-black/50 italic">
+                  Market Shield strictly analyzes financial solicitations, trading signals, and investment fraud. Personal messages, greetings, and recipes are rejected by design.
+                </p>
+              </div>
+            )}
+
+            {/* 3 RECTANGLE BOX CARDS (CENTERED BIGGER TITLES, NO NUMBERINGS) */}
+            {(() => {
+              const score = checkifyResult ? (checkifyResult.severity_score !== undefined ? checkifyResult.severity_score : (checkifyResult.overall_score || 0)) : (scanText ? 50 : 0);
+              const isAnalyzed = Boolean(checkifyResult);
+              return (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+                  {/* CARD 1: VIOLATION / THREAT TYPE */}
+                  <div className="bg-forest border border-forest-dark rounded-xl p-6 shadow-md space-y-4 flex flex-col justify-between text-white hover:border-lemongrass/40 transition-all text-center">
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-center gap-2">
+                        <Scale className="w-4 h-4 text-lemongrass" />
+                        <span className="text-xs font-mono font-bold uppercase tracking-wider text-lemongrass">
+                          THREAT / VIOLATION TYPE
+                        </span>
+                      </div>
+
+                      {/* Head 1 Prediction */}
+                      <div className="space-y-1">
+                        <div className="text-[10px] font-mono text-lemongrass/70 uppercase tracking-widest">
+                          HEAD 1 PREDICTION
+                        </div>
+                        <h3 className="text-xl sm:text-2xl font-extrabold text-white font-display text-center leading-snug tracking-wide">
+                          {isAnalyzed
+                            ? (checkifyResult.is_financial === false
+                                ? "NON-FINANCIAL"
+                                : (checkifyResult.head1_label?.replace(/_/g, " ").toUpperCase() || checkifyResult.verdict_label || "SCAM / FRAUD VECTOR"))
+                            : (scanText.trim() ? "Ready to Audit" : "Awaiting Query")}
+                        </h3>
+                        {isAnalyzed && (
+                          <div className="text-xs font-mono font-bold text-lemongrass flex items-center justify-center gap-1.5">
+                            {checkifyResult.is_financial === false ? (
+                              <span className="text-rose-300 font-mono text-[11px]">Guardrail Rejected (Non-Financial)</span>
+                            ) : (
+                              <>
+                                <CheckCircle2 className="w-3.5 h-3.5 text-lemongrass" />
+                                <span>
+                                  {checkifyResult.head1_confidence_pct
+                                    ? `${checkifyResult.head1_confidence_pct}% Confidence`
+                                    : "High Confidence"}
+                                </span>
+                              </>
+                            )}
+                          </div>
                         )}
                       </div>
-                    </div>
-                  </div>
-                </div>
 
-                {/* Screenshot Upload Thumbnail Preview */}
-                {selectedImagePreview && (
-                  <div className="p-2.5 bg-sage-1/30 rounded-lg border border-black/8 flex items-center justify-between gap-3 text-xs">
-                    <div className="flex items-center gap-3">
-                      <div className="relative w-12 h-12 rounded border border-black/15 overflow-hidden bg-white shrink-0">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={selectedImagePreview} alt="Screenshot preview" className="w-full h-full object-cover" />
-                      </div>
-                      <div>
-                        <div className="font-bold text-forest text-xs flex items-center gap-1.5">
-                          <BadgeCheck className="w-3.5 h-3.5 text-emerald-700" />
-                          <span>Screenshot Ingested: {attachedFiles[0]?.name}</span>
+                      {/* Head 2 Multi-Label Threat Badges */}
+                      {isAnalyzed && checkifyResult.is_financial === false ? (
+                        <div className="pt-2 space-y-1.5 border-t border-white/10 text-center">
+                          <span className="px-2.5 py-1 rounded-full text-[10.5px] font-mono font-semibold bg-white/10 border border-white/20 text-white/70 inline-block">
+                            None (Personal / Non-Financial Input)
+                          </span>
                         </div>
-                        <div className="text-[11px] text-black/60">
-                          Optical Character Recognition (OCR) and Error Level Analysis (ELA) will execute automatically on submission.
+                      ) : isAnalyzed && checkifyResult.active_threats && checkifyResult.active_threats.length > 0 ? (
+                        <div className="pt-2 space-y-1.5 border-t border-white/10">
+                          <div className="text-[10px] font-mono text-white/60 uppercase tracking-wider">
+                            HEAD 2 DETECTED THREAT TYPES
+                          </div>
+                          <div className="flex flex-wrap justify-center gap-1.5 max-h-[85px] overflow-y-auto">
+                            {checkifyResult.active_threats.slice(0, 4).map((th: any, idx: number) => (
+                              <span
+                                key={idx}
+                                className="px-2 py-0.5 rounded-full text-[10.5px] font-mono font-semibold bg-white/10 border border-white/20 text-lemongrass flex items-center gap-1"
+                              >
+                                <span>{th.threat}</span>
+                                <span className="text-white/60 text-[9.5px]">({th.score_pct}%)</span>
+                              </span>
+                            ))}
+                          </div>
                         </div>
-                      </div>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={handleClearFiles}
-                      className="text-[11px] font-mono text-red-700 hover:underline cursor-pointer shrink-0"
-                    >
-                      Remove
-                    </button>
-                  </div>
-                )}
-
-                {/* Action Bar & Quick Seed Chips */}
-                <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-black/8">
-                  {/* Seed Case Samples */}
-                  <div className="flex items-center gap-1.5 overflow-x-auto text-[11px] py-1">
-                    <span className="font-mono text-black/45 shrink-0 uppercase text-[10px] font-semibold">Seed Cases:</span>
-                    {(demoSeedCases.length > 0 ? demoSeedCases : [
-                      { id: "a", label: "Legitimate research note (SEBI RA)", text: "This is Deepa Krishnan, SEBI registered research analyst (INH000008841), sharing our quarterly outlook on large-cap IT. All equity investments carry market risk. Past returns are not an assurance of future performance. We do not provide assured return schemes.", expectedBand: "Low" },
-                      { id: "b", label: "Hindi guarantee (paisa double)", text: "गारंटी मुनाफा! सिर्फ 15 दिन में पैसा डबल। SEBI certified advisor join VIP group now pay Rs 4999 to tips@ybl", expectedBand: "High" },
-                      { id: "c", label: "Urgent VIP group solicitation", text: "SURE SHOT Buy SUZLON at 47, target 95 in 10 days. Guaranteed profit. Pay Rs 2,999 to xyztips@okaxis for VIP group. Join t.me/xyzresearch now, only 5 seats left! - Amit Patel, XYZ Research Advisory, INH000004121", expectedBand: "High" },
-                      { id: "d", label: "Phishing clone (zer0dha.top)", text: "Important notice: Complete your Zerodha KYC verification immediately to prevent account suspension.", url: "https://zer0dha-invest.top/login", expectedBand: "High" },
-                      { id: "e", label: "Lookalike domain (groww-pro.in)", text: "Special pre-IPO allotment allocation via Groww Pro portal.", url: "https://groww-pro-vip.in", expectedBand: "High" },
-                      { id: "f", label: "IPO allotment scam", text: "Guaranteed HNI quota allotment for Tata Technologies IPO. Transfer application amount directly to our escrow account rajesh.wealth@axisbank to confirm allocation.", expectedBand: "High" },
-                    ]).map((c: any) => (
-                      <button
-                        key={c.id || c.label}
-                        type="button"
-                        onClick={() => handleSelectSeedCase(c)}
-                        className="px-2.5 py-1 rounded bg-sage-1/40 hover:bg-sage-1 border border-black/10 text-black/70 hover:text-forest whitespace-nowrap text-[10.5px] font-mono transition-colors cursor-pointer"
-                      >
-                        {c.label}
-                      </button>
-                    ))}
-                  </div>
-
-                  {/* Submission Action Buttons */}
-                  <div className="flex items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={() => handleResetCheckify()}
-                      className="px-3 py-2 rounded-md text-xs font-mono text-black/50 hover:text-black hover:bg-black/5 transition-colors cursor-pointer"
-                    >
-                      Clear
-                    </button>
-
-                    <button
-                      type="submit"
-                      disabled={isScanning || (!scanText.trim() && !scanTargetUrl.trim() && attachedFiles.length === 0)}
-                      className="px-6 py-2.5 rounded-md bg-forest hover:bg-forest/90 text-lemongrass font-sans font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
-                    >
-                      {isScanning ? (
-                        <>
-                          <Loader2 className="w-4 h-4 animate-spin text-lemongrass" />
-                          <span>Auditing Multimodal Evidence...</span>
-                        </>
                       ) : (
-                        <>
-                          <ShieldAlert className="w-4 h-4 text-lemongrass" />
-                          <span>Analyze &amp; Audit Evidence →</span>
-                        </>
+                        <p className="text-xs text-white/80 font-sans leading-relaxed text-center">
+                          {isAnalyzed
+                            ? "Audited under SEBI (PFUTP) Anti-Fraud Regulations, Master Broker Circulars & Cybercrime Framework."
+                            : "Identifies whether your input contains an unauthorized payment solicitation, phishing link, guaranteed return scheme, or legitimate broker notice."}
+                        </p>
                       )}
-                    </button>
+                    </div>
+
+                    <div className="pt-3 border-t border-white/10 flex items-center justify-between">
+                      <span className="text-[11px] font-mono text-lemongrass/70 uppercase">
+                        {checkifyResult?.engine_name?.includes("Native") ? "DEBERTA-V3 (NATIVE)" : "DEBERTA DUAL-HEAD"}
+                      </span>
+                      <span className={clsx(
+                        "px-2.5 py-0.5 rounded text-[10.5px] font-mono font-bold border",
+                        isAnalyzed
+                          ? checkifyResult.is_financial === false
+                            ? "bg-rose-500/20 text-rose-300 border-rose-400/30"
+                            : score >= 60
+                              ? "bg-rose-500/20 text-rose-300 border-rose-400/30"
+                              : score >= 30
+                                ? "bg-amber-400/20 text-amber-200 border-amber-400/30"
+                                : "bg-lemongrass/20 text-lemongrass border-lemongrass/40"
+                          : "bg-white/10 text-white/60 border-white/15"
+                      )}>
+                        {isAnalyzed ? (checkifyResult.is_financial === false ? "BLOCKED" : (checkifyResult.verdict_label || checkifyResult.verdict || "ANALYZED")) : "NOT ANALYZED"}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* CARD 2: SEVERITY OF THREAT */}
+                  <div className="bg-forest border border-forest-dark rounded-xl p-6 shadow-md space-y-4 flex flex-col justify-between text-white hover:border-lemongrass/40 transition-all text-center">
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-center gap-2">
+                        <AlertTriangle className="w-4 h-4 text-lemongrass" />
+                        <span className="text-xs font-mono font-bold uppercase tracking-wider text-lemongrass">
+                          SEVERITY OF THREAT
+                        </span>
+                      </div>
+
+                      {/* Severity Number & Scale */}
+                      <div className="flex items-baseline justify-center gap-2">
+                        <span className={clsx(
+                          "text-4xl sm:text-5xl font-extrabold font-display",
+                          score >= 80 ? "text-rose-400" : score >= 50 ? "text-amber-300" : "text-lemongrass"
+                        )}>
+                          {isAnalyzed ? score : "--"}
+                        </span>
+                        <span className="text-xs font-mono text-white/60">/ 100 Scale</span>
+                      </div>
+
+                      {/* Progress Meter Bar */}
+                      <div className="w-full h-2 rounded-full bg-white/15 overflow-hidden">
+                        <div
+                          className={clsx(
+                            "h-full transition-all duration-500 rounded-full",
+                            score >= 80 ? "bg-rose-400" : score >= 50 ? "bg-amber-400" : "bg-lemongrass"
+                          )}
+                          style={{ width: isAnalyzed ? `${Math.min(100, Math.max(0, score))}%` : "0%" }}
+                        />
+                      </div>
+
+                      {/* Dynamic Factor Contributions Breakdown */}
+                      {isAnalyzed && checkifyResult.risk_factors ? (
+                        <div className="pt-1 text-[10.5px] font-mono text-white/80 grid grid-cols-2 gap-1 text-left bg-white/5 p-2 rounded-lg border border-white/10">
+                          <div>Signal: <span className="text-lemongrass font-bold">+{checkifyResult.risk_factors['Model Classification Signal'] || 0}</span></div>
+                          <div>Stakes: <span className="text-lemongrass font-bold">+{checkifyResult.risk_factors['Financial Demands & Stakes'] || 0}</span></div>
+                          <div>Urgency: <span className="text-lemongrass font-bold">+{checkifyResult.risk_factors['Urgency & Coercive Pressure'] || 0}</span></div>
+                          <div>Compound: <span className="text-lemongrass font-bold">+{checkifyResult.risk_factors['Threat Compounder'] || 0}</span></div>
+                        </div>
+                      ) : (
+                        <p className="text-xs text-white/80 font-sans leading-relaxed text-center">
+                          {isAnalyzed
+                            ? score >= 80
+                              ? "Critical severity: Urgent financial loss risk, credential harvest, or illegal assured return scheme."
+                              : score >= 50
+                                ? "Moderate to high risk: Unverified claims, FOMO pressure, or suspicious communication patterns detected."
+                                : "Standard legitimate communication or low-risk educational advisory."
+                            : "Calculates scam probability, financial loss urgency, and manipulation severity on a 0 to 100 index."}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="pt-3 border-t border-white/10 flex items-center justify-between">
+                      <span className="text-[11px] font-mono text-lemongrass/70 uppercase">RATING</span>
+                      <span className={clsx(
+                        "px-2.5 py-0.5 rounded text-[10.5px] font-mono font-bold border",
+                        isAnalyzed
+                          ? checkifyResult.is_financial === false
+                            ? "bg-lemongrass/20 text-lemongrass border-lemongrass/40"
+                            : score >= 80
+                              ? "bg-rose-500/20 text-rose-300 border-rose-400/30 font-extrabold"
+                              : score >= 50
+                                ? "bg-amber-400/20 text-amber-200 border-amber-400/30"
+                                : "bg-lemongrass/20 text-lemongrass border-lemongrass/40"
+                          : "bg-white/10 text-white/60 border-white/15"
+                      )}>
+                        {isAnalyzed
+                          ? (checkifyResult.is_financial === false ? "SAFE (NON-FINANCIAL)" : (checkifyResult.severity_tier || (score >= 80 ? "CRITICAL (80-100)" : score >= 50 ? "HIGH (50-79)" : "SAFE (0-49)")))
+                          : "STANDBY"}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* CARD 3: SUMMARY OF THE THREAT */}
+                  <div className="bg-forest border border-forest-dark rounded-xl p-6 shadow-md space-y-4 flex flex-col justify-between text-white hover:border-lemongrass/40 transition-all text-center">
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-center gap-2">
+                        <FileText className="w-4 h-4 text-lemongrass" />
+                        <span className="text-xs font-mono font-bold uppercase tracking-wider text-lemongrass">
+                          SUMMARY OF THE THREAT
+                        </span>
+                      </div>
+                      <h3 className="text-lg sm:text-xl font-bold text-white font-display text-center leading-snug">
+                        One-Line AI Threat Explainer
+                      </h3>
+                      <p className="text-xs text-lemongrass font-sans leading-relaxed italic bg-white/10 p-3.5 rounded-lg border border-white/10 text-center">
+                        &ldquo;{checkifyResult?.one_line_explainer || checkifyResult?.summary || "Enter your message or attach a screenshot above and click Analyse to generate an instant threat summary and safety audit."}&rdquo;
+                      </p>
+                    </div>
+                    <div className="pt-3 border-t border-white/10 flex items-center justify-between">
+                      <span className="text-[11px] font-mono text-lemongrass/70 uppercase">GUARDRAIL</span>
+                      <span className="text-[11px] font-mono font-bold truncate max-w-[200px] flex items-center gap-1.5 justify-end">
+                        {checkifyResult?.is_financial === false ? (
+                          <>
+                            <span className="w-2 h-2 rounded-full bg-rose-400 shrink-0 inline-block" />
+                            <span className="text-rose-300">BLOCKED NON-FINANCIAL</span>
+                          </>
+                        ) : (
+                          <>
+                            <span className="w-2 h-2 rounded-full bg-emerald-400 shrink-0 inline-block" />
+                            <span className="text-lemongrass">FINANCIAL VERIFIED</span>
+                          </>
+                        )}
+                      </span>
+                    </div>
                   </div>
                 </div>
-
-                {/* Session Past Scans History Ribbon */}
-                {checkifyHistory.length > 0 && (
-                  <div className="pt-2 border-t border-black/5 flex items-center gap-2 overflow-x-auto text-xs font-mono text-black/60">
-                    <span className="text-[10px] uppercase font-bold text-black/40 shrink-0">Session Scans ({checkifyHistory.length}):</span>
-                    {checkifyHistory.map((h: any) => {
-                      const score = h.overall_score || 0;
-                      const dotColor = score >= 80 ? "bg-red-600" : score >= 60 ? "bg-orange-500" : score >= 40 ? "bg-amber-500" : score >= 20 ? "bg-teal-600" : "bg-emerald-600";
-                      const isCurrent = checkifyResult?.id === h.id;
-                      return (
-                        <button
-                          key={h.id}
-                          type="button"
-                          onClick={() => {
-                            setCheckifyResult(h);
-                            setCheckifyTab("overview");
-                          }}
-                          className={clsx(
-                            "px-2.5 py-1 rounded border text-[11px] flex items-center gap-1.5 whitespace-nowrap transition-colors cursor-pointer",
-                            isCurrent ? "bg-forest text-lemongrass border-forest font-bold" : "bg-white border-black/10 hover:bg-sage-1/50 text-black/80"
-                          )}
-                        >
-                          <span className={clsx("w-2 h-2 rounded-full shrink-0", dotColor)} />
-                          <span>#{h.id} ({score}/100)</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                )}
-              </form>
-            </div>
+              );
+            })()}
 
             {/* LIVE ANALYSIS DOSSIER (When analysis result is present) */}
             {checkifyResult && (
               <div className="space-y-4 animate-in fade-in duration-300">
-                {/* Topbar Risk Banner & Gauge */}
-                {(() => {
-                  const d = checkifyResult;
-                  const score = d.overall_score || 0;
-                  const colorTheme = score >= 80 ? "red" : score >= 60 ? "orange" : score >= 40 ? "amber" : score >= 20 ? "teal" : "emerald";
-                  const strokeColor = score >= 80 ? "#dc2626" : score >= 60 ? "#ea580c" : score >= 40 ? "#d97706" : score >= 20 ? "#0d9488" : "#059669";
-                  const inputSummary = [
-                    d.input?.text ? "Text" : null,
-                    d.input?.hasImage ? "Image" : null,
-                    d.input?.url ? "URL" : null,
-                  ].filter(Boolean).join(" + ") || "Submission";
-
-                  return (
-                    <div className="bg-white border border-black/10 rounded-lg shadow-sm p-4">
-                      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-                        {/* Left Metadata & Action Row */}
-                        <div className="space-y-2">
-                          <div className="flex flex-wrap items-center gap-2">
-                            <h1 className="font-display font-black text-forest text-lg sm:text-xl tracking-tight">
-                              Analysis #{d.id}
-                            </h1>
-                            <span className="px-2.5 py-0.5 rounded text-[11px] font-mono font-bold bg-sage-1 text-forest border border-black/10">
-                              {inputSummary}
-                            </span>
-                            {d.content_type && (
-                              <span className="px-2.5 py-0.5 rounded text-[11px] font-mono font-bold bg-black/5 text-black/70 border border-black/10">
-                                {d.content_type.replace(/_/g, " ")}
-                              </span>
-                            )}
-                          </div>
-
-                          <div className="flex flex-wrap items-center gap-3 text-xs font-mono text-black/60">
-                            <span>Analyzed: <strong className="text-black font-semibold">{new Date(d.submittedAt || Date.now()).toLocaleTimeString()}</strong></span>
-                            <span>•</span>
-                            <span>Engine Latency: <strong className="text-black font-semibold">{d.elapsedMs || 0}ms</strong></span>
-                            {d.domain && (
-                              <>
-                                <span>•</span>
-                                <span>Domain: <strong className="text-forest font-semibold">{d.domain}</strong></span>
-                              </>
-                            )}
-                          </div>
-
-                          <div className="flex flex-wrap items-center gap-2 pt-1">
-                            <button
-                              type="button"
-                              onClick={handleCopyCybercrimeDraft}
-                              className="px-3 py-1.5 rounded bg-sage-1/50 hover:bg-sage-1 border border-black/10 text-xs font-mono text-forest font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
-                            >
-                              <Copy className="w-3.5 h-3.5" />
-                              <span>Copy 1930 Draft</span>
-                            </button>
-                            <button
-                              type="button"
-                              onClick={handleExportEvidenceJson}
-                              className="px-3 py-1.5 rounded bg-forest text-lemongrass hover:bg-forest/90 text-xs font-mono font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
-                            >
-                              <Download className="w-3.5 h-3.5" />
-                              <span>Export Dossier</span>
-                            </button>
-                          </div>
-                        </div>
-
-                        {/* Right Gauge & Verdict Banner */}
-                        <div className="flex items-center gap-4 self-end lg:self-center">
-                          {/* Circular SVG Gauge */}
-                          <div className="flex flex-col items-center gap-1">
-                            <div className="relative w-20 h-20 flex items-center justify-center">
-                              <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
-                                <circle cx="50" cy="50" r="40" stroke="rgba(0,0,0,0.08)" strokeWidth="8" fill="none" />
-                                <circle
-                                  cx="50"
-                                  cy="50"
-                                  r="40"
-                                  stroke={strokeColor}
-                                  strokeWidth="8"
-                                  strokeDasharray={251.2}
-                                  strokeDashoffset={251.2 - (251.2 * score) / 100}
-                                  strokeLinecap="round"
-                                  fill="none"
-                                  className="transition-all duration-700 ease-out"
-                                />
-                              </svg>
-                              <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-                                <span className="font-mono font-black text-xl leading-none text-forest">
-                                  {score}
-                                </span>
-                                <span className="text-[9px] font-mono text-black/50 uppercase">Score</span>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="text-right space-y-1">
-                            <span
-                              className={clsx(
-                                "px-3 py-1 rounded-full text-xs font-mono font-bold tracking-tight uppercase inline-block",
-                                score >= 80 ? "bg-red-100 text-red-800 border border-red-200"
-                                : score >= 60 ? "bg-orange-100 text-orange-800 border border-orange-200"
-                                : score >= 40 ? "bg-amber-100 text-amber-800 border border-amber-200"
-                                : "bg-emerald-100 text-emerald-800 border border-emerald-200"
-                              )}
-                            >
-                              {d.verdict_label || d.verdict}
-                            </span>
-                            <div className="text-[11px] font-mono text-black/50">
-                              Confidence: <strong className="text-black font-semibold">{d.confidence}%</strong>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })()}
-
-                {/* Subtabs Bar */}
-                <div className="bg-white border border-black/10 rounded-lg p-1 flex items-center gap-1 overflow-x-auto text-xs font-mono">
-                  {[
-                    { id: "overview", label: "Overview", icon: Layers },
-                    { id: "screenshot", label: "Screenshot Intelligence", icon: Camera },
-                    { id: "evidence_graph", label: "Evidence Graph", icon: Network },
-                    { id: "content_lang", label: "Content & Language", icon: Cpu },
-                    { id: "link_domain", label: "Link & Domain", icon: Globe },
-                    { id: "golden_hours", label: "If You Already Paid (1930)", icon: Siren },
-                    { id: "methodology", label: "Methodology", icon: Scale },
-                  ].map((t) => {
-                    const Icon = t.icon || Layers;
-                    const isActive = checkifyTab === t.id;
-                    return (
-                      <button
-                        key={t.id}
-                        type="button"
-                        onClick={() => setCheckifyTab(t.id)}
-                        className={clsx(
-                          "px-3 py-2 rounded-md flex items-center gap-1.5 whitespace-nowrap transition-all cursor-pointer font-semibold",
-                          isActive
-                            ? "bg-forest text-lemongrass shadow-xs"
-                            : "text-black/60 hover:text-forest hover:bg-sage-1/40"
-                        )}
-                      >
-                        <Icon className={clsx("w-3.5 h-3.5", isActive ? "text-lemongrass" : "text-black/50")} />
-                        <span>{t.label}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-
                 {/* Tab 1: Overview */}
                 {checkifyTab === "overview" && (
-                  <div className="space-y-4">
-                    {/* Annotated Transcript with Inline Polarity Badges */}
-                    <div className="bg-white border border-black/10 rounded-lg p-5 shadow-xs space-y-3">
-                      <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-black/8">
-                        <div className="flex items-center gap-2">
-                          <FileText className="w-4 h-4 text-forest" />
-                          <h3 className="font-display font-bold text-forest text-sm">
-                            Syntactic Transcript Polarity Analysis
-                          </h3>
+                  <div className="space-y-6 animate-in fade-in duration-200">
+                    {/* 1. Overview Box (Green Header with White Text & Minimal White Arrow) */}
+                    <div className="bg-white border border-black/10 rounded-2xl shadow-xs overflow-hidden transition-all duration-200">
+                      <div
+                        onClick={() => setOverviewCollapsed(!overviewCollapsed)}
+                        className="bg-forest text-white p-4 sm:p-5 flex items-center justify-between gap-3 cursor-pointer select-none hover:bg-forest/95 transition-colors"
+                      >
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-white border border-white/15 shadow-2xs">
+                            <Layers className="w-4 h-4 text-white" />
+                          </div>
+                          <div>
+                            <h2 className="font-display font-bold text-white text-base sm:text-lg">
+                              Overview
+                            </h2>
+                            <p className="text-xs text-white/80 font-sans">
+                              Syntactic Transcript Polarity &amp; Key Forensic Terminology
+                            </p>
+                          </div>
                         </div>
 
-                        <div className="flex items-center gap-3 text-xs">
-                          <label className="flex items-center gap-1.5 text-[11px] font-mono text-black/60 cursor-pointer">
-                            <input
-                              type="checkbox"
-                              checked={naiveMode}
-                              onChange={(e) => setNaiveMode(e.target.checked)}
-                              className="rounded border-black/20 text-forest focus:ring-0"
-                            />
-                            <span>Show naive keyword matching instead</span>
-                          </label>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-mono font-semibold text-white/80 hidden sm:inline-block">
+                            {!overviewCollapsed ? "Collapse" : "Expand"}
+                          </span>
+                          <div className={clsx(
+                            "w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 flex items-center justify-center text-white transition-transform duration-200",
+                            !overviewCollapsed ? "rotate-180" : "rotate-0"
+                          )}>
+                            <ChevronDown className="w-4 h-4 text-white" />
+                          </div>
                         </div>
                       </div>
 
-                      {naiveMode && (
-                        <div className="p-3 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 text-xs font-mono space-y-1.5 animate-in fade-in duration-200">
-                          <div className="font-bold flex items-center gap-1.5 text-amber-800">
-                            <AlertTriangle className="w-4 h-4 text-amber-700" />
-                            <span>Naive Keyword Matching Active (No Negation / Context Trees)</span>
-                          </div>
-                          <p className="text-[11px] text-amber-800 leading-relaxed">
-                            A naive regex scanner flags keywords unconditionally without understanding negation or disclaimers.
-                          </p>
-                          <div className="flex flex-wrap items-center gap-4 text-xs font-bold pt-1">
-                            <span>Naive Score: {checkifyResult.naive_vs_checkify?.naiveScore || 45}/100</span>
-                            <span>Engine Score: {checkifyResult.overall_score}/100</span>
-                            <span className="text-emerald-700 font-normal">
-                              Difference: {(checkifyResult.naive_vs_checkify?.differenceExplained || []).join(", ") || "Syntactic negation resolved"}
-                            </span>
+                      {!overviewCollapsed && (
+                        <div className="p-5 sm:p-6 border-t border-black/8 animate-in fade-in duration-200">
+                          <div className="p-5 bg-sage-1/20 rounded-xl border border-black/8 text-sm sm:text-base font-sans text-forest leading-relaxed whitespace-pre-wrap">
+                            {renderHighlightedOverviewText(
+                              checkifyResult.annotated_transcript?.text || checkifyResult.input?.text || "",
+                              checkifyResult
+                            )}
                           </div>
                         </div>
                       )}
-
-                      <div className="p-4 bg-sage-1/20 rounded-lg border border-black/8 text-xs font-mono text-forest leading-relaxed whitespace-pre-wrap">
-                        {checkifyResult.annotated_transcript?.text || checkifyResult.input?.text || "No text available."}
-                      </div>
                     </div>
 
-                    {/* 2-Column: Active Pillar Meters & Evidence Balance */}
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
-                      {/* Active Pillar Decomposition */}
-                      <div className="lg:col-span-6 bg-white border border-black/10 rounded-lg p-5 shadow-xs space-y-3">
-                        <div className="flex items-center gap-2 pb-2 border-b border-black/8">
-                          <Activity className="w-4 h-4 text-forest" />
-                          <h3 className="font-display font-bold text-forest text-sm">
-                            Active Pillar Risk Decomposition
-                          </h3>
-                        </div>
+                    {/* 2. Uploads Forensics Box (Green Header with White Text & Minimal White Arrow) */}
+                    {(() => {
+                      const hasUploadedDetails = Boolean(
+                        checkifyResult._hasUploadedMedia ||
+                        checkifyResult._uploadedImagePreview ||
+                        checkifyResult.modules?.screenshot?.available ||
+                        checkifyResult.ocr?.available ||
+                        checkifyResult.ocr?.text ||
+                        checkifyResult.extracted_text ||
+                        attachedFiles.length > 0 ||
+                        attachedDoc ||
+                        attachedAudio
+                      );
+                      const isUnflapped = uploadsForensicsFlapped !== null ? uploadsForensicsFlapped : hasUploadedDetails;
 
-                        <div className="space-y-3">
-                          {Object.entries(checkifyResult.risk_breakdown || {}).map(([key, b]: [string, any]) => {
-                            const score = b.score || 0;
-                            const isAvail = b.available;
-                            return (
-                              <div key={key} className="space-y-1">
-                                <div className="flex items-center justify-between text-xs font-mono">
-                                  <span className="text-black/70 font-medium">{b.label || key}</span>
-                                  <span className={clsx("font-bold", !isAvail ? "text-black/40 italic" : score >= 70 ? "text-red-700" : score >= 35 ? "text-amber-700" : "text-emerald-700")}>
-                                    {isAvail ? `${score}/100` : "Not Involved"}
-                                  </span>
+                      return (
+                        <div className="bg-white border border-black/10 rounded-2xl shadow-xs transition-all animate-in fade-in duration-200 overflow-hidden">
+                          {/* Header / Flap Trigger */}
+                          <div
+                            onClick={() => setUploadsForensicsFlapped(!isUnflapped)}
+                            className="bg-forest text-white p-4 sm:p-5 flex items-center justify-between gap-3 cursor-pointer select-none hover:bg-forest/95 transition-colors"
+                          >
+                            <div className="flex items-center gap-2.5">
+                              <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-white border border-white/15 shadow-2xs">
+                                <Camera className="w-4 h-4 text-white" />
+                              </div>
+                              <div>
+                                <h2 className="font-display font-bold text-white text-base sm:text-lg flex items-center gap-2">
+                                  <span>Uploads Forensics</span>
+                                  {!hasUploadedDetails && (
+                                    <span className="text-[10px] font-mono text-white/70 font-normal px-2 py-0.5 rounded bg-white/10 border border-white/15">
+                                      (No file attached)
+                                    </span>
+                                  )}
+                                </h2>
+                                <p className="text-xs text-white/80 font-sans">
+                                  OCR Document Extraction, Image Forensics &amp; Artifact Summary
+                                </p>
+                              </div>
+                            </div>
+
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs font-mono font-semibold text-white/80 hidden sm:inline-block">
+                                {isUnflapped ? "Collapse" : "Expand"}
+                              </span>
+                              <div className={clsx(
+                                "w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 flex items-center justify-center text-white transition-transform duration-200",
+                                isUnflapped ? "rotate-180" : "rotate-0"
+                              )}>
+                                <ChevronDown className="w-4 h-4 text-white" />
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Expanded / Unflapped Content */}
+                          {isUnflapped && (
+                            <div className="p-5 sm:p-6 space-y-4 border-t border-black/8 animate-in fade-in duration-200">
+                              {/* Uploaded Image Preview & Metadata (If Image attached) */}
+                              {(selectedImagePreview || checkifyResult._uploadedImagePreview) && (
+                                <div className="p-4 bg-sage-1/10 rounded-xl border border-black/10 flex flex-col sm:flex-row items-center gap-4">
+                                  <div className="w-24 h-24 rounded-lg overflow-hidden border border-black/10 bg-black/5 shrink-0 flex items-center justify-center">
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                    <img
+                                      src={selectedImagePreview || checkifyResult._uploadedImagePreview}
+                                      alt="Uploaded Document"
+                                      className="w-full h-full object-contain"
+                                    />
+                                  </div>
+                                  <div className="space-y-1 text-center sm:text-left">
+                                    <div className="text-xs font-mono font-bold text-forest uppercase flex items-center justify-center sm:justify-start gap-1.5">
+                                      <Camera className="w-3.5 h-3.5 text-moss" />
+                                      <span>Uploaded Image Source</span>
+                                    </div>
+                                    <p className="text-xs font-mono text-black/70">
+                                      {checkifyResult.ocr?.filename || "screenshot.png"}
+                                    </p>
+                                    {checkifyResult.ocr?.available && (
+                                      <div className="flex items-center justify-center sm:justify-start gap-2 pt-1">
+                                        <span className="px-2 py-0.5 rounded text-[10.5px] font-mono font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                                          OCR Extracted ({checkifyResult.ocr.word_count || 0} words)
+                                        </span>
+                                      </div>
+                                    )}
+                                  </div>
                                 </div>
-                                <div className="w-full h-2 rounded-full bg-sage-1/50 overflow-hidden">
-                                  <div
-                                    className={clsx("h-full rounded-full transition-all duration-500", score >= 70 ? "bg-red-600" : score >= 35 ? "bg-amber-500" : "bg-emerald-600")}
-                                    style={{ width: `${Math.min(score, 100)}%` }}
-                                  />
+                              )}
+
+                              {/* OCR Extracted Text */}
+                              <div className="space-y-2 pt-1">
+                                <div className="flex items-center justify-between">
+                                  <span className="text-xs font-mono font-bold text-forest uppercase tracking-wider flex items-center gap-1.5">
+                                    <FileText className="w-3.5 h-3.5 text-moss" />
+                                    <span>OCR Extracted Text</span>
+                                  </span>
+                                  <div className="flex items-center gap-2">
+                                    {(checkifyResult.ocr?.text || checkifyResult.extracted_text) && (
+                                      <button
+                                        type="button"
+                                        onClick={() => {
+                                          navigator.clipboard.writeText(checkifyResult.ocr?.text || checkifyResult.extracted_text || "");
+                                          setToastMessage("Copied OCR text to clipboard.");
+                                          setTimeout(() => setToastMessage(null), 2500);
+                                        }}
+                                        className="text-[11px] font-mono text-moss hover:text-forest flex items-center gap-1 font-semibold transition-colors cursor-pointer"
+                                      >
+                                        <Copy className="w-3 h-3" />
+                                        <span>Copy OCR Text</span>
+                                      </button>
+                                    )}
+                                    {!hasUploadedDetails && (
+                                      <span className="text-[10.5px] font-mono font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+                                        EMPTY
+                                      </span>
+                                    )}
+                                  </div>
+                                </div>
+
+                                <div className="p-5 bg-sage-1/20 rounded-xl border border-black/8 text-sm sm:text-base font-sans text-forest leading-relaxed whitespace-pre-wrap max-h-64 overflow-y-auto">
+                                  {hasUploadedDetails ? (
+                                    renderHighlightedOverviewText(
+                                      checkifyResult.ocr?.text || checkifyResult.extracted_text || checkifyResult.annotated_transcript?.text || checkifyResult.input?.text || "No uploaded file or OCR text detected.",
+                                      checkifyResult
+                                    )
+                                  ) : (
+                                    <span className="text-black/50 italic font-mono text-xs sm:text-sm">
+                                      Empty — No document or image file was uploaded for this scan.
+                                    </span>
+                                  )}
                                 </div>
                               </div>
-                            );
-                          })}
-                        </div>
-                      </div>
 
-                      {/* Evidence Balance Matrix */}
-                      <div className="lg:col-span-6 bg-white border border-black/10 rounded-lg p-5 shadow-xs space-y-3">
-                        <div className="flex items-center gap-2 pb-2 border-b border-black/8">
-                          <Scale className="w-4 h-4 text-forest" />
-                          <h3 className="font-display font-bold text-forest text-sm">
-                            Evidence Balance Matrix
-                          </h3>
-                        </div>
+                              {/* Summary of What the Document is About */}
+                              <div className="p-4 rounded-xl bg-forest text-white border border-forest-dark space-y-1.5 shadow-xs">
+                                <div className="flex items-center gap-2">
+                                  <span className="px-2 py-0.5 rounded text-[9.5px] font-mono font-extrabold uppercase bg-lemongrass text-forest">
+                                    DOCUMENT SUMMARY
+                                  </span>
+                                  <span className="text-xs font-bold text-lemongrass font-display">
+                                    What the Document is About
+                                  </span>
+                                </div>
+                                <p className="text-xs sm:text-sm font-sans text-white/90 leading-relaxed pt-1">
+                                  {hasUploadedDetails ? (
+                                    checkifyResult.ocr?.summary ||
+                                    checkifyResult.summary ||
+                                    checkifyResult.narrative?.summary ||
+                                    checkifyResult.one_line_explainer ||
+                                    "Summary: Analysis of financial claims, investment solicitations, or advisory notices evaluated under SEBI statutory guidelines."
+                                  ) : (
+                                    <span className="text-white/60 italic">
+                                      Empty — No document uploaded. Upload a file above to generate an instant document summary and OCR audit.
+                                    </span>
+                                  )}
+                                </p>
+                              </div>
 
-                        <div className="space-y-2">
-                          <div className="p-3 bg-red-50/60 rounded-lg border border-red-200/80 space-y-1.5">
-                            <div className="text-xs font-mono font-bold text-red-800 uppercase flex items-center justify-between">
-                              <span>Risk Increasing Red Flags</span>
-                              <span>+{(checkifyResult.evidence_balance?.increasing || []).length}</span>
-                            </div>
-                            <div className="space-y-1">
-                              {(checkifyResult.evidence_balance?.increasing || []).length === 0 ? (
-                                <p className="text-[11px] text-black/40 font-mono">No severe risk-increasing signals observed.</p>
-                              ) : (
-                                (checkifyResult.evidence_balance?.increasing || []).slice(0, 3).map((inc: any, idx: number) => (
-                                  <div key={idx} className="p-1.5 rounded bg-white border border-red-100 text-xs font-mono flex items-center justify-between">
-                                    <span className="font-semibold text-red-900 truncate">{inc.label || inc.signal}</span>
-                                    <span className="text-[10px] text-red-600 shrink-0">[{inc.severity || "HIGH"}]</span>
+                              {/* Upload Prompt Action (When no media is attached, prompts and redirects upwards to upload) */}
+                              {!hasUploadedDetails && (
+                                <div className="p-4 rounded-xl bg-sage-1/40 border border-black/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+                                  <div className="space-y-0.5">
+                                    <div className="text-xs font-mono font-bold text-forest flex items-center justify-center sm:justify-start gap-1.5">
+                                      <Upload className="w-3.5 h-3.5 text-moss" />
+                                      <span>Upload a Document or Screenshot</span>
+                                    </div>
+                                    <p className="text-xs text-black/60 font-sans">
+                                      Attach an image, PDF, or document in the Protect input box to inspect compression residuals and extracted text.
+                                    </p>
                                   </div>
-                                ))
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      protectTextareaRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+                                      setTimeout(() => {
+                                        fileInputRef.current?.click();
+                                      }, 300);
+                                    }}
+                                    className="px-4 py-2 bg-forest hover:bg-forest/90 text-lemongrass font-mono font-bold text-xs rounded-xl transition-all cursor-pointer shadow-xs whitespace-nowrap flex items-center gap-1.5"
+                                  >
+                                    <Paperclip className="w-3.5 h-3.5 text-lemongrass" />
+                                    <span>Upload Document ↑</span>
+                                  </button>
+                                </div>
                               )}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })()}
+
+                    {/* 3. Explanation Section (Green Header with White Text & Minimal White Arrow) */}
+                    {(() => {
+                      const d = checkifyResult;
+                      const mr = d.modules?.content?.mathReality || d.mathReality;
+                      const c = d.financial_claims || {};
+                      const pct = mr?.impliedAnnualPct
+                        ? Math.round(mr.impliedAnnualPct / 12)
+                        : (c.claims?.length > 0 ? c.claims[0] : 100);
+                      const principal = 10000;
+                      const compounded1Y = mr?.finalAmount || Math.round(principal * Math.pow(1 + pct / 100, 12));
+                      const nifty1Y = Math.round(principal * 1.13);
+                      const fd1Y = Math.round(principal * 1.07);
+                      const explanationText = mr?.explanation ||
+                        `If ₹10,000 actually compounded at the claimed rate of ${pct}% per month, it would become ₹${compounded1Y.toLocaleString()} in 365 days. For comparison, India's premier equity index (Nifty 50) has averaged ~13% annually, and bank Fixed Deposits offer ~7% guaranteed. Guaranteed high-return schemes violate compounding reality and are classified as Ponzi or fraudulent solicitations under SEBI PFUTP regulations.`;
+
+                      const threatAnalysisText = d.single_para_explanation
+                        || d.explanation?.single_para_explanation
+                        || d.explanation?.words_depicting_analysis
+                        || (typeof d.explanation === "string" ? d.explanation : "")
+                        || d.summary
+                        || d.one_line_explainer
+                        || "";
+
+                      return (
+                        <div className="bg-white border border-black/10 rounded-2xl shadow-xs overflow-hidden transition-all duration-200">
+                          {/* Header */}
+                          <div
+                            onClick={() => setExplanationCollapsed(!explanationCollapsed)}
+                            className="bg-forest text-white p-4 sm:p-5 flex items-center justify-between gap-3 cursor-pointer select-none hover:bg-forest/95 transition-colors"
+                          >
+                            <div className="flex items-center gap-2.5">
+                              <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-white border border-white/15 shadow-2xs">
+                                <Calculator className="w-4 h-4 text-white" />
+                              </div>
+                              <div>
+                                <h2 className="font-display font-bold text-white text-base sm:text-lg">
+                                  Explanation
+                                </h2>
+                                <p className="text-xs text-white/80 font-sans">
+                                  Threat Analysis &amp; Deceptive Psychology
+                                </p>
+                              </div>
+                            </div>
+
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs font-mono font-semibold text-white/80 hidden sm:inline-block">
+                                {!explanationCollapsed ? "Collapse" : "Expand"}
+                              </span>
+                              <div className={clsx(
+                                "w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 flex items-center justify-center text-white transition-transform duration-200",
+                                !explanationCollapsed ? "rotate-180" : "rotate-0"
+                              )}>
+                                <ChevronDown className="w-4 h-4 text-white" />
+                              </div>
                             </div>
                           </div>
 
-                          <div className="p-3 bg-emerald-50/60 rounded-lg border border-emerald-200/80 space-y-1.5">
-                            <div className="text-xs font-mono font-bold text-emerald-800 uppercase flex items-center justify-between">
-                              <span>Risk Reducing Disclaimers</span>
-                              <span>-{(checkifyResult.evidence_balance?.reducing || []).length}</span>
-                            </div>
-                            <div className="space-y-1">
-                              {(checkifyResult.evidence_balance?.reducing || []).length === 0 ? (
-                                <p className="text-[11px] text-black/40 font-mono">No statutory disclaimers found.</p>
-                              ) : (
-                                (checkifyResult.evidence_balance?.reducing || []).slice(0, 3).map((red: any, idx: number) => (
-                                  <div key={idx} className="p-1.5 rounded bg-white border border-emerald-100 text-xs font-mono flex items-center justify-between">
-                                    <span className="font-semibold text-emerald-900 truncate">{red.label}</span>
-                                    <span className="text-[10px] text-emerald-600 shrink-0">[-5 pts]</span>
+                          {!explanationCollapsed && (
+                            <div className="p-5 sm:p-6 space-y-5 border-t border-black/8 animate-in fade-in duration-200">
+                              {/* Threat Analysis & Deceptive Psychology (Streamlit Dashboard Parity) */}
+                              {threatAnalysisText ? (
+                                <div className="p-5 bg-sage-1/30 rounded-xl border border-black/10 space-y-2.5 shadow-2xs">
+                                  <div className="flex items-center gap-2 text-xs font-mono font-bold text-forest uppercase tracking-wider">
+                                    <Sparkles className="w-3.5 h-3.5 text-moss" />
+                                    <span>Threat Analysis &amp; Deceptive Psychology</span>
                                   </div>
-                                ))
+                                  <p className="text-sm font-sans text-forest/90 leading-relaxed">
+                                    {threatAnalysisText}
+                                  </p>
+                                </div>
+                              ) : (
+                                <div className="p-5 bg-sage-1/20 rounded-xl border border-black/8 text-sm font-sans text-forest leading-relaxed">
+                                  Standard financial communication verified with legitimate market conventions. No coercive psychological patterns detected.
+                                </div>
+                              )}
+
+                              {/* Specific Numeric & Textual Risk Drivers Detected */}
+                              {d.is_financial !== false && ((d.risk_drivers && d.risk_drivers.length > 0) || (d.explanation?.risk_drivers && d.explanation.risk_drivers.length > 0)) && (
+                                <div className="p-4 sm:p-5 bg-white rounded-xl border border-black/10 shadow-2xs space-y-2.5">
+                                  <div className="flex items-center gap-2">
+                                    <AlertTriangle className="w-3.5 h-3.5 text-forest" />
+                                    <h4 className="text-xs sm:text-sm font-mono font-bold text-forest uppercase tracking-wider">
+                                      Specific Numeric &amp; Textual Risk Drivers Detected
+                                    </h4>
+                                  </div>
+                                  <ul className="space-y-2">
+                                    {(d.risk_drivers || d.explanation?.risk_drivers || []).map((driver: string, idx: number) => (
+                                      <li key={idx} className="flex items-start gap-2.5 bg-sage-1/30 p-2.5 sm:p-3 rounded-lg border border-black/5 text-xs sm:text-sm text-forest font-sans">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-forest mt-2 shrink-0" />
+                                        <span className="leading-snug text-black/90 font-medium">{driver}</span>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })()}
+
+                    {/* 4. Summary Section (NEW, below Explanation, Green Header with White Text & Minimal White Arrow) */}
+                    {(() => {
+                      const d = checkifyResult;
+                      const isScam = (d.overall_score || 0) >= 40 || d.verdict === "FRAUD" || d.verdict === "SUSPICIOUS";
+                      const summaryNarrative = d.summary || d.narrative?.summary || d.ocr?.summary ||
+                        (isScam
+                          ? "Forensic analysis has identified severe risk indicators violating SEBI Intermediary and PFUTP regulations. The solicitation presents deceptive promises of guaranteed compounded returns and unregistered advisory, posing critical capital risk."
+                          : "Forensic analysis confirms the communication complies with standard statutory disclosure norms with no fraudulent compounding or unauthorized solicitation signals detected.");
+
+                      return (
+                        <div className="bg-white border border-black/10 rounded-2xl shadow-xs overflow-hidden transition-all duration-200">
+                          {/* Header */}
+                          <div
+                            onClick={() => setSummaryCollapsed(!summaryCollapsed)}
+                            className="bg-forest text-white p-4 sm:p-5 flex items-center justify-between gap-3 cursor-pointer select-none hover:bg-forest/95 transition-colors"
+                          >
+                            <div className="flex items-center gap-2.5">
+                              <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-white border border-white/15 shadow-2xs">
+                                <FileText className="w-4 h-4 text-white" />
+                              </div>
+                              <div>
+                                <h2 className="font-display font-bold text-white text-base sm:text-lg">
+                                  Summary
+                                </h2>
+                                <p className="text-xs text-white/80 font-sans">
+                                  Comprehensive Scam &amp; Incident Forensics Synthesis
+                                </p>
+                              </div>
+                            </div>
+
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs font-mono font-semibold text-white/80 hidden sm:inline-block">
+                                {!summaryCollapsed ? "Collapse" : "Expand"}
+                              </span>
+                              <div className={clsx(
+                                "w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 flex items-center justify-center text-white transition-transform duration-200",
+                                !summaryCollapsed ? "rotate-180" : "rotate-0"
+                              )}>
+                                <ChevronDown className="w-4 h-4 text-white" />
+                              </div>
+                            </div>
+                          </div>
+
+                          {!summaryCollapsed && (
+                            <div className="p-5 sm:p-6 space-y-4 border-t border-black/8 animate-in fade-in duration-200">
+                              {/* Executive Threat Summary Main Statement */}
+                              <div className="p-5 bg-sage-1/20 rounded-xl border border-black/8 space-y-3">
+                                <div className="flex items-center justify-between flex-wrap gap-2">
+                                  <span className="text-xs font-mono font-bold text-forest uppercase tracking-wider flex items-center gap-1.5">
+                                    <Sparkles className="w-3.5 h-3.5 text-moss" />
+                                    <span>Executive Threat Summary</span>
+                                  </span>
+                                  <span className={clsx(
+                                    "px-2.5 py-0.5 rounded text-[10.5px] font-mono font-extrabold uppercase border",
+                                    d.is_financial === false
+                                      ? "bg-rose-100 text-rose-800 border-rose-200"
+                                      : isScam
+                                        ? "bg-rose-100 text-rose-800 border-rose-200"
+                                        : "bg-emerald-100 text-emerald-800 border-emerald-200"
+                                  )}>
+                                    {d.is_financial === false ? "NON-FINANCIAL" : (d.verdict || (isScam ? "SUSPICIOUS / FRAUD" : "VERIFIED SAFE"))}
+                                  </span>
+                                </div>
+                                <p className="text-sm sm:text-base font-sans font-semibold text-forest leading-relaxed border-l-4 border-moss pl-3.5 py-0.5">
+                                  &ldquo;{d.one_line_explainer || d.summary || summaryNarrative}&rdquo;
+                                </p>
+                                {d.single_para_explanation && (
+                                  <p className="text-xs sm:text-sm font-sans text-black/75 leading-relaxed pt-1">
+                                    {d.single_para_explanation}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })()}
+
+                    {/* 5. Link Analysis (Square Box) & If You've Been Scammed (Rectangle Box) Row */}
+                    <div className="flex flex-col lg:flex-row items-stretch gap-4 w-full animate-in fade-in duration-200">
+                      {/* Left: Link Analysis Box (Square-proportioned packed box, full green theme) */}
+                      {(() => {
+                        const linkObj = checkifyResult.link || checkifyResult.url_analysis;
+                        const domainName = checkifyResult.domain || linkObj?.domain || checkifyResult.extracted_entities?.urls?.[0] || "";
+                        const hasLink = Boolean(domainName || linkObj?.available || (linkObj?.url && linkObj.url !== "https://"));
+
+                        const domainAge = linkObj?.whois?.domainAgeDays
+                          ? `${linkObj.whois.domainAgeDays} days`
+                          : linkObj?.whois?.creationDate
+                            ? `Reg: ${linkObj.whois.creationDate}`
+                            : hasLink
+                              ? "Fresh / Unregistered"
+                              : "—";
+
+                        const isPunycode = Boolean(linkObj?.isIdn || (linkObj?.idnDecoded && linkObj.idnDecoded !== linkObj?.domain));
+                        const punycodeStatus = hasLink
+                          ? (isPunycode ? "PUNYCODE SPOOF" : "Standard ASCII")
+                          : "—";
+
+                        return (
+                          <div className="w-full lg:w-80 lg:min-w-[320px] lg:max-w-[340px] bg-forest border border-forest-dark rounded-2xl p-5 shadow-md space-y-3.5 text-white flex flex-col justify-between shrink-0">
+                            <div className="space-y-3">
+                              {/* Header */}
+                              <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-white/10">
+                                <div className="flex items-center gap-2">
+                                  <div className="w-7 h-7 rounded-lg bg-white/10 flex items-center justify-center text-white border border-white/15">
+                                    <Globe className="w-3.5 h-3.5 text-white" />
+                                  </div>
+                                  <h3 className="font-display font-bold text-white text-sm sm:text-base">
+                                    Link Analysis
+                                  </h3>
+                                </div>
+                                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-white/10 text-lemongrass border border-white/15 uppercase">
+                                  {hasLink ? "DOMAIN FORENSICS" : "NO LINK"}
+                                </span>
+                              </div>
+
+                              {/* Packed Details */}
+                              <div className="space-y-2 font-sans">
+                                {/* Domain Name */}
+                                <div className="p-2.5 bg-white/10 rounded-xl border border-white/10 flex items-center justify-between gap-2">
+                                  <span className="text-xs font-mono font-bold text-lemongrass/80 shrink-0">
+                                    Domain Name:
+                                  </span>
+                                  <span className={clsx(
+                                    "text-xs font-mono font-bold truncate text-right max-w-[150px]",
+                                    hasLink ? "text-white" : "text-white/50 italic"
+                                  )} title={hasLink ? domainName : "No URL provided"}>
+                                    {hasLink ? domainName : "None"}
+                                  </span>
+                                </div>
+
+                                {/* Domain Age */}
+                                <div className="p-2.5 bg-white/10 rounded-xl border border-white/10 flex items-center justify-between gap-2">
+                                  <span className="text-xs font-mono font-bold text-lemongrass/80 shrink-0">
+                                    Domain Age:
+                                  </span>
+                                  <span className={clsx(
+                                    "text-xs font-mono font-bold text-right",
+                                    hasLink ? "text-white" : "text-white/50"
+                                  )}>
+                                    {domainAge}
+                                  </span>
+                                </div>
+
+                                {/* PunyCode */}
+                                <div className="p-2.5 bg-white/10 rounded-xl border border-white/10 flex items-center justify-between gap-2">
+                                  <span className="text-xs font-mono font-bold text-lemongrass/80 shrink-0">
+                                    PunyCode:
+                                  </span>
+                                  <span className={clsx(
+                                    "px-2 py-0.5 rounded text-[10px] font-mono font-extrabold uppercase border",
+                                    !hasLink
+                                      ? "bg-white/10 text-white/50 border-white/10"
+                                      : isPunycode
+                                        ? "bg-rose-500/30 text-rose-200 border-rose-400/40 animate-pulse"
+                                        : "bg-lemongrass/20 text-lemongrass border-lemongrass/40"
+                                  )}>
+                                    {punycodeStatus}
+                                  </span>
+                                </div>
+                              </div>
+
+                              {/* When no link: Interactive input form right inside the green square box */}
+                              {!hasLink && (
+                                <div className="p-3 bg-white/10 rounded-xl border border-white/15 space-y-2.5">
+                                  <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-lemongrass">
+                                    <Link2 className="w-3.5 h-3.5 text-lemongrass" />
+                                    <span>Put Link to Analyze</span>
+                                  </div>
+
+                                  <form
+                                    onSubmit={(e) => {
+                                      e.preventDefault();
+                                      handleAnalyzeInlineUrl();
+                                    }}
+                                    className="space-y-2"
+                                  >
+                                    <div className="relative">
+                                      <input
+                                        type="text"
+                                        value={inlineUrlInput}
+                                        onChange={(e) => setInlineUrlInput(e.target.value)}
+                                        placeholder="e.g. domain.com or https://..."
+                                        className="w-full px-2.5 py-1.5 bg-white/10 border border-white/20 rounded-lg text-xs font-mono text-white placeholder:text-white/40 focus:outline-none focus:border-lemongrass focus:ring-1 focus:ring-lemongrass transition-all pr-7"
+                                      />
+                                      {inlineUrlInput && (
+                                        <button
+                                          type="button"
+                                          onClick={() => setInlineUrlInput("")}
+                                          className="absolute right-2 top-1/2 -translate-y-1/2 text-white/50 hover:text-white"
+                                        >
+                                          <X className="w-3 h-3" />
+                                        </button>
+                                      )}
+                                    </div>
+
+                                    <button
+                                      type="submit"
+                                      disabled={isAnalyzingInlineUrl || !inlineUrlInput.trim()}
+                                      className="w-full py-1.5 px-2.5 bg-lemongrass hover:bg-lemongrass/90 disabled:opacity-50 disabled:cursor-not-allowed text-forest font-mono font-bold text-xs rounded-lg transition-all cursor-pointer shadow-xs flex items-center justify-center gap-1.5"
+                                    >
+                                      {isAnalyzingInlineUrl ? (
+                                        <>
+                                          <Loader2 className="w-3.5 h-3.5 animate-spin text-forest" />
+                                          <span>Inspecting...</span>
+                                        </>
+                                      ) : (
+                                        <>
+                                          <Globe className="w-3.5 h-3.5 text-forest" />
+                                          <span>Inspect Link</span>
+                                        </>
+                                      )}
+                                    </button>
+                                  </form>
+                                </div>
                               )}
                             </div>
                           </div>
-                        </div>
-                      </div>
+                        );
+                      })()}
+
+                      {/* Right: If You Have Been Scammed (Spacious Rectangle Box with Green Header) */}
+                      {(() => {
+                        const d = checkifyResult;
+                        const originalText = (d.input?.text || d.annotated_transcript?.text || scanText || "").trim();
+                        const domain = d.domain || d.link?.domain || d.extracted_entities?.urls?.[0] || "";
+                        const claimsList = d.financial_claims?.claims?.length > 0 ? d.financial_claims.claims.join(", ") : "";
+                        const claimsText = claimsList ? `guaranteed returns of ${claimsList}%` : "abnormal guaranteed return claims";
+                        const isNonFinancial = d.is_financial === false;
+                        const isScam = (d.overall_score || 0) >= 40 || d.verdict === "FRAUD" || d.verdict === "SUSPICIOUS";
+
+                        // Channel identification
+                        const hasTelegram = /telegram|t\.me/i.test(originalText);
+                        const hasWhatsapp = /whatsapp|wa\.me/i.test(originalText);
+                        const hasApk = /apk|app|download/i.test(originalText);
+                        const channel = hasTelegram ? "an unauthorized Telegram VIP channel" :
+                                        hasWhatsapp ? "an unauthorized WhatsApp group" :
+                                        hasApk ? "a fraudulent mobile APK / fake trading app" :
+                                        "an unauthorized digital communication channel";
+
+                        // Risk drivers
+                        const driversList = (d.risk_drivers || d.explanation?.risk_drivers || []).filter((dr: any) => typeof dr === "string");
+                        const keyDrivers = driversList.slice(0, 3).join("; ");
+
+                        // Core explanation
+                        const rawExplainer = (d.one_line_explainer || d.summary || "").replace(/^["'\s]+|["'\s]+$/g, '').trim();
+
+                        // Construct concise, high-signal explanation optimized for Resolve retrieval and visible at a single glance
+                        let issueDescription = "";
+                        if (isNonFinancial) {
+                          issueDescription = "Non-financial message: No securities advisory, guaranteed return claims, or financial solicitation detected.";
+                        } else if (isScam || driversList.length > 0 || claimsList || originalText.length > 0) {
+                          const fraudDetails = rawExplainer && rawExplainer.length > 20 && !rawExplainer.toLowerCase().includes("forensic analysis confirms")
+                            ? (rawExplainer.endsWith('.') ? rawExplainer : `${rawExplainer}.`)
+                            : `Perpetrators solicited capital promising ${claimsText} and unlicensed trading tips violating SEBI PFUTP regulations.`;
+                          
+                          const targetMeta = domain ? ` Platform/Link: ${domain}.` : "";
+                          
+                          issueDescription = `Victim targeted by an unauthorized investment scam and cyber fraud scheme operated via ${channel}.${targetMeta} ${fraudDetails} Filing for emergency golden-hour assistance (Helpline 1930 / cybercrime.gov.in) for immediate banking freeze and SEBI SCORES dispute escalation.`;
+                        } else {
+                          issueDescription = "Legitimate financial communication verified. Complies with SEBI statutory disclosures with no unauthorized solicitation detected.";
+                        }
+
+                        const handleOpenResolveCopilot = () => {
+                          setGrievanceText(issueDescription);
+                          setActiveTab("resolve");
+                          setTimeout(() => {
+                            if (grievanceTextareaRef.current) {
+                              grievanceTextareaRef.current.style.height = "auto";
+                              grievanceTextareaRef.current.style.height = `${Math.min(380, Math.max(100, grievanceTextareaRef.current.scrollHeight))}px`;
+                              grievanceTextareaRef.current.focus();
+                            }
+                          }, 100);
+                          window.scrollTo({ top: 0, behavior: "smooth" });
+                          setToastMessage("Transferred incident explanation to Resolve. Click 'Analyse' to proceed.");
+                          setTimeout(() => setToastMessage(null), 3500);
+                        };
+
+                        return (
+                          <div className="flex-1 w-full bg-white border border-black/10 rounded-2xl shadow-xs overflow-hidden transition-all duration-200 flex flex-col justify-between">
+                            {/* Green Header */}
+                            <div
+                              onClick={() => setScammedCollapsed(!scammedCollapsed)}
+                              className="bg-forest text-white p-4 sm:p-5 flex items-center justify-between gap-3 cursor-pointer select-none hover:bg-forest/95 transition-colors"
+                            >
+                              <div className="flex items-center gap-2.5">
+                                <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-white border border-white/15 shadow-2xs">
+                                  <Siren className="w-4 h-4 text-white" />
+                                </div>
+                                <div>
+                                  <h3 className="font-display font-bold text-white text-base sm:text-lg flex items-center gap-2">
+                                    <span>If You Have Been Scammed</span>
+                                  </h3>
+                                  <p className="text-xs text-white/80 font-sans">
+                                    Victim redressal roadmap &amp; automated dispute filing
+                                  </p>
+                                </div>
+                              </div>
+
+                              <div className="flex items-center gap-2">
+                                <span className="px-2.5 py-1 rounded text-[10px] font-mono font-bold bg-white/10 text-lemongrass border border-white/15 uppercase tracking-wider hidden sm:inline-block">
+                                  VICTIM RECOVERY
+                                </span>
+                                <div className={clsx(
+                                  "w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 flex items-center justify-center text-white transition-transform duration-200",
+                                  !scammedCollapsed ? "rotate-180" : "rotate-0"
+                                )}>
+                                  <ChevronDown className="w-4 h-4 text-white" />
+                                </div>
+                              </div>
+                            </div>
+
+                            {!scammedCollapsed && (
+                              <div className="p-5 sm:p-6 space-y-4 border-t border-black/8 animate-in fade-in duration-200 flex-1 flex flex-col justify-between">
+                                <div className="space-y-3.5">
+                                  {/* Described Issue & Retrieval Explanation - Visible at a single glance without scrollbar */}
+                                  <div className="space-y-1.5 font-sans">
+                                    <div className="flex items-center justify-between">
+                                      <div className="text-xs font-mono font-bold text-forest uppercase tracking-wider flex items-center gap-1.5">
+                                        <FileText className="w-3.5 h-3.5 text-moss" />
+                                        <span>Incident Explanation (For Resolve Copilot):</span>
+                                      </div>
+                                      <button
+                                        type="button"
+                                        onClick={() => {
+                                          navigator.clipboard.writeText(issueDescription);
+                                          setToastMessage("Copied incident explanation to clipboard.");
+                                          setTimeout(() => setToastMessage(null), 2500);
+                                        }}
+                                        className="text-[11px] font-mono text-moss hover:text-forest flex items-center gap-1 font-semibold transition-colors cursor-pointer"
+                                      >
+                                        <Copy className="w-3 h-3" />
+                                        <span>Copy</span>
+                                      </button>
+                                    </div>
+                                    <div className="p-3.5 sm:p-4 bg-sage-1/25 rounded-xl border-l-4 border-l-moss border-y border-r border-black/8 text-xs sm:text-sm font-sans text-forest leading-relaxed select-text shadow-2xs">
+                                      {issueDescription}
+                                    </div>
+                                  </div>
+
+                                  {/* Recovery Guidance Points */}
+                                  <div className="p-3 bg-rose-50/70 border border-rose-200/80 rounded-xl text-xs font-sans text-rose-900 space-y-1 leading-relaxed">
+                                    <div className="font-bold flex items-center gap-1 font-mono uppercase text-[10.5px] text-rose-800">
+                                      <Clock className="w-3 h-3 text-rose-700" />
+                                      <span>Golden-Hour Redressal Protocol:</span>
+                                    </div>
+                                    <p className="text-rose-800/90 text-xs">
+                                      If funds were transferred or unauthorized trades executed, clicking below will open <strong>Resolve Copilot</strong> with this explanation pre-populated to retrieve appropriate SEBI regulations, helpline 1930 protocols, and draft your dispute dossier.
+                                    </p>
+                                  </div>
+                                </div>
+
+                                {/* CTA Button: Open Resolve Copilot */}
+                                <div className="pt-2">
+                                  <button
+                                    type="button"
+                                    onClick={handleOpenResolveCopilot}
+                                    className="w-full py-3 px-4 bg-forest hover:bg-forest/90 text-lemongrass font-mono font-bold text-xs sm:text-sm rounded-xl transition-all cursor-pointer shadow-xs hover:shadow-md flex items-center justify-center gap-2 group"
+                                  >
+                                    <Bot className="w-4 h-4 text-lemongrass transition-transform group-hover:scale-110" />
+                                    <span>Open Resolve Copilot →</span>
+                                  </button>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })()}
                     </div>
                   </div>
                 )}
 
                 {/* Tab 2: Screenshot Intelligence */}
                 {checkifyTab === "screenshot" && (
-                  <div className="bg-white border border-black/10 rounded-lg p-5 shadow-xs space-y-4 animate-in fade-in duration-200">
-                    <div className="flex items-center gap-2 pb-2 border-b border-black/8">
-                      <Camera className="w-4 h-4 text-forest" />
-                      <h3 className="font-display font-bold text-forest text-sm">
-                        Screenshot Forensics &amp; OCR
-                      </h3>
+                  <div className="bg-white border border-black/10 rounded-2xl p-6 sm:p-7 shadow-xs space-y-5 animate-in fade-in duration-200">
+                    <div className="flex items-center justify-between pb-3 border-b border-black/8">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-8 h-8 rounded-lg bg-forest/10 flex items-center justify-center text-forest border border-forest/15">
+                          <Camera className="w-4 h-4 text-forest" />
+                        </div>
+                        <div>
+                          <h3 className="font-display font-bold text-forest text-base sm:text-lg">
+                            Screenshot Forensics &amp; OCR
+                          </h3>
+                          <p className="text-xs text-black/60 font-sans">
+                            Optical Character Recognition &amp; Visual Artifact Diagnostics
+                          </p>
+                        </div>
+                      </div>
+                      {checkifyResult.ocr?.available && (
+                        <span className="px-2.5 py-1 rounded text-[11px] font-mono font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                          {checkifyResult.ocr.word_count || 0} WORDS EXTRACTED
+                        </span>
+                      )}
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
-                      <div className="md:col-span-6 space-y-2">
-                        <span className="text-xs font-mono font-bold text-forest uppercase block">OCR Extracted Text:</span>
-                        <div className="p-3 bg-sage-1/20 rounded border border-black/8 font-mono text-xs max-h-64 overflow-y-auto whitespace-pre-wrap text-forest">
+                    <div className="grid grid-cols-1 md:grid-cols-12 gap-5">
+                      <div className="md:col-span-7 space-y-3">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-mono font-bold text-forest uppercase tracking-wider flex items-center gap-1.5">
+                            <FileText className="w-3.5 h-3.5 text-moss" />
+                            <span>OCR Extracted Text:</span>
+                          </span>
+                          {(checkifyResult.ocr?.text || checkifyResult.extracted_text) && (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                navigator.clipboard.writeText(checkifyResult.ocr?.text || checkifyResult.extracted_text || "");
+                                setToastMessage("Copied OCR text to clipboard.");
+                                setTimeout(() => setToastMessage(null), 2500);
+                              }}
+                              className="text-[11px] font-mono text-moss hover:text-forest flex items-center gap-1 font-semibold transition-colors cursor-pointer"
+                            >
+                              <Copy className="w-3 h-3" />
+                              <span>Copy OCR Text</span>
+                            </button>
+                          )}
+                        </div>
+                        <div className="p-4 bg-sage-1/20 rounded-xl border border-black/8 font-mono text-xs sm:text-sm max-h-72 overflow-y-auto whitespace-pre-wrap text-forest leading-relaxed">
                           {checkifyResult.ocr?.text || checkifyResult.extracted_text || "No screenshot uploaded or no text detected via OCR."}
+                        </div>
+
+                        {/* Document Summary in Tab 2 */}
+                        <div className="p-4 rounded-xl bg-forest text-white border border-forest-dark space-y-1.5 shadow-xs">
+                          <div className="flex items-center gap-2">
+                            <span className="px-2 py-0.5 rounded text-[9.5px] font-mono font-extrabold uppercase bg-lemongrass text-forest">
+                              DOCUMENT SUMMARY
+                            </span>
+                            <span className="text-xs font-bold text-lemongrass font-display">
+                              What the Document / Screenshot is About
+                            </span>
+                          </div>
+                          <p className="text-xs sm:text-sm font-sans text-white/90 leading-relaxed pt-1">
+                            {checkifyResult.ocr?.summary || checkifyResult.summary || checkifyResult.one_line_explainer || "Summary: Analysis of financial claims, investment solicitations, or advisory notices evaluated under SEBI statutory guidelines."}
+                          </p>
                         </div>
                       </div>
 
-                      <div className="md:col-span-6 space-y-2">
-                        <span className="text-xs font-mono font-bold text-forest uppercase block">Uploaded Image &amp; Tamper Residual:</span>
-                        {selectedImagePreview ? (
-                          <div className="relative rounded border border-black/10 overflow-hidden bg-black/5 max-h-56 flex items-center justify-center">
+                      <div className="md:col-span-5 space-y-2">
+                        <span className="text-xs font-mono font-bold text-forest uppercase tracking-wider block">Uploaded Image &amp; Tamper Residual:</span>
+                        {(selectedImagePreview || checkifyResult._uploadedImagePreview) ? (
+                          <div className="relative rounded-xl border border-black/10 overflow-hidden bg-black/5 max-h-72 flex items-center justify-center p-2 shadow-2xs">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img src={selectedImagePreview} alt="Screenshot submission" className="max-h-56 object-contain" />
+                            <img src={selectedImagePreview || checkifyResult._uploadedImagePreview} alt="Screenshot submission" className="max-h-64 object-contain rounded-lg" />
                           </div>
                         ) : (
-                          <div className="p-8 text-center bg-sage-1/10 rounded border border-black/8 text-xs font-mono text-black/40">
+                          <div className="p-8 text-center bg-sage-1/10 rounded-xl border border-black/8 text-xs font-mono text-black/40">
                             Upload a screenshot in the top bar to inspect compression residuals and extracted bounding boxes.
                           </div>
                         )}
@@ -5920,7 +7505,7 @@ SIGNATURE OF THE COMPLAINANT / AUTHORIZED LEGAL HEIR
                                   strokeWidth={2}
                                 />
                                 {n.isCenter && (
-                                  <text x={n.x} y={n.y + 4} textAnchor="middle" fontFamily="monospace" fontSize={12} fontWeight={700} fill="#000">
+                                  <text x={n.x} y={n.y + 4} textAnchor="middle" fontFamily="Inter, sans-serif" fontSize={12} fontWeight={700} fill="#000">
                                     {d.overall_score}
                                   </text>
                                 )}
@@ -5928,7 +7513,7 @@ SIGNATURE OF THE COMPLAINANT / AUTHORIZED LEGAL HEIR
                                   x={n.x}
                                   y={n.y + n.r + 12}
                                   textAnchor="middle"
-                                  fontFamily="monospace"
+                                  fontFamily="Inter, sans-serif"
                                   fontSize={n.isBucket ? 10 : 9}
                                   fontWeight={n.isBucket ? 600 : 400}
                                   fill="#14342b"
@@ -6083,27 +7668,71 @@ SIGNATURE OF THE COMPLAINANT / AUTHORIZED LEGAL HEIR
               </button>
             </div>
           </div>
-        )}{/* 3. COMMUNITY TAB (Twitter/X-Style Discussions Feed) */}
+        )}
+
+        {/* 3. COMMUNITY TAB (Twitter/X-Style Discussions Feed) */}
         {activeTab === "community" && (
-          <CommunityTwitterFeed
-            currentUser={{
-              name: userName,
-              handle: userHandle,
-              avatar: userAvatar,
-              image: userImage,
-            }}
-          />
+          <div className="space-y-6 animate-in fade-in duration-300">
+            {/* Centered Main Title */}
+            <div className="text-center space-y-1.5">
+              <span className="text-[11px] sm:text-xs font-mono font-bold tracking-widest uppercase text-moss">
+                INVESTOR NETWORK
+              </span>
+              <h1 className="text-5xl sm:text-6xl font-semibold text-forest font-display tracking-tight">
+                Community
+              </h1>
+              <p className="text-sm sm:text-base text-black/60 font-sans max-w-xl mx-auto">
+                Discuss markets, share alerts, and flag suspicious activity
+              </p>
+            </div>
+
+            {/* Section Infinite Ticker */}
+            <DashboardSectionTicker
+              items={[
+                "● INVESTOR NETWORK",
+                "MARKET DISCUSSIONS",
+                "SCAM ALERTS",
+                "COMMUNITY SIGNALS",
+              ]}
+            />
+
+            <CommunityTwitterFeed
+              currentUser={{
+                name: userName,
+                handle: userHandle,
+                avatar: userAvatar,
+                image: userImage,
+              }}
+            />
+          </div>
         )}
 
         {/* 4. RESOLVE TAB (SEBI CHATBOT / GRIEVANCES SECTION) */}
         {activeTab === "resolve" && (
           <div className="w-full min-h-[650px] bg-white border border-black/10 rounded-2xl shadow-xs p-6 sm:p-10 space-y-8 text-left animate-in fade-in duration-300">
             {/* Centered Main Title */}
-            <div className="text-center space-y-2">
+            <div className="text-center space-y-1.5">
+              <span className="text-[11px] sm:text-xs font-mono font-bold tracking-widest uppercase text-moss">
+                REGULATORY ASSISTANCE
+              </span>
               <h1 className="text-5xl sm:text-6xl font-semibold text-forest font-display tracking-tight">
                 Grievances
               </h1>
+              <p className="text-sm sm:text-base text-black/60 font-sans max-w-xl mx-auto">
+                Understand disputes, violations, and escalation pathways
+              </p>
             </div>
+
+            {/* Section Infinite Ticker */}
+            <DashboardSectionTicker
+              items={[
+                "✦ REGULATORY ASSISTANCE",
+                "SEBI",
+                "GRIEVANCES",
+                "DISPUTE SUPPORT",
+                "RESOLUTION",
+              ]}
+            />
 
             {/* Grievances Input Box Section */}
             <div className="bg-sage-1/20 border border-black/10 rounded-xl p-5 sm:p-6 space-y-3.5 shadow-2xs">
@@ -6120,7 +7749,7 @@ SIGNATURE OF THE COMPLAINANT / AUTHORIZED LEGAL HEIR
                       setSebiAnalysisResult(null);
                       if (grievanceTextareaRef.current) grievanceTextareaRef.current.style.height = "100px";
                     }}
-                    className="text-xs font-mono text-red-600 hover:text-red-800 transition-colors flex items-center gap-1 cursor-pointer"
+                    className="px-2.5 py-1 rounded-lg bg-rose-500 hover:bg-rose-600 text-white text-xs font-mono font-medium flex items-center gap-1 shadow-xs transition-colors cursor-pointer"
                   >
                     <X className="w-3.5 h-3.5" />
                     <span>Clear</span>
@@ -6699,13 +8328,13 @@ SIGNATURE OF THE COMPLAINANT / AUTHORIZED LEGAL HEIR
               </div>
             </div>
 
-            {/* TWO FINE METRIC CARDS (BOTH GREEN, SIDE-BY-SIDE, TITLED DAYS OVERDUE & FINE, 100 RS/DAY) */}
+            {/* TWO FINE & ESCALATION METRIC CARDS */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full pt-2">
               {/* Card 1: Days Overdue */}
               <div className="bg-forest text-white border border-forest-dark rounded-2xl p-6 sm:p-7 shadow-xs flex flex-col justify-between space-y-4">
                 <div className="border-b border-white/10 pb-3">
-                  <h3 className="text-xl sm:text-2xl font-bold font-display text-white text-center tracking-tight">
-                    Days Overdue
+                  <h3 className="text-xl sm:text-2xl font-bold font-display text-white text-center tracking-tight uppercase">
+                    DAYS OVERDUE
                   </h3>
                 </div>
 
@@ -6725,7 +8354,7 @@ SIGNATURE OF THE COMPLAINANT / AUTHORIZED LEGAL HEIR
                       {daysOverdue}
                     </span>
                     <span className="block text-xs font-mono text-white/70 uppercase tracking-wider mt-1">
-                      {daysOverdue === 1 ? "Day Overdue" : "Days Overdue"}
+                      DAYS OVERDUE
                     </span>
                   </div>
 
@@ -6745,28 +8374,47 @@ SIGNATURE OF THE COMPLAINANT / AUTHORIZED LEGAL HEIR
                 </div>
               </div>
 
-              {/* Card 2: Fine */}
+              {/* Card 2: Escalation Status */}
               <div className="bg-forest text-white border border-forest-dark rounded-2xl p-6 sm:p-7 shadow-xs flex flex-col justify-between space-y-4">
                 <div className="border-b border-white/10 pb-3">
-                  <h3 className="text-xl sm:text-2xl font-bold font-display text-white text-center tracking-tight">
-                    Fine
+                  <h3 className="text-xl sm:text-2xl font-bold font-display text-white text-center tracking-tight uppercase">
+                    ESCALATION STATUS
                   </h3>
                 </div>
 
-                {/* Fine Calculated Value */}
-                <div className="flex flex-col items-center justify-center py-2 text-center">
-                  <span className="text-5xl sm:text-6xl font-black font-display text-lemongrass tracking-tight">
-                    ₹{(daysOverdue * 100).toLocaleString("en-IN")}
+                {/* Escalation Status Value */}
+                <div className="flex flex-col items-center justify-center py-2 text-center min-h-[90px]">
+                  <span className="text-3xl sm:text-4xl font-black font-display text-lemongrass tracking-tight leading-tight">
+                    {daysOverdue > 21 ? "SEBI ESCALATED" : daysOverdue > 0 ? "TRIGGERED" : "NOT TRIGGERED"}
                   </span>
-                  <span className="text-xs font-mono text-white/70 uppercase tracking-wider mt-1">
-                    Total Penalty Accrued
+                  <span className="text-xs font-mono text-white/70 uppercase tracking-wider mt-2">
+                    CURRENT STATUS
                   </span>
                 </div>
 
                 <div className="pt-3 border-t border-white/10 flex items-center justify-between text-xs font-mono text-lemongrass/80">
-                  <span>PENALTY RATE</span>
-                  <span className="font-bold text-lemongrass">₹100 / Day Payable to Investor</span>
+                  <span>NEXT STEP</span>
+                  <span className="font-bold text-lemongrass">
+                    {daysOverdue > 0 ? "First-Level SCORES Review" : "Awaiting ATR"}
+                  </span>
                 </div>
+              </div>
+            </div>
+
+            {/* Escalation Pathway Banner below cards */}
+            <div className="w-full bg-forest text-white border border-forest-dark rounded-2xl p-4 sm:p-5 flex flex-wrap items-center justify-between gap-3 shadow-xs font-mono">
+              <div className="flex items-center gap-2 text-xs text-white/70">
+                <span className="w-2 h-2 rounded-full bg-lemongrass animate-pulse" />
+                <span className="font-bold uppercase tracking-wider">Redressal Escalation Workflow:</span>
+              </div>
+              <div className="flex items-center gap-2 text-xs sm:text-sm font-bold text-lemongrass">
+                <span className="px-3 py-1 rounded-lg bg-white/10 border border-white/15 text-white">
+                  ESCALATION STATUS
+                </span>
+                <span className="text-lemongrass text-base">→</span>
+                <span className="px-3 py-1 rounded-lg bg-lemongrass text-forest">
+                  FIRST-LEVEL REVIEW
+                </span>
               </div>
             </div>
 

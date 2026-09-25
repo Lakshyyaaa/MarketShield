@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -7,7 +7,7 @@
 :root {
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-display: 'Outfit', 'Space Grotesk', -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  --font-mono: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --header-height: 4.4375rem;
 
   --color-black: #090f05;
@@ -238,3 +238,57 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #4a5b38;
 }
+
+/* Section Infinite Ticker Animation */
+@keyframes sectionTickerLoop {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-section-ticker {
+  display: flex;
+  width: max-content;
+  animation: sectionTickerLoop 25s linear infinite;
+}
+
+/* DeBERTa Scam Highlighting (Deep Forest Green Theme #375124) */
+.scam-highlight {
+  background-color: #375124 !important;
+  color: #FFFFFF !important;
+  font-weight: 700 !important;
+  padding: 2px 7px !important;
+  border-radius: 4px !important;
+  display: inline !important;
+  box-shadow: 0 0 10px rgba(55, 81, 36, 0.35) !important;
+  border-bottom: 2px solid #233417 !important;
+}
+
+.scam-word-badge {
+  background-color: #375124 !important;
+  color: #FFFFFF !important;
+  font-weight: 700 !important;
+  padding: 3px 10px !important;
+  border-radius: 6px !important;
+  font-size: 0.85rem !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  border: 1px solid #233417 !important;
+  box-shadow: 0 1px 3px rgba(55, 81, 36, 0.25) !important;
+}
+
+.scam-item-row {
+  background: rgba(24, 40, 14, 0.04);
+  border: 1px solid rgba(24, 40, 14, 0.1);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+
